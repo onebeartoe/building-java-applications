@@ -1,2 +1,2 @@
 # building-java-applications
-This repository holds resources for 
+This repository holds resources for building Java applications.
