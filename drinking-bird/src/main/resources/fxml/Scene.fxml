@@ -17,7 +17,11 @@
               <Button fx:id="button" onAction="#handleButtonAction" text="Click Me!" BorderPane.alignment="CENTER" />
          </bottom>
          <center>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+            <ImageView fx:id="birdBody"
+                       fitHeight="150.0" fitWidth="200.0" 
+                       pickOnBounds="true" 
+                       preserveRatio="true" 
+                       BorderPane.alignment="CENTER">
                <image>
                   <Image url="@drinking-bird.jpg" />
                </image>
