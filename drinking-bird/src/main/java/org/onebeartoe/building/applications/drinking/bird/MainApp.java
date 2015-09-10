@@ -1,5 +1,6 @@
 package org.onebeartoe.building.applications.drinking.bird;
 
+import java.net.URL;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.fxml.FXMLLoader;
@@ -7,17 +8,23 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
-public class MainApp extends Application {
+public class MainApp extends Application 
+{
+    private FXMLLoader loader;
 
     @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
+    public void start(Stage stage) throws Exception 
+    {
+        URL url = getClass().getResource("/fxml/Scene.fxml");
+        
+        loader = new FXMLLoader(url);
+        
+        Parent root = loader.load();
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
         
-        stage.setTitle("JavaFX and Maven");
+        stage.setTitle("Drinking Bird Bot");
         stage.setScene(scene);
         stage.show();
     }
@@ -30,8 +37,15 @@ public class MainApp extends Application {
      *
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         launch(args);
     }
 
+    @Override
+    public void stop()
+    {
+        final FXMLController controller = loader.getController();
+        controller.stopThreads();
+    }    
 }

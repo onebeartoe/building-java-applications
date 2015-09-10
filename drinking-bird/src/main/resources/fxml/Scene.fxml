@@ -7,26 +7,30 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="org.onebeartoe.building.applications.drinking.bird.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="246.0" prefWidth="320" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.onebeartoe.building.applications.drinking.bird.FXMLController">
     <children>
       <BorderPane prefHeight="200.0" prefWidth="320.0">
          <top>
               <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" minHeight="16" minWidth="69" text="top label" BorderPane.alignment="CENTER" />
          </top>
-         <bottom>
-              <Button fx:id="button" onAction="#handleButtonAction" text="Click Me!" BorderPane.alignment="CENTER" />
-         </bottom>
          <center>
-            <ImageView fx:id="birdBody"
-                       fitHeight="150.0" fitWidth="200.0" 
-                       pickOnBounds="true" 
-                       preserveRatio="true" 
-                       BorderPane.alignment="CENTER">
+            <ImageView fx:id="birdBody" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                <image>
                   <Image url="@drinking-bird.jpg" />
                </image>
             </ImageView>
          </center>
+         <bottom>
+            <VBox alignment="CENTER" prefHeight="37.0" prefWidth="195.0" BorderPane.alignment="CENTER_RIGHT">
+               <children>
+                    <Button fx:id="button" alignment="CENTER" contentDisplay="CENTER" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="86.0" text="Click Me!" />
+                  <CheckBox fx:id="checkbox" 
+                            onAction="#handleCheckBoxAction"
+                            mnemonicParsing="false" 
+                            text="Automatically" />
+               </children>
+            </VBox>
+         </bottom>
       </BorderPane>
     </children>
 </AnchorPane>
