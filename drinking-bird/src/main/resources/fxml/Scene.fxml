@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -7,28 +8,50 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="246.0" prefWidth="320" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.onebeartoe.building.applications.drinking.bird.FXMLController">
+<AnchorPane id="AnchorPane" prefHeight="272.0" prefWidth="320" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.onebeartoe.building.applications.drinking.bird.FXMLController">
     <children>
       <BorderPane prefHeight="200.0" prefWidth="320.0">
          <top>
-              <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" minHeight="16" minWidth="69" text="top label" BorderPane.alignment="CENTER" />
+              <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" minHeight="16" minWidth="69" BorderPane.alignment="CENTER" />
          </top>
          <center>
-            <ImageView fx:id="birdBody" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
-               <image>
-                  <Image url="@drinking-bird.jpg" />
-               </image>
-            </ImageView>
+            <StackPane maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="131.0" prefWidth="320.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@background.png" />
+                     </image>
+                  </ImageView>                   
+                                     
+                  <ImageView fx:id="birdBody" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@bird-body.png" />
+                     </image>
+                  </ImageView>
+
+                  <ImageView fitHeight="144.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@foreground.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <padding>
+                  <Insets top="50.0" />
+               </padding>
+            </StackPane>
          </center>
          <bottom>
-            <VBox alignment="CENTER" prefHeight="37.0" prefWidth="195.0" BorderPane.alignment="CENTER_RIGHT">
+            <VBox alignment="CENTER" prefHeight="118.0" prefWidth="320.0" BorderPane.alignment="CENTER">
                <children>
-                    <Button fx:id="button" alignment="CENTER" contentDisplay="CENTER" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="86.0" text="Click Me!" />
-                  <CheckBox fx:id="checkbox" 
-                            onAction="#handleCheckBoxAction"
-                            mnemonicParsing="false" 
-                            text="Automatically" />
+                    <Button fx:id="button" alignment="CENTER" contentDisplay="CENTER" onAction="#handleButtonAction" prefHeight="25.0" prefWidth="86.0" text="Click Me!">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin></Button>
+                  <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#handleCheckBoxAction" text="Automatically" />
                </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
             </VBox>
          </bottom>
       </BorderPane>
