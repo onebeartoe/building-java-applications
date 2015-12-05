@@ -153,5 +153,5 @@ public class FXMLController implements Initializable
                 robot.mouseRelease(InputEvent.BUTTON1_MASK);
             }
         }
-    }    
+    }
 }
