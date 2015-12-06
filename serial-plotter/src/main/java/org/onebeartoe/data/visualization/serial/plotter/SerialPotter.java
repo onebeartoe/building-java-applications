@@ -1,6 +1,8 @@
 
 package org.onebeartoe.data.visualization.serial.plotter;
 
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -36,7 +38,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
 
-public class SerialPotter extends Application 
+public class SerialPotter extends Application implements SerialPortEventListener
 {
     private Logger logger;
     
@@ -98,13 +100,16 @@ public class SerialPotter extends Application
         }
         if(externalTemperatureSeries.getData().size() > MAX_DATA_POINTS)
         {
-            externalTemperatureSeries.getData().remove(0, externalTemperatureSeries.getData().size() - MAX_DATA_POINTS);
+            int size = externalTemperatureSeries.getData().size() - MAX_DATA_POINTS;
+            ObservableList data = externalTemperatureSeries.getData();
+            data.remove(0, size);
         }
                 
         // update 
         xAxis.setLowerBound(xSeriesData-MAX_DATA_POINTS);
         xAxis.setUpperBound(xSeriesData-1);
     }
+    
     @Override
     /**
      * 
@@ -130,6 +135,41 @@ public class SerialPotter extends Application
             }
         }.start();
     }    
+
+    /**
+     * Handle an event on the serial port. Read the data and print it.
+     */
+    @Override
+    public synchronized void serialEvent(SerialPortEvent event) 
+    {
+// TODO: WE MAY NEED TO KEEP THIS:        
+//        if(event.getEventType() == SerialPortEvent.DATA_AVAILABLE) 
+//        {
+//            try 
+//            {
+//                String inputLine = input.readLine();
+//
+//                messages.add(inputLine);
+//                
+//                int size = messages.size();
+//                if(size >= 50)
+//                {
+//                    messages.remove(0);
+//                }
+//                
+//                System.out.println(inputLine);
+//            } 
+//            catch (Exception e) 
+//            {
+//                System.err.println(e.toString());
+//            }
+//        }
+//        // Ignore all the other eventTypes, but you should consider the other ones.
+//        
+//        ServletContext servletContext = getServletContext();
+//        servletContext.setAttribute(ARDUINO_MESSAGES, messages);
+    }
+
     
     @Override
     public void start(Stage stage) throws Exception 
@@ -166,10 +206,24 @@ public class SerialPotter extends Application
         sc.setId("liveAreaChart");
         sc.setTitle("Lizard Enclosure Sensor Readings");
         
+        final AreaChart<Number, Number> sc2 = new AreaChart<Number, Number>(xAxis, yAxis) 
+        {
+            @Override 
+            protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
+            {
+                ; // This method is overriden with empty statement, to remove symbols on each data point.
+            }
+        };
+        sc2.setAnimated(false);
+        sc2.setId("sssliveAreaChart");
+        sc2.setTitle("ssLizard Enclosure Sensor Readings");
+        
         SerialPotterFxmlController controller = loader.getController();
         AnchorPane anchorPane = controller.getAnchorPane();
         ObservableList<Node> children = anchorPane.getChildren();
-        children.add(sc);        
+        
+        children.add(sc);
+//        children.add(sc2);
 
         // internal temperature Series
         internalTemperatureSeries = new AreaChart.Series<Number, Number>();
@@ -197,7 +251,7 @@ public class SerialPotter extends Application
             }
         });
        
-        stage.setTitle("JavaFX and Maven");
+        stage.setTitle("Serial Plotter");
         stage.setScene(scene);
         stage.show();
         
@@ -237,20 +291,21 @@ public class SerialPotter extends Application
                 sensorIds.add("P");
                 
                 sensorIds.stream()
-                        .forEach( s -> {
-                                            try
-                                            {
-                                                outstream.write(s.getBytes());                                                
-                                                outstream.write(':');                                                
-                                                float f = (new Random()).nextFloat();
-                                                outstream.write( String.valueOf(f).getBytes() );
-                                                outstream.write( System.lineSeparator().getBytes() );
-                                            }
-                                            catch (IOException ex)
-                                            {
-                                                logger.log(Level.SEVERE, null, ex);
-                                            }
-                                        });
+                        .forEach( s -> 
+                        {
+                            try
+                            {
+                                outstream.write(s.getBytes());                                                
+                                outstream.write(':');                                                
+                                float f = (new Random()).nextFloat();
+                                outstream.write( String.valueOf(f).getBytes() );
+                                outstream.write( System.lineSeparator().getBytes() );
+                            }
+                            catch (IOException ex)
+                            {
+                                logger.log(Level.SEVERE, null, ex);
+                            }
+                        });
                 
                 byte[] bytes = outstream.toByteArray();
                 ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
