@@ -9,13 +9,16 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -26,13 +29,13 @@ import static javafx.application.Application.launch;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
+
 import org.onebeartoe.data.visualization.serial.plotter.remove.ArduinoMessage;
 import static org.onebeartoe.data.visualization.serial.plotter.remove.ArduinoSensorTypes.EXTERNAL_TEMPERATURE;
 import static org.onebeartoe.data.visualization.serial.plotter.remove.ArduinoSensorTypes.INTERNAL_HUMIDITY;
@@ -41,12 +44,6 @@ import static org.onebeartoe.data.visualization.serial.plotter.remove.ArduinoSen
 
 public class SerialPotter extends Application 
 {
-//    @FXML
-//    private AreaChart areaChart;
-    
-    @FXML
-    private AnchorPane anchorPane;
-
     private Logger logger;
     
     private NumberAxis xAxis;
@@ -72,6 +69,10 @@ public class SerialPotter extends Application
     private final long dataRefreshDelay = 2000;
     
     private long lastId = 0;
+    
+    private FXMLLoader loader;
+    
+    private Map<String, XYChart.Series> dataMap;
     
     private void addDataToSeries()
     {
@@ -110,59 +111,14 @@ public class SerialPotter extends Application
         xAxis.setLowerBound(xSeriesData-MAX_DATA_POINTS);
         xAxis.setUpperBound(xSeriesData-1);
     }
-    
-    private void initialize(Stage primaryStage, Parent root) 
+    @Override
+    /**
+     * 
+     */
+    public void init()
     {
-        logger = Logger.getLogger(getClass().getName());
-        
-        xAxis = new NumberAxis(0,MAX_DATA_POINTS,MAX_DATA_POINTS/10);
-        xAxis.setForceZeroInRange(false);
-        xAxis.setAutoRanging(false);
-        
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setAutoRanging(true);
-        
-        // Chart
-        final AreaChart<Number, Number> sc = new AreaChart<Number, Number>(xAxis, yAxis) 
-        {
-            @Override 
-            protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
-            {
-                ; // This method is overriden with empty statement, to remove symbols on each data point.
-            }
-        };
-        sc.setAnimated(false);
-        sc.setId("liveAreaChart");
-        sc.setTitle("Lizard Enclosure Sensor Readings");
-        
-        ObservableList<Node> children = anchorPane.getChildren();
-        children.add(sc);
-
-        // internal temperature Series
-        internalTemperatureSeries = new AreaChart.Series<Number, Number>();
-        internalTemperatureSeries.setName("Internal Temperature");
-        sc.getData().add(internalTemperatureSeries);        
-        
-        externalTemperatureSeries = new AreaChart.Series<Number, Number>();
-        externalTemperatureSeries.setName("External Temperature");
-        sc.getData().add(externalTemperatureSeries);
-        
-        internalHumiditySeries = new AreaChart.Series<Number, Number>();
-        internalHumiditySeries.setName("Internal Humidity");
-        sc.getData().add(internalHumiditySeries);
-
-        primaryStage.setScene(new Scene(sc));
-        
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() 
-        {
-            @Override
-            public void handle(WindowEvent t) 
-            {
-                Platform.exit();
-                System.exit(0);
-            }
-        });
-    }    
+       dataMap = new HashMap();
+    }
 
     /**
      * Timeline gets called in the JavaFX Main thread
@@ -184,13 +140,69 @@ public class SerialPotter extends Application
     @Override
     public void start(Stage stage) throws Exception 
     {
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Scene.fxml"));
+        URL url = getClass().getResource("/fxml/Scene.fxml");
+                
+        loader = new FXMLLoader(url);
+                
+        Parent root = loader.load();
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add("/styles/Styles.css");
+
+        logger = Logger.getLogger(getClass().getName());
         
-        initialize(stage, root);
+        xAxis = new NumberAxis(0,MAX_DATA_POINTS,MAX_DATA_POINTS/10);
+        xAxis.setForceZeroInRange(false);
+        xAxis.setAutoRanging(false);
         
+        NumberAxis yAxis = new NumberAxis();
+        yAxis.setAutoRanging(true);
+        
+        
+        // Chart
+        final AreaChart<Number, Number> sc = new AreaChart<Number, Number>(xAxis, yAxis) 
+        {
+            @Override 
+            protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
+            {
+                ; // This method is overriden with empty statement, to remove symbols on each data point.
+            }
+        };
+        sc.setAnimated(false);
+        sc.setId("liveAreaChart");
+        sc.setTitle("Lizard Enclosure Sensor Readings");
+        
+        SerialPotterFxmlController controller = loader.getController();
+        AnchorPane anchorPane = controller.getAnchorPane();
+        ObservableList<Node> children = anchorPane.getChildren();
+        children.add(sc);        
+
+        // internal temperature Series
+        internalTemperatureSeries = new AreaChart.Series<Number, Number>();
+        internalTemperatureSeries.setName("Internal Temperature");
+        sc.getData().add(internalTemperatureSeries);        
+        
+        externalTemperatureSeries = new AreaChart.Series<Number, Number>();
+        externalTemperatureSeries.setName("External Temperature");
+        sc.getData().add(externalTemperatureSeries);
+        
+        internalHumiditySeries = new AreaChart.Series<Number, Number>();
+        internalHumiditySeries.setName("Internal Humidity");
+        sc.getData().add(internalHumiditySeries);
+
+        stage.setScene(scene);      
+//        stage.setScene( new Scene(sc));
+        
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
+        {
+            @Override
+            public void handle(WindowEvent t) 
+            {
+                Platform.exit();
+                System.exit(0);
+            }
+        });
+       
         stage.setTitle("JavaFX and Maven");
         stage.setScene(scene);
         stage.show();
@@ -240,12 +252,11 @@ public class SerialPotter extends Application
                         .forEach( s -> {
                                             try
                                             {
-                                                outstream.write(s.getBytes());
-                                                outstream.write( System.lineSeparator().getBytes() );
-                                                outstream.write(':');
-                                                
+                                                outstream.write(s.getBytes());                                                
+                                                outstream.write(':');                                                
                                                 float f = (new Random()).nextFloat();
                                                 outstream.write( String.valueOf(f).getBytes() );
+                                                outstream.write( System.lineSeparator().getBytes() );
                                             }
                                             catch (IOException ex)
                                             {
@@ -260,31 +271,40 @@ public class SerialPotter extends Application
                 InputStreamReader reader = new InputStreamReader(instream);
                 BufferedReader in = new BufferedReader(reader);
 
-                ArduinoMessage am = null;
+internalTemperatureMessageQueue.add(4);                
+                
+//                ArduinoMessage am = null;
                 String inputLine;
                 while ( (inputLine = in.readLine()) != null)
                 {
-                    am = ArduinoMessage.fromLine(inputLine);
+                    String [] split = inputLine.split(":");
                     
-                    switch(am.sensorType)
+                    String dataName = split[0];
+                    
+                    String s = split[1];                    
+                    double d  = Double.valueOf(s);
+                    
+//                    am = ArduinoMessage.fromLine(inputLine);
+                    
+                    switch(dataName)
                     {
-                        case INTERNAL_TEMPERATURE:
+                        case "S":
                         {
-                            internalTemperatureMessageQueue.add(am.sensorValue);
+                            internalTemperatureMessageQueue.add(d);
                             System.out.println(inputLine);
                             
                             break;
                         }
-                        case EXTERNAL_TEMPERATURE:
+                        case "B":
                         {
-                            externalTemperatureMessageQueue.add(am.sensorValue);
+                            externalTemperatureMessageQueue.add(d);
                             System.out.println(inputLine);
                             
                             break;
                         }
-                        case INTERNAL_HUMIDITY:
+                        case "Q":
                         {
-                            internalHumidityMessageQueue.add(am.sensorValue);
+                            internalHumidityMessageQueue.add(d);
                             System.out.println(inputLine);
                             
                             break;
@@ -293,10 +313,7 @@ public class SerialPotter extends Application
                 }
                 in.close();
                 
-                if(am != null)
-                {
-                    lastId = am.id;
-                }
+
 
                 Thread.sleep(dataRefreshDelay);
                 
