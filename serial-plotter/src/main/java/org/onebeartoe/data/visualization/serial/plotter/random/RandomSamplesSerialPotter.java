@@ -1,7 +1,6 @@
 
-package org.onebeartoe.data.visualization.serial.plotter;
+package org.onebeartoe.data.visualization.serial.plotter.random;
 
-import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.io.BufferedReader;
@@ -38,19 +37,9 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
 import static javafx.application.Application.launch;
-import org.onebeartoe.io.serial.SerialPorts;
+import org.onebeartoe.data.visualization.serial.plotter.SerialPotterFxmlController;
 
-/**
- * This application uses JavaFX and to visualize data (float values) as it streams 
- * in from a serial input connection.
- * 
- * This was tested with the Adafruit EZ Link (adafruit.com/products/1628) using this command:
- * 
- * java -Djava.library.path="c:\opt\rxtx" -jar target/serial-plotter-0.0.1-SNAPSHOT.jar
- * 
- * @author Roberto Marquez
- */
-public class SerialPotter extends Application implements SerialPortEventListener
+public class RandomSamplesSerialPotter extends Application implements SerialPortEventListener
 {
     private Logger logger;
     
@@ -84,11 +73,7 @@ public class SerialPotter extends Application implements SerialPortEventListener
     
     private final String DATA_PROVIDER_KEY = "dataProvider";
     
-private volatile List<String> messages;
-
-    private BufferedReader input;
-    
-    private SerialPort serialPort;
+//    private DataProvider dataProvider;
     
     private void addDataToSeries()
     {
@@ -136,15 +121,9 @@ private volatile List<String> messages;
      */
     public void init()
     {
-        logger = Logger.getLogger( getClass().getName() );
-        
         initializeParameters();
        
         dataMap = new HashMap();
-        
-        messages = new ArrayList();
-        
-        initializeSerialPort();
     }
 
     private void initializeParameters()
@@ -154,32 +133,19 @@ private volatile List<String> messages;
         Map<String, String> namedParams = parameters.getNamed();
         
         String dataProviderName = namedParams.get(DATA_PROVIDER_KEY);
-//        switch(dataProviderName)
-//        {
-//            case "random":
-//            {
-//                
-//                break;
-//            }
-//            default:
-//            {
-//                
-//            }
-//        }
+        switch(dataProviderName)
+        {
+            case "random":
+            {
+                
+                break;
+            }
+            default:
+            {
+                
+            }
+        }
     }    
-    
-    private void initializeSerialPort()
-    {
-        try
-        {
-            serialPort = SerialPorts.get();
-            serialPort.addEventListener(this);
-        }
-        catch (Exception | NoClassDefFoundError ex)
-        {
-            logger.log(Level.SEVERE, null, ex);
-        }
-    }
     
     /**
      * Timeline gets called in the JavaFX Main thread
@@ -204,33 +170,35 @@ private volatile List<String> messages;
     @Override
     public synchronized void serialEvent(SerialPortEvent event) 
     {
-        if(event.getEventType() == SerialPortEvent.DATA_AVAILABLE) 
-        {
-            try 
-            {
-                String inputLine = input.readLine();
-
-                messages.add(inputLine);
-                
-                int size = messages.size();
-                if(size >= 50)
-                {
-                    messages.remove(0);
-                }
-                
-                System.out.println(inputLine);
-            } 
-            catch (Exception e) 
-            {
-                System.err.println(e.toString());
-            }
-        }
-        else
-        {
-            // Ignore all the other eventTypes, but you should consider the other ones.        
-        }        
+// TODO: WE MAY NEED TO KEEP THIS:        
+//        if(event.getEventType() == SerialPortEvent.DATA_AVAILABLE) 
+//        {
+//            try 
+//            {
+//                String inputLine = input.readLine();
+//
+//                messages.add(inputLine);
+//                
+//                int size = messages.size();
+//                if(size >= 50)
+//                {
+//                    messages.remove(0);
+//                }
+//                
+//                System.out.println(inputLine);
+//            } 
+//            catch (Exception e) 
+//            {
+//                System.err.println(e.toString());
+//            }
+//        }
+//        // Ignore all the other eventTypes, but you should consider the other ones.
+//        
+//        ServletContext servletContext = getServletContext();
+//        servletContext.setAttribute(ARDUINO_MESSAGES, messages);
     }
 
+    
     @Override
     public void start(Stage stage) throws Exception 
     {
@@ -320,16 +288,6 @@ private volatile List<String> messages;
         executor.execute(addToQueue);
         
         prepareTimeline();        
-    }
-    
-    @Override
-    public void stop()
-    {
-        if (serialPort != null) 
-        {
-            serialPort.removeEventListener();
-            serialPort.close();
-        }        
     }
 
     /**
