@@ -1,3 +1,4 @@
+
 package org.onebeartoe.data.visualization.serial.plotter;
 
 import java.io.BufferedReader;
@@ -8,7 +9,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,12 +35,6 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
-
-import org.onebeartoe.data.visualization.serial.plotter.remove.ArduinoMessage;
-import static org.onebeartoe.data.visualization.serial.plotter.remove.ArduinoSensorTypes.EXTERNAL_TEMPERATURE;
-import static org.onebeartoe.data.visualization.serial.plotter.remove.ArduinoSensorTypes.INTERNAL_HUMIDITY;
-import static org.onebeartoe.data.visualization.serial.plotter.remove.ArduinoSensorTypes.INTERNAL_TEMPERATURE;
-
 
 public class SerialPotter extends Application 
 {
@@ -233,13 +227,7 @@ public class SerialPotter extends Application
         public void run() 
         {
             try 
-            {
-                String u = "http://192.168.15.30:9080/lizard-enclosure/arduino/sensor/readings/raw";
-//                u = "http://localhost:8080/lizard-enclosure/arduino/sensor/readings/raw/mock";
-                u += "?lastId=" + lastId;
-                u += "&t=" + (new Date()).getTime();
-                URL url = new URL(u);
-                
+            {   
                 ByteArrayOutputStream outstream = new ByteArrayOutputStream();
                 
                 List<String> sensorIds = new ArrayList();
@@ -271,9 +259,8 @@ public class SerialPotter extends Application
                 InputStreamReader reader = new InputStreamReader(instream);
                 BufferedReader in = new BufferedReader(reader);
 
-internalTemperatureMessageQueue.add(4);                
-                
-//                ArduinoMessage am = null;
+                internalTemperatureMessageQueue.add(4);                
+
                 String inputLine;
                 while ( (inputLine = in.readLine()) != null)
                 {
@@ -283,9 +270,7 @@ internalTemperatureMessageQueue.add(4);
                     
                     String s = split[1];                    
                     double d  = Double.valueOf(s);
-                    
-//                    am = ArduinoMessage.fromLine(inputLine);
-                    
+
                     switch(dataName)
                     {
                         case "S":
@@ -312,8 +297,6 @@ internalTemperatureMessageQueue.add(4);
                     }
                 }
                 in.close();
-                
-
 
                 Thread.sleep(dataRefreshDelay);
                 
