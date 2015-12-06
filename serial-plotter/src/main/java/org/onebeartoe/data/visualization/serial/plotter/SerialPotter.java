@@ -39,6 +39,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
 import static javafx.application.Application.launch;
 import org.onebeartoe.io.serial.SerialPorts;
+import org.onebeartoe.system.Sleeper;
 
 /**
  * This application uses JavaFX and to visualize data (float values) as it streams 
@@ -67,9 +68,9 @@ public class SerialPotter extends Application implements SerialPortEventListener
     private XYChart.Series externalTemperatureSeries;
     private ConcurrentLinkedQueue<Number> externalTemperatureMessageQueue = new ConcurrentLinkedQueue();
     
-    private ExecutorService executor;
+//    private ExecutorService executor;
     
-    private AddToQueue addToQueue;
+//    private AddToQueue addToQueue;
     
     private int xSeriesData = 0;
 
@@ -137,48 +138,46 @@ private volatile List<String> messages;
     public void init()
     {
         logger = Logger.getLogger( getClass().getName() );
-        
-        initializeParameters();
        
         dataMap = new HashMap();
         
         messages = new ArrayList();
         
         initializeSerialPort();
-    }
-
-    private void initializeParameters()
-    {
-        // command line parameters are passed in the form '--name=value'
-        Parameters parameters = getParameters();
-        Map<String, String> namedParams = parameters.getNamed();
-        
-        String dataProviderName = namedParams.get(DATA_PROVIDER_KEY);
-//        switch(dataProviderName)
-//        {
-//            case "random":
-//            {
-//                
-//                break;
-//            }
-//            default:
-//            {
-//                
-//            }
-//        }
     }    
     
     private void initializeSerialPort()
     {
         try
         {
-            serialPort = SerialPorts.get();
+            System.out.println("obtaining serial port");
+            serialPort = SerialPorts.get();                        
+            System.out.println("serial port obtained");
+            Sleeper.sleepo(2000);
+            
+            InputStream is = serialPort.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            input = new BufferedReader(isr);
+            
             serialPort.addEventListener(this);
         }
         catch (Exception | NoClassDefFoundError ex)
         {
             logger.log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * The main() method is ignored in correctly deployed JavaFX application.
+     * main() serves only as fallback in case the application can not be
+     * launched through deployment artifacts, e.g., in IDEs with limited FX
+     * support. NetBeans ignores main().
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) 
+    {
+        launch(args);
     }
     
     /**
@@ -211,14 +210,53 @@ private volatile List<String> messages;
                 String inputLine = input.readLine();
 
                 messages.add(inputLine);
+ 
+                String [] split = inputLine.split(":");
                 
-                int size = messages.size();
-                if(size >= 50)
+                if( split.length >= 2)
                 {
-                    messages.remove(0);
+                    String dataName = split[0];
+
+                    String s = split[1];                    
+                    double d  = Double.valueOf(s);
+
+                    switch(dataName)
+                    {
+                        case "S":
+                        {
+                            internalTemperatureMessageQueue.add(d);
+                            System.out.println(inputLine);
+
+                            break;
+                        }
+                        case "B":
+                        {
+                            externalTemperatureMessageQueue.add(d);
+                            System.out.println(inputLine);
+
+                            break;
+                        }
+                        case "Q":
+                        {
+                            internalHumidityMessageQueue.add(d);
+                            System.out.println(inputLine);
+
+                            break;
+                        }
+                    }
+
+                    int size = messages.size();
+                    if(size >= 50)
+                    {
+                        messages.remove(0);
+                    }
+
+                    System.out.println(inputLine);                    
                 }
-                
-                System.out.println(inputLine);
+                else
+                {
+                    System.out.println("bad data: " + inputLine);
+                }
             } 
             catch (Exception e) 
             {
@@ -227,7 +265,7 @@ private volatile List<String> messages;
         }
         else
         {
-            // Ignore all the other eventTypes, but you should consider the other ones.        
+            // Ignore all the other eventTypes
         }        
     }
 
@@ -315,9 +353,9 @@ private volatile List<String> messages;
         stage.setScene(scene);
         stage.show();
         
-        executor = Executors.newCachedThreadPool();
-        addToQueue = new AddToQueue();
-        executor.execute(addToQueue);
+//        executor = Executors.newCachedThreadPool();
+//        addToQueue = new AddToQueue();
+//        executor.execute(addToQueue);
         
         prepareTimeline();        
     }
@@ -332,20 +370,7 @@ private volatile List<String> messages;
         }        
     }
 
-    /**
-     * The main() method is ignored in correctly deployed JavaFX application.
-     * main() serves only as fallback in case the application can not be
-     * launched through deployment artifacts, e.g., in IDEs with limited FX
-     * support. NetBeans ignores main().
-     *
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) 
-    {
-        launch(args);
-    }
-
-    private class AddToQueue implements Runnable 
+    private class AddToQueueeeee implements Runnable 
     {
         @Override
         public void run() 
@@ -387,6 +412,7 @@ private volatile List<String> messages;
                 internalTemperatureMessageQueue.add(4);                
 
                 String inputLine;
+                
                 while ( (inputLine = in.readLine()) != null)
                 {
                     String [] split = inputLine.split(":");
@@ -425,7 +451,7 @@ private volatile List<String> messages;
 
                 Thread.sleep(dataRefreshDelay);
                 
-                executor.execute(this);
+  //              executor.execute(this);
             } 
             catch(Exception ex) 
             {
