@@ -44,8 +44,12 @@ volatile int IBI = 600;             // holds the time between beats, the Inter-B
 volatile boolean Pulse = false;     // true when pulse wave is high, false when it's low
 volatile boolean QS = false;        // becomes true when Arduoino finds a beat.
 
+int lightSensorPin = 3; // analog pin 3
 
-void setup(){
+unsigned long lightPreviousMillis = 0;
+
+void setup()
+{
   pinMode(blinkPin,OUTPUT);         // pin that will blink to your heartbeat!
   pinMode(fadePin,OUTPUT);          // pin that will fade to your heartbeat!
   Serial.begin(9600);             // we agree to talk fast!
@@ -59,27 +63,36 @@ void setup(){
    //analogReference(EXTERNAL);   
 }
 
+const long lightInterval = 1000 / 3;
 
+int lightReading = 0;
+
+unsigned long currentMillis;
 
 void loop()
 {
-  sendDataToProcessing('S', Signal);     // send Processing the raw Pulse Sensor data
+  currentMillis = millis();
+  
+//  sendDataToProcessing('S', Signal);     // send Processing the raw Pulse Sensor data
   if (QS == true)                        // Quantified Self flag is true when arduino finds a heartbeat
   {
         fadeRate = 255;                  // Set 'fadeRate' Variable to 255 to fade LED with pulse
-        sendDataToProcessing('B',BPM);   // send heart rate with a 'B' prefix/        
-        sendDataToProcessing('Q',IBI);   // send time between beats with a 'Q' prefix
+//        sendDataToProcessing('B',BPM);   // send heart rate with a 'B' prefix/        
+//        sendDataToProcessing('Q',IBI);   // send time between beats with a 'Q' prefix
 
-        sendPulseDataToProcessing(50);   // send a pulse signal
+        sendPulseDataToProcessing(250);   // send a pulse signal
+        sendPulseDataToProcessing(0);
         
         QS = false;                      // reset the Quantified Self flag for next time    
   }
   else
   {
-    sendPulseDataToProcessing( 0);   // send a pulse signal
+//    sendPulseDataToProcessing( 0);   // send a pulse signal
   }
   
   ledFadeToBeat();
+
+  lightSensor();
   
   delay(20);                             //  take a break
 }
@@ -92,6 +105,17 @@ void ledFadeToBeat()
     analogWrite(fadePin,fadeRate);          //  fade LED
   }
 
+void lightSensor()
+{
+  if (currentMillis - lightPreviousMillis >= lightInterval) 
+  {
+    // save the last time you blinked the LED
+    lightPreviousMillis = currentMillis;
+
+    lightReading = analogRead(lightSensorPin);
+    sendDataToProcessing('L', lightReading);
+  }  
+}
 
 void sendDataToProcessing(char symbol, int data )
 {
