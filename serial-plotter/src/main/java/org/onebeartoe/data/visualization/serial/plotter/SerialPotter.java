@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
@@ -72,6 +73,7 @@ private volatile List<String> messages;
      */
     final AreaChart<Number, Number> sc = new AreaChart<Number, Number>(xAxis, yAxis) 
     {
+//TODO: or was it this that made the tick marks appear?        
 //        @Override 
 //        protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
 //        {
@@ -121,8 +123,6 @@ private volatile List<String> messages;
         
         messages = new ArrayList();
         
-//        sc.setHorizontalZeroLineVisible(true);
-        
         initializeSerialPort();
     }    
     
@@ -143,7 +143,7 @@ private volatile List<String> messages;
         }
         catch (Exception | NoClassDefFoundError ex)
         {
-//            logger.log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
     }
 
@@ -226,7 +226,7 @@ private volatile List<String> messages;
             } 
             catch (Exception e) 
             {
-//                System.err.println(e.toString());
+                System.err.println(e.toString());
             }
         }
         else
@@ -245,6 +245,7 @@ private volatile List<String> messages;
         Parent root = loader.load();
         
         Scene scene = new Scene(root);
+//TODO: is this really what made the tick marks appear?        
 //        scene.getStylesheets().add("/styles/Styles.css");
 
         logger = Logger.getLogger(getClass().getName());
@@ -263,18 +264,6 @@ private volatile List<String> messages;
         sc.setAnimated(false);
         sc.setId("serialPlotterChart");
         sc.setTitle("Serial Plotter");
-        
-//        final AreaChart<Number, Number> sc2 = new AreaChart<Number, Number>(xAxis, yAxis) 
-//        {
-//            @Override 
-//            protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
-//            {
-//                ; // This method is overriden with empty statement, to remove symbols on each data point.
-//            }
-//        };
-//        sc2.setAnimated(false);
-//        sc2.setId("sssliveAreaChart");
-//        sc2.setTitle("ssLizard Enclosure Sensor Readings");
         
         SerialPotterFxmlController controller = loader.getController();
         AnchorPane anchorPane = controller.getAnchorPane();
