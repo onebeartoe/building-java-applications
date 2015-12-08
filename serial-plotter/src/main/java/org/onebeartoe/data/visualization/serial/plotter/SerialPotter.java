@@ -210,10 +210,7 @@ private volatile List<String> messages;
                         }
 
                         Platform.runLater(
-                            () -> 
-                            {
-                                addDataToSeries(dataName);
-                            }
+                            () -> { addDataToSeries(dataName); }
                         );
 
                         System.out.println(inputLine + ": " + xSeriesData);
@@ -228,10 +225,6 @@ private volatile List<String> messages;
             {
                 System.err.println(e.toString());
             }
-        }
-        else
-        {
-            // Ignore all the other eventTypes
         }        
     }
 
@@ -295,52 +288,6 @@ private volatile List<String> messages;
         {
             serialPort.removeEventListener();
             serialPort.close();
-        }        
-    }
-    
-    private class DataChannel
-    {
-        private int xPosition;
-        
-        private XYChart.Series chartSeries;
-        
-        private ConcurrentLinkedQueue<Number> dataQueue;
-        
-        public DataChannel()
-        {
-            xPosition = 0;
-            chartSeries = new AreaChart.Series<Number, Number>();
-            dataQueue = new ConcurrentLinkedQueue();
-        }
-
-        public int getxPosition()
-        {
-            return xPosition;
-        }
-
-        public void setxPosition(int xPosition)
-        {
-            this.xPosition = xPosition;
-        }
-
-        public XYChart.Series getChartSeries()
-        {
-            return chartSeries;
-        }
-
-        public void setChartSeries(XYChart.Series chartSeries)
-        {
-            this.chartSeries = chartSeries;
-        }
-
-        public ConcurrentLinkedQueue<Number> getDataQueue()
-        {
-            return dataQueue;
-        }
-
-        public void setDataQueue(ConcurrentLinkedQueue<Number> dataQueue)
-        {
-            this.dataQueue = dataQueue;
         }        
     }
 }
