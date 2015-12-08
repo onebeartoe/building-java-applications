@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.chart.AreaChart ?>
 
-
 <AnchorPane id="AnchorPane" 
             prefHeight="200" 
             prefWidth="320" 

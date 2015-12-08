@@ -39,7 +39,7 @@ import javafx.stage.WindowEvent;
 import static javafx.application.Application.launch;
 import org.onebeartoe.data.visualization.serial.plotter.SerialPotterFxmlController;
 
-public class RandomSamplesSerialPotter extends Application implements SerialPortEventListener
+public class RandomSamplesSerialPotter extends Application
 {
     private Logger logger;
     
@@ -139,46 +139,13 @@ public class RandomSamplesSerialPotter extends Application implements SerialPort
                 addDataToSeries();
             }
         }.start();
-    }    
-
-    /**
-     * Handle an event on the serial port. Read the data and print it.
-     */
-    @Override
-    public synchronized void serialEvent(SerialPortEvent event) 
-    {
-// TODO: WE MAY NEED TO KEEP THIS:        
-//        if(event.getEventType() == SerialPortEvent.DATA_AVAILABLE) 
-//        {
-//            try 
-//            {
-//                String inputLine = input.readLine();
-//
-//                messages.add(inputLine);
-//                
-//                int size = messages.size();
-//                if(size >= 50)
-//                {
-//                    messages.remove(0);
-//                }
-//                
-//                System.out.println(inputLine);
-//            } 
-//            catch (Exception e) 
-//            {
-//                System.err.println(e.toString());
-//            }
-//        }
-//        // Ignore all the other eventTypes, but you should consider the other ones.
-//        
-//        ServletContext servletContext = getServletContext();
-//        servletContext.setAttribute(ARDUINO_MESSAGES, messages);
     }
 
-    
     @Override
     public void start(Stage stage) throws Exception 
     {
+        System.out.println("output from ramdom samples");
+        
         URL url = getClass().getResource("/fxml/Scene.fxml");
                 
         loader = new FXMLLoader(url);
@@ -186,49 +153,42 @@ public class RandomSamplesSerialPotter extends Application implements SerialPort
         Parent root = loader.load();
         
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("/styles/Styles.css");
+//        scene.getStylesheets().add("/styles/Styles.css");
 
         logger = Logger.getLogger(getClass().getName());
         
-        xAxis = new NumberAxis(0,MAX_DATA_POINTS,MAX_DATA_POINTS/10);
+        xAxis = new NumberAxis(0,MAX_DATA_POINTS, MAX_DATA_POINTS/10);
         xAxis.setForceZeroInRange(false);
         xAxis.setAutoRanging(false);
+        xAxis.setTickMarkVisible(true);
+        xAxis.setTickLabelsVisible(true);
+        xAxis.setTickUnit(10);
         
         NumberAxis yAxis = new NumberAxis();
         yAxis.setAutoRanging(true);
-        
+        yAxis.setTickMarkVisible(true);
+        yAxis.setTickLabelsVisible(true);
+        yAxis.setTickUnit(10);
         
         // Chart
         final AreaChart<Number, Number> sc = new AreaChart<Number, Number>(xAxis, yAxis) 
-        {
-            @Override 
-            protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
-            {
-                ; // This method is overriden with empty statement, to remove symbols on each data point.
-            }
-        };
+//        {
+//            @Override 
+//            protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
+//            {
+//                ; // This method is overriden with empty statement, to remove symbols on each data point.
+//            }
+//        }
+    ;
         sc.setAnimated(false);
         sc.setId("liveAreaChart");
         sc.setTitle("Lizard Enclosure Sensor Readings");
-        
-        final AreaChart<Number, Number> sc2 = new AreaChart<Number, Number>(xAxis, yAxis) 
-        {
-            @Override 
-            protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
-            {
-                ; // This method is overriden with empty statement, to remove symbols on each data point.
-            }
-        };
-        sc2.setAnimated(false);
-        sc2.setId("sssliveAreaChart");
-        sc2.setTitle("ssLizard Enclosure Sensor Readings");
         
         SerialPotterFxmlController controller = loader.getController();
         AnchorPane anchorPane = controller.getAnchorPane();
         ObservableList<Node> children = anchorPane.getChildren();
         
         children.add(sc);
-//        children.add(sc2);
 
         // internal temperature Series
         internalTemperatureSeries = new AreaChart.Series<Number, Number>();

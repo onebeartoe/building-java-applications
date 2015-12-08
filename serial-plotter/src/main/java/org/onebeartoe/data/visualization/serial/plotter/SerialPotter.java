@@ -12,12 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -54,18 +51,7 @@ public class SerialPotter extends Application implements SerialPortEventListener
     
     private static final int MAX_DATA_POINTS = 50;
     
-//    private XYChart.Series internalTemperatureSeries;
-//    private ConcurrentLinkedQueue<Number> internalTemperatureMessageQueue = new ConcurrentLinkedQueue();
-//    
-//    private XYChart.Series internalHumiditySeries;
-//    private ConcurrentLinkedQueue<Number> internalHumidityMessageQueue = new ConcurrentLinkedQueue();
-//    
-//    private XYChart.Series externalTemperatureSeries;
-//    private ConcurrentLinkedQueue<Number> externalTemperatureMessageQueue = new ConcurrentLinkedQueue();
-    
     private int xSeriesData = 0;
-    
-    private long lastId = 0;
     
     private FXMLLoader loader;
     
@@ -86,78 +72,37 @@ private volatile List<String> messages;
      */
     final AreaChart<Number, Number> sc = new AreaChart<Number, Number>(xAxis, yAxis) 
     {
-        @Override 
-        protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
-        {
-            ; // This method is overriden with empty statement, to remove symbols on each data point.
-        }
+//        @Override 
+//        protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
+//        {
+//            ; // This method is overriden with empty statement, to remove symbols on each data point.
+//        }
     };    
     
     private synchronized void addDataToSeries(String dataName)
     {
-//        System.out.println("adding data to series");
-        
-        Set<String> keySet = dataMap.keySet();
-        
-//        keySet.stream()
-//                .forEach( k -> 
-//                {
-                    DataChannel dc = dataMap.get(dataName);
-//                    DataChannel dc = dataMap.get(k);
-                    ConcurrentLinkedQueue<Number> dataQueue = dc.getDataQueue();
-                    if( !dataQueue.isEmpty() )
-                    {
-                        int xPosition = dc.getxPosition();
-                        Number value = dataQueue.remove();
-                        AreaChart.Data acData = new AreaChart.Data(xSeriesData, value);
-                        XYChart.Series cs = dc.getChartSeries();
-                        cs.getData().add(acData);
-                        
-                        dc.setxPosition(xPosition+1);
-                     
-                        if(cs.getData().size() > MAX_DATA_POINTS)
-                        {
-                            int size = cs.getData().size() - MAX_DATA_POINTS;
-                            ObservableList data = cs.getData();
-                            data.remove(0, size);
-                        }
-                    }
-//                });
-        
-        xSeriesData++;
+        DataChannel dc = dataMap.get(dataName);
 
-//        if( !internalTemperatureMessageQueue.isEmpty() )
-//        {
-//            AreaChart.Data data = new AreaChart.Data(xSeriesData++, internalTemperatureMessageQueue.remove());
-//            internalTemperatureSeries.getData().add(data);
-//        }        
-//        // remove points to keep us at no more than MAX_DATA_POINTS
-//        if(internalTemperatureSeries.getData().size() > MAX_DATA_POINTS) 
-//        {
-//            internalTemperatureSeries.getData().remove(0, internalTemperatureSeries.getData().size() - MAX_DATA_POINTS);
-//        }
-//        
-//        if( !internalHumidityMessageQueue.isEmpty() )
-//        {
-//            AreaChart.Data data = new AreaChart.Data(xSeriesData-1, internalHumidityMessageQueue.remove() );
-//            internalHumiditySeries.getData().add(data);
-//        }
-//        if(internalHumiditySeries.getData().size() > MAX_DATA_POINTS)
-//        {
-//            internalHumiditySeries.getData().remove(0, internalHumiditySeries.getData().size() - MAX_DATA_POINTS);
-//        }
-//        
-//        if( !externalTemperatureMessageQueue.isEmpty() )
-//        {
-//            AreaChart.Data data = new AreaChart.Data(xSeriesData-1, externalTemperatureMessageQueue.remove() );
-//            externalTemperatureSeries.getData().add(data);
-//        }
-//        if(externalTemperatureSeries.getData().size() > MAX_DATA_POINTS)
-//        {
-//            int size = externalTemperatureSeries.getData().size() - MAX_DATA_POINTS;
-//            ObservableList data = externalTemperatureSeries.getData();
-//            data.remove(0, size);
-//        }
+        ConcurrentLinkedQueue<Number> dataQueue = dc.getDataQueue();
+        if( !dataQueue.isEmpty() )
+        {
+            int xPosition = dc.getxPosition();
+            Number value = dataQueue.remove();
+            AreaChart.Data acData = new AreaChart.Data(xSeriesData, value);
+            XYChart.Series cs = dc.getChartSeries();
+            cs.getData().add(acData);
+
+            dc.setxPosition(xPosition+1);
+
+            if(cs.getData().size() > MAX_DATA_POINTS)
+            {
+                int size = cs.getData().size() - MAX_DATA_POINTS;
+                ObservableList data = cs.getData();
+                data.remove(0, size);
+            }
+        }
+
+        xSeriesData++;
                 
         // update 
         xAxis.setLowerBound(xSeriesData-MAX_DATA_POINTS);
@@ -176,7 +121,7 @@ private volatile List<String> messages;
         
         messages = new ArrayList();
         
-//        sc.set
+//        sc.setHorizontalZeroLineVisible(true);
         
         initializeSerialPort();
     }    
@@ -214,23 +159,6 @@ private volatile List<String> messages;
     {
         launch(args);
     }
-    
-//    /**
-//     * Timeline gets called in the JavaFX Main thread
-//     */ 
-//    private void prepareTimeline() 
-//    {        
-//        // Every frame to take any data from queue and add to chart
-//        new AnimationTimer() 
-//        {
-//            // is this the proper Thread to kill in primaryStage.setOnCloseRequest() ????
-//            @Override 
-//            public void handle(long now) 
-//            {
-//                addDataToSeries();
-//            }
-//        }.start();
-//    }    
 
     /**
      * Handle an event on the serial port. Read the data and print it.
@@ -317,50 +245,42 @@ private volatile List<String> messages;
         Parent root = loader.load();
         
         Scene scene = new Scene(root);
-        scene.getStylesheets().add("/styles/Styles.css");
+//        scene.getStylesheets().add("/styles/Styles.css");
 
         logger = Logger.getLogger(getClass().getName());
                 
         xAxis.setForceZeroInRange(false);
         xAxis.setAutoRanging(false);
+        xAxis.setTickMarkVisible(true);
+        xAxis.setTickLabelsVisible(true);
+        xAxis.setTickUnit(10);
         
-//        NumberAxis yAxis = new NumberAxis();
         yAxis.setAutoRanging(true);
-
-        sc.setAnimated(false);
-        sc.setId("liveAreaChart");
-        sc.setTitle("Lizard Enclosure Sensor Readings");
+        yAxis.setTickMarkVisible(true);
+        yAxis.setTickLabelsVisible(true);
+        yAxis.setTickUnit(10);
         
-        final AreaChart<Number, Number> sc2 = new AreaChart<Number, Number>(xAxis, yAxis) 
-        {
-            @Override 
-            protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
-            {
-                ; // This method is overriden with empty statement, to remove symbols on each data point.
-            }
-        };
-        sc2.setAnimated(false);
-        sc2.setId("sssliveAreaChart");
-        sc2.setTitle("ssLizard Enclosure Sensor Readings");
+        sc.setAnimated(false);
+        sc.setId("serialPlotterChart");
+        sc.setTitle("Serial Plotter");
+        
+//        final AreaChart<Number, Number> sc2 = new AreaChart<Number, Number>(xAxis, yAxis) 
+//        {
+//            @Override 
+//            protected void dataItemAdded(XYChart.Series<Number, Number> series, int itemIndex, XYChart.Data<Number, Number> item) 
+//            {
+//                ; // This method is overriden with empty statement, to remove symbols on each data point.
+//            }
+//        };
+//        sc2.setAnimated(false);
+//        sc2.setId("sssliveAreaChart");
+//        sc2.setTitle("ssLizard Enclosure Sensor Readings");
         
         SerialPotterFxmlController controller = loader.getController();
         AnchorPane anchorPane = controller.getAnchorPane();
         ObservableList<Node> children = anchorPane.getChildren();
         
         children.add(sc);
-
-//        // internal temperature Series
-//        internalTemperatureSeries = new AreaChart.Series<Number, Number>();
-//        internalTemperatureSeries.setName("Internal Temperature");
-//        sc.getData().add(internalTemperatureSeries);        
-//        
-//        externalTemperatureSeries = new AreaChart.Series<Number, Number>();
-//        externalTemperatureSeries.setName("External Temperature");
-//        sc.getData().add(externalTemperatureSeries);
-//        
-//        internalHumiditySeries = new AreaChart.Series<Number, Number>();
-//        internalHumiditySeries.setName("Internal Humidity");
-//        sc.getData().add(internalHumiditySeries);
 
         stage.setScene(scene);
         
@@ -374,11 +294,9 @@ private volatile List<String> messages;
             }
         });
        
-        stage.setTitle("Serial Plotter");
+        stage.setTitle("onebeartoe apps");
         stage.setScene(scene);
         stage.show();
-        
-//        prepareTimeline();        
     }
     
     @Override

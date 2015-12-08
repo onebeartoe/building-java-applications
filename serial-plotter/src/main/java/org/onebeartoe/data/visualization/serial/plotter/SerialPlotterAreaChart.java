@@ -5,6 +5,7 @@ import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.Axis;
 
 /**
+ * @deprecated 
  * @author Roberto Marquez
  */
 public class SerialPlotterAreaChart extends AreaChart<Number, Number>
