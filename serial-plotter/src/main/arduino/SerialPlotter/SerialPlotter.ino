@@ -29,7 +29,6 @@ Fade LED pin moved to pin 5 (use of Timer2 disables PWM on pins 3 & 11).
 Tidied up inefficiencies since the last version. 
 */
 
-
 //  VARIABLES
 int pulsePin = 0;                 // Pulse Sensor purple wire connected to analog pin 0
 int blinkPin = 13;                // pin to blink led at each beat
@@ -47,6 +46,9 @@ volatile boolean QS = false;        // becomes true when Arduoino finds a beat.
 int lightSensorPin = 3; // analog pin 3
 
 unsigned long lightPreviousMillis = 0;
+unsigned long linearPotPreviousMillis = 0;
+
+int linearPotPin = 5;
 
 void setup()
 {
@@ -55,7 +57,7 @@ void setup()
   Serial.begin(9600);             // we agree to talk fast!
 //  Serial.begin(115200);             // we agree to talk fast!
 
-  Serial.println("hello");
+//  Serial.println("hello");
   
   interruptSetup();                 // sets up to read Pulse Sensor signal every 2mS 
    // UN-COMMENT THE NEXT LINE IF YOU ARE POWERING The Pulse Sensor AT LOW VOLTAGE, 
@@ -65,7 +67,11 @@ void setup()
 
 const long lightInterval = 1000 / 3;
 
+const long linearPotInterval = 333;
+
 int lightReading = 0;
+
+int linearPotReading = 0;
 
 unsigned long currentMillis;
 
@@ -93,6 +99,8 @@ void loop()
   ledFadeToBeat();
 
   lightSensor();
+
+  linearPot();
   
   delay(20);                             //  take a break
 }
@@ -113,19 +121,34 @@ void lightSensor()
     lightPreviousMillis = currentMillis;
 
     lightReading = analogRead(lightSensorPin);
-    sendDataToProcessing('L', lightReading);
-  }  
+    sendDataToProcessing("L", lightReading);
+  } 
 }
 
-void sendDataToProcessing(char symbol, int data )
+void linearPot()
 {
-    Serial.print(symbol);                // symbol prefix tells Processing what type of data is coming
-    Serial.print(':');
-    Serial.println(data);                // the data to send culminating in a carriage return
+  if (currentMillis - linearPotPreviousMillis >= linearPotInterval) 
+  {
+    // save the last time you blinked the LED
+    linearPotPreviousMillis = currentMillis;
+
+    linearPotReading = analogRead(linearPotPin);
+    sendDataToProcessing("LP", linearPotReading);
+  }
+}
+
+void sendDataToProcessing(String dataName, int data )
+{
+    String serialData = dataName + ":" + data;
+    
+    Serial.println(serialData);
+//    Serial.print(symbol);                // symbol prefix tells Processing what type of data is coming
+//    Serial.print(':');
+//    Serial.println(data);                // the data to send culminating in a carriage return
 }
 
 void sendPulseDataToProcessing(int data)
 {
-  sendDataToProcessing('P', data);   // send a pulse signal
+  sendDataToProcessing("P", data);   // send a pulse signal
 }
 
