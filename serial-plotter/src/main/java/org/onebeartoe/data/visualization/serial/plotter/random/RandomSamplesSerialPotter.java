@@ -120,32 +120,9 @@ public class RandomSamplesSerialPotter extends Application implements SerialPort
      * 
      */
     public void init()
-    {
-        initializeParameters();
-       
+    {       
         dataMap = new HashMap();
     }
-
-    private void initializeParameters()
-    {
-        // command line parameters are passed in the form '--name=value'
-        Parameters parameters = getParameters();
-        Map<String, String> namedParams = parameters.getNamed();
-        
-        String dataProviderName = namedParams.get(DATA_PROVIDER_KEY);
-        switch(dataProviderName)
-        {
-            case "random":
-            {
-                
-                break;
-            }
-            default:
-            {
-                
-            }
-        }
-    }    
     
     /**
      * Timeline gets called in the JavaFX Main thread

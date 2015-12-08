@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -370,93 +368,93 @@ private volatile List<String> messages;
         }        
     }
 
-    private class AddToQueueeeee implements Runnable 
-    {
-        @Override
-        public void run() 
-        {
-            try 
-            {   
-                ByteArrayOutputStream outstream = new ByteArrayOutputStream();
-                
-                List<String> sensorIds = new ArrayList();
-                sensorIds.add("S");
-                sensorIds.add("B");
-                sensorIds.add("Q");
-                sensorIds.add("P");
-                
-                sensorIds.stream()
-                        .forEach( s -> 
-                        {
-                            try
-                            {
-                                outstream.write(s.getBytes());                                                
-                                outstream.write(':');                                                
-                                float f = (new Random()).nextFloat();
-                                outstream.write( String.valueOf(f).getBytes() );
-                                outstream.write( System.lineSeparator().getBytes() );
-                            }
-                            catch (IOException ex)
-                            {
-                                logger.log(Level.SEVERE, null, ex);
-                            }
-                        });
-                
-                byte[] bytes = outstream.toByteArray();
-                ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-                
-                InputStream instream = bais;
-                InputStreamReader reader = new InputStreamReader(instream);
-                BufferedReader in = new BufferedReader(reader);
-
-                internalTemperatureMessageQueue.add(4);                
-
-                String inputLine;
-                
-                while ( (inputLine = in.readLine()) != null)
-                {
-                    String [] split = inputLine.split(":");
-                    
-                    String dataName = split[0];
-                    
-                    String s = split[1];                    
-                    double d  = Double.valueOf(s);
-
-                    switch(dataName)
-                    {
-                        case "S":
-                        {
-                            internalTemperatureMessageQueue.add(d);
-                            System.out.println(inputLine);
-                            
-                            break;
-                        }
-                        case "B":
-                        {
-                            externalTemperatureMessageQueue.add(d);
-                            System.out.println(inputLine);
-                            
-                            break;
-                        }
-                        case "Q":
-                        {
-                            internalHumidityMessageQueue.add(d);
-                            System.out.println(inputLine);
-                            
-                            break;
-                        }
-                    }
-                }
-                in.close();
-
-                Thread.sleep(dataRefreshDelay);
-                
-  //              executor.execute(this);
-            } 
-            catch(Exception ex) 
-            {
-                logger.log(Level.SEVERE, ex.getMessage(), ex);
-            }
-        }
-    }
+//    private class AddToQueueeeee implements Runnable 
+//    {
+//        @Override
+//        public void run() 
+//        {
+//            try 
+//            {   
+//                ByteArrayOutputStream outstream = new ByteArrayOutputStream();
+//                
+//                List<String> sensorIds = new ArrayList();
+//                sensorIds.add("S");
+//                sensorIds.add("B");
+//                sensorIds.add("Q");
+//                sensorIds.add("P");
+//                
+//                sensorIds.stream()
+//                        .forEach( s -> 
+//                        {
+//                            try
+//                            {
+//                                outstream.write(s.getBytes());                                                
+//                                outstream.write(':');                                                
+//                                float f = (new Random()).nextFloat();
+//                                outstream.write( String.valueOf(f).getBytes() );
+//                                outstream.write( System.lineSeparator().getBytes() );
+//                            }
+//                            catch (IOException ex)
+//                            {
+//                                logger.log(Level.SEVERE, null, ex);
+//                            }
+//                        });
+//                
+//                byte[] bytes = outstream.toByteArray();
+//                ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+//                
+//                InputStream instream = bais;
+//                InputStreamReader reader = new InputStreamReader(instream);
+//                BufferedReader in = new BufferedReader(reader);
+//
+//                internalTemperatureMessageQueue.add(4);                
+//
+//                String inputLine;
+//                
+//                while ( (inputLine = in.readLine()) != null)
+//                {
+//                    String [] split = inputLine.split(":");
+//                    
+//                    String dataName = split[0];
+//                    
+//                    String s = split[1];                    
+//                    double d  = Double.valueOf(s);
+//
+//                    switch(dataName)
+//                    {
+//                        case "S":
+//                        {
+//                            internalTemperatureMessageQueue.add(d);
+//                            System.out.println(inputLine);
+//                            
+//                            break;
+//                        }
+//                        case "B":
+//                        {
+//                            externalTemperatureMessageQueue.add(d);
+//                            System.out.println(inputLine);
+//                            
+//                            break;
+//                        }
+//                        case "Q":
+//                        {
+//                            internalHumidityMessageQueue.add(d);
+//                            System.out.println(inputLine);
+//                            
+//                            break;
+//                        }
+//                    }
+//                }
+//                in.close();
+//
+//                Thread.sleep(dataRefreshDelay);
+//                
+//  //              executor.execute(this);
+//            } 
+//            catch(Exception ex) 
+//            {
+//                logger.log(Level.SEVERE, ex.getMessage(), ex);
+//            }
+//        }
+//    }
 }
