@@ -5,9 +5,6 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -15,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,14 +62,7 @@ public class SerialPotter extends Application implements SerialPortEventListener
     private XYChart.Series externalTemperatureSeries;
     private ConcurrentLinkedQueue<Number> externalTemperatureMessageQueue = new ConcurrentLinkedQueue();
     
-//    private ExecutorService executor;
-    
-//    private AddToQueue addToQueue;
-    
     private int xSeriesData = 0;
-
-//TODO: is this still needed?    
-    private final long dataRefreshDelay = 2000;
     
     private long lastId = 0;
     
@@ -319,7 +308,6 @@ private volatile List<String> messages;
         ObservableList<Node> children = anchorPane.getChildren();
         
         children.add(sc);
-//        children.add(sc2);
 
         // internal temperature Series
         internalTemperatureSeries = new AreaChart.Series<Number, Number>();
@@ -334,8 +322,7 @@ private volatile List<String> messages;
         internalHumiditySeries.setName("Internal Humidity");
         sc.getData().add(internalHumiditySeries);
 
-        stage.setScene(scene);      
-//        stage.setScene( new Scene(sc));
+        stage.setScene(scene);
         
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() 
         {
@@ -351,10 +338,6 @@ private volatile List<String> messages;
         stage.setScene(scene);
         stage.show();
         
-//        executor = Executors.newCachedThreadPool();
-//        addToQueue = new AddToQueue();
-//        executor.execute(addToQueue);
-        
         prepareTimeline();        
     }
     
@@ -367,94 +350,4 @@ private volatile List<String> messages;
             serialPort.close();
         }        
     }
-
-//    private class AddToQueueeeee implements Runnable 
-//    {
-//        @Override
-//        public void run() 
-//        {
-//            try 
-//            {   
-//                ByteArrayOutputStream outstream = new ByteArrayOutputStream();
-//                
-//                List<String> sensorIds = new ArrayList();
-//                sensorIds.add("S");
-//                sensorIds.add("B");
-//                sensorIds.add("Q");
-//                sensorIds.add("P");
-//                
-//                sensorIds.stream()
-//                        .forEach( s -> 
-//                        {
-//                            try
-//                            {
-//                                outstream.write(s.getBytes());                                                
-//                                outstream.write(':');                                                
-//                                float f = (new Random()).nextFloat();
-//                                outstream.write( String.valueOf(f).getBytes() );
-//                                outstream.write( System.lineSeparator().getBytes() );
-//                            }
-//                            catch (IOException ex)
-//                            {
-//                                logger.log(Level.SEVERE, null, ex);
-//                            }
-//                        });
-//                
-//                byte[] bytes = outstream.toByteArray();
-//                ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-//                
-//                InputStream instream = bais;
-//                InputStreamReader reader = new InputStreamReader(instream);
-//                BufferedReader in = new BufferedReader(reader);
-//
-//                internalTemperatureMessageQueue.add(4);                
-//
-//                String inputLine;
-//                
-//                while ( (inputLine = in.readLine()) != null)
-//                {
-//                    String [] split = inputLine.split(":");
-//                    
-//                    String dataName = split[0];
-//                    
-//                    String s = split[1];                    
-//                    double d  = Double.valueOf(s);
-//
-//                    switch(dataName)
-//                    {
-//                        case "S":
-//                        {
-//                            internalTemperatureMessageQueue.add(d);
-//                            System.out.println(inputLine);
-//                            
-//                            break;
-//                        }
-//                        case "B":
-//                        {
-//                            externalTemperatureMessageQueue.add(d);
-//                            System.out.println(inputLine);
-//                            
-//                            break;
-//                        }
-//                        case "Q":
-//                        {
-//                            internalHumidityMessageQueue.add(d);
-//                            System.out.println(inputLine);
-//                            
-//                            break;
-//                        }
-//                    }
-//                }
-//                in.close();
-//
-//                Thread.sleep(dataRefreshDelay);
-//                
-//  //              executor.execute(this);
-//            } 
-//            catch(Exception ex) 
-//            {
-//                logger.log(Level.SEVERE, ex.getMessage(), ex);
-//            }
-//        }
-//    }
 }
