@@ -58,7 +58,7 @@ public class SerialPotter extends Application implements SerialPortEventListener
     
     private Map<String, DataChannel> dataMap;
     
-    private final String DATA_PROVIDER_KEY = "dataProvider";
+//    private final String DATA_PROVIDER_KEY = "dataProvider";
     
 private volatile List<String> messages;
 
@@ -284,10 +284,6 @@ private volatile List<String> messages;
     @Override
     public void stop()
     {
-        if (serialPort != null) 
-        {
-            serialPort.removeEventListener();
-            serialPort.close();
-        }        
+        SerialPorts.shutdown(serialPort);                
     }
 }
