@@ -58,7 +58,7 @@ public class RssFeedTest
         String key = "EXTREME_NOTIFICATIONS_RSSURL";
         String rssUrl = System.getenv(key);
         
-rssUrl = "http://vsnv02aw01396.int.carlsonwagonlit.com:9191/cruisecontrol/rss/e2_trunk_deploy";        
+rssUrl = "http://some.other.host/ci/builds";        
         
         System.out.println(" env - rssUrl: " + rssUrl);                
         assertNotNull(rssUrl);        

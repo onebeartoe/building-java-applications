@@ -18,6 +18,7 @@
     <name>onebeartoe-building-applications-parent</name>
 
     <modules>
+        <module>continuous-integration</module>
         <module>drinking-bird</module>
         <module>parent-child</module>
         <module>serial-plotter</module>
