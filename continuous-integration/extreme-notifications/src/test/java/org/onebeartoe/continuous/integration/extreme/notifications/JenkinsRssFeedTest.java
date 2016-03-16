@@ -1,36 +1,34 @@
+
 package org.onebeartoe.continuous.integration.extreme.notifications;
 
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.dom4j.DocumentFactory;
-import org.dom4j.Node;
-import org.dom4j.io.SAXReader;
-import org.dom4j.tree.DefaultElement;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.Ignore;
 
 /**
- * This test is for CruiseControl builds.
+ * This test is for the RSS feeds provided by Jenkins builds.
  * 
  * @author Roberto Marquez
  */
-public class RssFeedTest
+public class JenkinsRssFeedTest
 {
 
-    public RssFeedTest()
+    public JenkinsRssFeedTest()
     {
     }
 
@@ -54,15 +52,14 @@ public class RssFeedTest
     {
     }
 
-    @Ignore
     @Test
     public void builds() throws MalformedURLException, IOException, DocumentException
     {
         String key = "EXTREME_NOTIFICATIONS_RSSURL";
         String rssUrl = System.getenv(key);
-        
-rssUrl = "http://some.other.host/ci/builds";        
 
+rssUrl = "https://onebeartoe.ci.cloudbees.com/rssAll";
+rssUrl = "https://onebeartoe.ci.cloudbees.com/rssLatest";
         
         System.out.println(" env - rssUrl: " + rssUrl);                
         assertNotNull(rssUrl);        
@@ -73,51 +70,68 @@ rssUrl = "http://some.other.host/ci/builds";
         // checkbox selected and that environments variables are correctly set in the 
         // 'Properties Content' input box.
         
-        Map<String,String> uris = new HashMap<String,String>();
-//            uris.put( "y", "http://xml.weather.yahoo.com/ns/rss/1.0" );
-        
-        DocumentFactory factory = new DocumentFactory();
-        factory.setXPathNamespaceURIs( uris );
+        boolean ok = false;
 
-        SAXReader xmlReader = new SAXReader();
-        xmlReader.setDocumentFactory( factory );
-        
-        URLConnection conn = new URL(rssUrl).openConnection();
-        InputStream inputStream = conn.getInputStream();
-        
-        Document doc = xmlReader.read(inputStream);		
-        String title = doc.valueOf("/rss/channel/title");        
-        assertNotNull(title);
-        System.out.println("title: " + title);
-        
-        System.out.println("\nitems:");
-        String itemsPath = "/rss/channel/item";
-        List<DefaultElement> selectNodes = doc.selectNodes(itemsPath);
-        for(DefaultElement e : selectNodes)
+        try 
         {
-            System.out.println("\ne: " + e.toString() );
+            URL feedUrl = new URL(rssUrl);
+
+            SyndFeedInput input = new SyndFeedInput();
+            SyndFeed feed = input.build(new XmlReader(feedUrl));
             
-            String descriptionPath = "description";
-            Object o = e.selectObject(descriptionPath);
-            System.out.println("o: " + o.toString() );
+            List entries = feed.getEntries();
             
-            Node node = e.selectSingleNode(descriptionPath);
-            String n = node.getText();
-            System.out.println("n: " + n.toString() );
+//            List <String> titles = entries.stream()
+//                   .map( p -> p.getTitle() )
+//                   .collectforEach( p -> {});
+            
+// steams and lambda this baby
+            List<String> titles = new ArrayList();
+            for(Object e : entries)
+            {
+                SyndEntry se = (SyndEntry) e;
+                se.getAuthor();
+                String title = se.getTitle();
+                String published = se.getPublishedDate().toString();
+                
+                System.out.println(published);
+                System.out.println(title);
+                System.out.println();
+                
+                titles.add(title);
+            }
+
+            ok = true;
         }
-        
-        inputStream.close();
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+            System.out.println("ERROR: "+ex.getMessage());
+        }
+
+        if (!ok) 
+        {
+            System.out.println();
+            System.out.println("FeedReader reads and prints any RSS/Atom feed type.");
+            System.out.println("The first parameter must be the URL of the feed to read.");
+            System.out.println();
+        }
+        else
+        {
+            
+        }
     }
 
     @Test
     public void deploys()
     {
+/*        
         String key = "temp";
         String rssUrl = System.getenv(key);        
         System.out.println(" env -   PATH: " + rssUrl);        
         assertNotNull(rssUrl);
         assertNotSame(rssUrl, "");
-        
+  */      
         Map<String, String> env = System.getenv();
 //        for (String envName : env.keySet()) 
         {
