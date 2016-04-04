@@ -1,0 +1,11 @@
+
+User Story: Light Strip for Build Stati
+
+As a developer, I would like a to have LED indicators for project build stati, so that I have an 
+idea of the build heath just by looking over at the extreme notification center.
+
+Condition of Acceptance
+
+An app is available to periodically check the RSS feeds of the builds and 
+the app communicates with the Arduino to update the LED strip status and 
+the LED strip indicates the build status with the corresponding color.
