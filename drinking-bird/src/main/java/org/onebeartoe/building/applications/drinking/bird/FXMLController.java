@@ -22,7 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
-public class FXMLController implements Initializable 
+public class FXMLController implements Initializable
 {    
     @FXML
     private Label label;
@@ -154,5 +154,5 @@ public class FXMLController implements Initializable
                 robot.mouseRelease(InputEvent.BUTTON1_MASK);
             }
         }
-    }    
+    }
 }

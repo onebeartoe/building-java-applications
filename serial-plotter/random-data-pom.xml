@@ -3,24 +3,34 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     
     <modelVersion>4.0.0</modelVersion>
+    
 
-    <groupId>org.onebeartoe.building.applications</groupId>
-    <artifactId>onebeartoe-building-applications-drinking-bird</artifactId>
+
+    <groupId>org.onebeartoe.data.visualization.serial.plotter</groupId>
+    <artifactId>serial-plotter-random</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     
     <packaging>jar</packaging>
 
-    <name>onebeartoe-building-applications-drinking-bird</name>
+    <name>onebeartoe-building-applications-serial-plotter-random</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mainClass>org.onebeartoe.building.applications.drinking.bird.MainApp</mainClass>
+        <mainClass>org.onebeartoe.data.visualization.serial.plotter.random.RandomSamplesSerialPotter</mainClass>
     </properties>
 
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
-        <name>Your Organisation</name>
+        <name>e</name>
     </organization>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.onebeartoe.data.visualization.serial.plotter</groupId>
+            <artifactId>serial-plotter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -88,8 +98,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <compilerArguments>
                         <bootclasspath>${sun.boot.class.path}${path.separator}${java.home}/lib/jfxrt.jar</bootclasspath>
                     </compilerArguments>
