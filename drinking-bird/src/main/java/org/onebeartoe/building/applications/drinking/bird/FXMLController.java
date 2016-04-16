@@ -79,6 +79,7 @@ public class FXMLController implements Initializable
             Date firstTime = new Date();
             clickTask = new ClickTask();
 
+            //TODO: Use the Duration class that was introduced in Java 8.
             final long period = 1000 * 20;
             timer.schedule(clickTask, firstTime, period);
         }
