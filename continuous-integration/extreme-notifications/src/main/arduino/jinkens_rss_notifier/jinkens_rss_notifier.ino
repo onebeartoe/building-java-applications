@@ -1,4 +1,22 @@
 
+/**
+ * The project uses an Arduino Uno.
+ * 
+ * To setup the board in the Arduino IDE use these configurations under the Tools menu:
+ * 
+Tools
+
+ Board -> Arduino/Genuino Uno
+
+  Mac OS X
+
+    Port -> /dev/cu.usbmodem411
+
+    Programmer -> Arduino ISP 
+ * 
+ * 
+ */
+
 char inData[64];
 char inChar=-1;
 
