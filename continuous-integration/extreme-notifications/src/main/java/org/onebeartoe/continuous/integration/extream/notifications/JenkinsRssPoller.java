@@ -17,6 +17,14 @@ import org.onebeartoe.io.serial.SerialPorts;
 import org.onebeartoe.system.Sleeper;
 
 /**
+ * Start the app with this command:
+ * 
+ *      java -Djava.library.path="c:\opt\rxtx" -jar target/serial-plotter-0.0.1-SNAPSHOT.jar
+ * 
+ * I found a 64bit version of rxtx for Windows here:
+ * 
+ *      http://www.openremote.org/display/forums/Zwave+rxtxSerial+dll+Can't+load+IA+32bit
+ * 
  * @author Roberto Marquez
  */
 public class JenkinsRssPoller implements SerialPortEventListener
