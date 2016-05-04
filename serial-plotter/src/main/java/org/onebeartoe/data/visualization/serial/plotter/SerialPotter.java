@@ -58,9 +58,8 @@ public class SerialPotter extends Application implements SerialPortEventListener
     
     private Map<String, DataChannel> dataMap;
     
-//    private final String DATA_PROVIDER_KEY = "dataProvider";
     
-private volatile List<String> messages;
+    private volatile List<String> messages;
 
     private BufferedReader input;
 
@@ -131,7 +130,7 @@ private volatile List<String> messages;
         try
         {
             System.out.println("obtaining serial port");
-            serialPort = SerialPorts.get();                        
+            serialPort = SerialPorts.get("COM17");
             System.out.println("serial port obtained");
             Sleeper.sleepo(2000);
             

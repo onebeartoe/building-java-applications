@@ -1,4 +1,10 @@
 
+/**
+ * This sketch is intened for the Arduino Uno.
+ * 
+ *    
+ */
+
 #include <Adafruit_NeoPixel.h>
 
 #define PIN 6
@@ -42,9 +48,9 @@ void loop()
 {
     byte numBytesAvailable= Serial.available();
 
-    // if there is something to read
     if (numBytesAvailable > 0)
     {    
+        // there is something to read from the serial connection
         String s = Serial.readString();
 
         Serial.println();
@@ -55,9 +61,10 @@ void loop()
         Serial.print("int: ");
         Serial.println(i);
 
-        if(i > 0)
+        if(i >= 0)
         {
             uint32_t color = strip.Color(0, 155, 0);
+            
             strip.setPixelColor(i, color);
             strip.show();
 
