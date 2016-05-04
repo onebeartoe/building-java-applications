@@ -12,7 +12,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.dom4j.DocumentException;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -93,9 +95,11 @@ rssUrl = "https://onebeartoe.ci.cloudbees.com/rssLatest";
                 se.getAuthor();
                 String title = se.getTitle();
                 String published = se.getPublishedDate().toString();
+                List links = se.getLinks();
                 
                 System.out.println(published);
                 System.out.println(title);
+                links.forEach(System.out::println);
                 System.out.println();
                 
                 titles.add(title);
