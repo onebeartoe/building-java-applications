@@ -25,6 +25,23 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN, NEO_GRB + NEO_K
 // and minimize distance between Arduino and first pixel.  Avoid connecting
 // on a live circuit...if you must, connect GND first.
 
+/**
+ * 
+ * To setup the board in the Arduino IDE use these configurations under the Tools menu:
+ * 
+Tools
+
+ Board -> Arduino/Genuino Uno
+
+  Mac OS X
+
+    Port -> /dev/cu.usbmodem411
+
+    Programmer -> Arduino ISP 
+ * 
+ * 
+ */
+
 char inData[64];
 char inChar=-1;
 
