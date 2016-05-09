@@ -1,14 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.onebeartoe.continuous.integration.extream.notifications;
+
+import java.util.List;
 
 /**
  *
- * @author URHM020
+ * @author Roberto Marquez
  */
-public class JenkinsRssFeed {
-    
+public class JenkinsRssFeed 
+{    
+    private List<JenkinsJob> jobs;
+
+    public List<JenkinsJob> getJobs() 
+    {
+        return jobs;
+    }
+
+    public void setJobs(List<JenkinsJob> jobs) 
+    {
+        this.jobs = jobs;
+    }
 }

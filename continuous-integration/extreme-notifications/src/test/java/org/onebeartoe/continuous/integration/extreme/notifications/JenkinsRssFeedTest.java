@@ -21,6 +21,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.onebeartoe.continuous.integration.extream.notifications.JenkinsRssPoller;
 
 /**
  * This test is for the RSS feeds provided by Jenkins builds.
@@ -60,8 +61,7 @@ public class JenkinsRssFeedTest
         String key = "EXTREME_NOTIFICATIONS_RSSURL";
         String rssUrl = System.getenv(key);
 
-rssUrl = "https://onebeartoe.ci.cloudbees.com/rssAll";
-rssUrl = "https://onebeartoe.ci.cloudbees.com/rssLatest";
+        rssUrl = JenkinsRssPoller.rssUrl;
         
         System.out.println(" env - rssUrl: " + rssUrl);                
         assertNotNull(rssUrl);        
@@ -99,7 +99,7 @@ rssUrl = "https://onebeartoe.ci.cloudbees.com/rssLatest";
                 
                 System.out.println(published);
                 System.out.println(title);
-                links.forEach(System.out::println);
+//                links.forEach(System.out::println);
                 System.out.println();
                 
                 titles.add(title);
