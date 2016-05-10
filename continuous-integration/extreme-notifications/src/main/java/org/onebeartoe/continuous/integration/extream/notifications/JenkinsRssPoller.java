@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -129,8 +130,15 @@ public class JenkinsRssPoller implements SerialPortEventListener
             try 
             {
                 String inputLine = input.readLine();
-
-                System.out.println("\t\t\t\t\t" + "received: " + inputLine);
+                
+                if(inputLine.trim().equals(""))
+                {
+                    System.out.println();
+                }
+                else
+                {
+                    System.out.println("\t\t\t\t\t" + "received: " + inputLine);
+                }
             } 
             catch (Exception e) 
             {
@@ -152,6 +160,8 @@ public class JenkinsRssPoller implements SerialPortEventListener
     
     private void updateNeopixels(List<JenkinsJob> jobs)
     {
+        List<String> unknownKeys = new ArrayList();
+        
         for(JenkinsJob jj : jobs)
         {
             String key = jj.getJobName();
@@ -159,7 +169,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
             
             if(neopixelId == null)
             {
-                System.out.println("There is no pixel id for " + key);
+                unknownKeys.add(key);
             }
             else
             {
@@ -172,6 +182,10 @@ public class JenkinsRssPoller implements SerialPortEventListener
                 Sleeper.sleepo(iterationDelay);   
             }
         }
+        
+        System.out.print("There is no pixel id for: ");
+        unknownKeys.forEach(System.out::print);
+        System.out.println();
     }
     
     class PollerTask extends TimerTask
