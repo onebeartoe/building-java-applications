@@ -5,6 +5,7 @@ import com.sun.syndication.io.FeedException;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
+import java.awt.Color;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -75,6 +76,38 @@ public class JenkinsRssPoller implements SerialPortEventListener
         mapJobsToNeopixels();
     }
     
+    private String buildArduinoMessage(JenkinsJob job)
+    {
+        StringBuilder message = new StringBuilder();
+        
+        String threeDigitFormat = "%03d";
+        
+        String neopixelId = String.format(threeDigitFormat, job.getNeopixelIndex());
+        
+        Color c = job.getJobStatus().getColor();
+        
+        int red = c.getRed();
+        int green = c.getGreen();
+        int blue = c.getBlue();
+        
+        String r = String.format(threeDigitFormat, red);
+        String g = String.format(threeDigitFormat, green);
+        String b = String.format(threeDigitFormat, blue);
+                
+        message.append(neopixelId);
+        message.append(":");
+        
+        message.append(r);
+        message.append(":");
+        
+        message.append(g);
+        message.append(":");
+        
+        message.append(b);
+        
+        return message.toString();
+    }
+    
     private void initializeSerialPort() throws Exception
     {
         System.out.println("obtaining serial port");
@@ -119,7 +152,15 @@ public class JenkinsRssPoller implements SerialPortEventListener
         return jobs;
     }
     
-/**
+    private void sendArduinoMessage(JenkinsJob job)
+    {
+        String message = buildArduinoMessage(job);
+
+        output.println(message);
+        output.flush();
+    }
+    
+    /**
      * Handle an event on the serial port. Read the data and print it.
      */
     @Override
@@ -137,7 +178,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
                 }
                 else
                 {
-                    System.out.println("\t\t\t\t\t" + "received: " + inputLine);
+                    System.out.println("\t\t\t\t\t" + "received from Arduino: " + inputLine);
                 }
             } 
             catch (Exception e) 
@@ -165,17 +206,19 @@ public class JenkinsRssPoller implements SerialPortEventListener
         for(JenkinsJob jj : jobs)
         {
             String key = jj.getJobName();
-            Integer neopixelId = jobsToNeopixels.get(key);
+            Integer id = jobsToNeopixels.get(key);
             
-            if(neopixelId == null)
+            if(id == null)
             {
                 unknownKeys.add(key);
             }
             else
             {
-                System.out.println("\t\t\t\t\t" + "Sending data for " + key + " (neopixel " + neopixelId + ")");
-                output.println(neopixelId);
-                output.flush();                
+                System.out.println("\t\t\t\t\t" + "Sending data for " + key + " (neopixel " + id + ")");
+                
+                jj.setNeopixelIndex(id);
+                
+                sendArduinoMessage(jj);
             
                 // Give the Arduino time to receive the data before sending the next one.
                 long iterationDelay = Duration.ofSeconds(4).toMillis();            
@@ -184,6 +227,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
         }
         
         System.out.print("There is no pixel id for: ");
+// TODO: Fix this so that it has a space character between unknown keys.        
         unknownKeys.forEach(System.out::print);
         System.out.println();
     }

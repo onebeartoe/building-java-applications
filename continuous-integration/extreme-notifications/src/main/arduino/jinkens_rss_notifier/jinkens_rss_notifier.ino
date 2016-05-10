@@ -61,6 +61,21 @@ void setup()
   strip.show(); // Initialize all pixels to 'off'
 }
 
+/**
+ * this is the loops over and over.
+ * 
+ * If there is data available on the Serial buffer, then it parses the line as follows:
+ * 
+ * sample input:
+ *           1 
+ * 01234567890123456789
+ * 002:000:155:000    
+ * 
+ * 0-2 -> neopixel index on the stip
+ *     4-6 -> red component (0-255)
+ *         8-10 -> green component (0-225)  
+ *             12-14 -> blue component (0-225)
+ */
 void loop() 
 {
     byte numBytesAvailable= Serial.available();
@@ -80,12 +95,23 @@ void loop()
 
         if(i >= 0)
         {
-            uint32_t color = strip.Color(0, 155, 0);
+            // we have a valid index
+
+            int r = s.substring(4,7).toInt();
+            int g = s.substring(8, 11).toInt();
+            int b = s.substring(12, 15).toInt();
+            
+            uint32_t color = strip.Color(r, g, b);
             
             strip.setPixelColor(i, color);
             strip.show();
 
-            Serial.println("color set");
+            Serial.print("color set: ");
+            Serial.print(r);
+            Serial.print(", ");
+            Serial.print(g);
+            Serial.print(", ");
+            Serial.println(b);
         }
     }
 }

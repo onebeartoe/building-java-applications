@@ -17,6 +17,18 @@ public class JenkinsJob
     
     private JenkinsJobStatus jobStatus;
     
+    private int neopixelIndex;
+
+    public int getNeopixelIndex() 
+    {
+        return neopixelIndex;
+    }
+
+    public void setNeopixelIndex(int neopixelIndex) 
+    {
+        this.neopixelIndex = neopixelIndex;
+    }
+    
     public String getJobName() {
         return jobName;
     }
