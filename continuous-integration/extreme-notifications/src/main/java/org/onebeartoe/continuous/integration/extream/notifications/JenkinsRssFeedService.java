@@ -1,6 +1,8 @@
 
 package org.onebeartoe.continuous.integration.extream.notifications;
 
+import com.sun.syndication.io.FeedException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -10,5 +12,5 @@ import java.util.List;
  */
 public interface JenkinsRssFeedService
 {
-    List<JenkinsJob> getJobs(URL rssUrl);
+    List<JenkinsJob> getJobs(URL rssUrl) throws FeedException, IOException;
 }

@@ -3,10 +3,13 @@ package org.onebeartoe.continuous.integration.extream.notifications;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,31 +20,33 @@ public class HttpJenkinsRssFeedService implements JenkinsRssFeedService
 {
 
     @Override
-    public List<JenkinsJob> getJobs(URL rssUrl) 
+    public List<JenkinsJob> getJobs(URL rssUrl) throws IOException, FeedException 
     {
-        URL feedUrl = new URL(rssUrl);
-
         SyndFeedInput input = new SyndFeedInput();
-        SyndFeed feed = input.build(new XmlReader(feedUrl));
+        XmlReader xmlReader = new XmlReader(rssUrl);
+        SyndFeed feed = input.build(xmlReader);
 
         List entries = feed.getEntries();
 
-        List<String> titles = new ArrayList();
+        List<JenkinsJob> jobs = new ArrayList();
         for(Object e : entries)
         {
             SyndEntry se = (SyndEntry) e;
             se.getAuthor();
             String title = se.getTitle();
-            String published = se.getPublishedDate().toString();
-
-            System.out.println(published);
+            JenkinsJob job = JenkinsJob.fromRssTitle(title);
+            Date jobRunDate = se.getPublishedDate();
+            job.setJobRunDate(jobRunDate);
+            
+//            System.out.println(jobRunDate);
             System.out.println(title);
-            System.out.println();
+//            System.out.println();
 
-            titles.add(title);
-        }        
+            jobs.add(job);
+        }
+        System.out.println();
         
-        return 
+        return jobs;
     }
     
 }

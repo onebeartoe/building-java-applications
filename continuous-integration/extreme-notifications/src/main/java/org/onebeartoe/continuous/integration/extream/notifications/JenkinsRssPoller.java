@@ -1,11 +1,13 @@
 
 package org.onebeartoe.continuous.integration.extream.notifications;
 
+import com.sun.syndication.io.FeedException;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -26,19 +28,22 @@ import org.onebeartoe.io.serial.SerialPorts;
 import org.onebeartoe.system.Sleeper;
 
 /**
- * Start the app with this command:
- * 
- *      java -Djava.library.path="c:\opt\rxtx" -jar target/serial-plotter-0.0.1-SNAPSHOT.jar
  * 
  * I found a 64bit version of rxtx for Windows here:
  * 
  *      http://www.openremote.org/display/forums/Zwave+rxtxSerial+dll+Can't+load+IA+32bit
  * 
+ * Start the app with this command:
+ * 
+ *      java -Djava.library.path="C:\home\world\installs\software-development\java\ch-rxtx-2.2-20081207-win-x64\ch-rxtx-2.2-20081207-win-x64" -jar continuous-integration/extreme-notifications/target/extreme-notifications-1.0-SNAPSHOT-jar-with-dependencies.jar
+ * 
+ * To run/debug from Netbeans, add the -Djava.library.path="C:\home\......" path above to the VM arguments via 'Right Click Project' -> Properties -> Run.
+ * 
  * @author Roberto Marquez
  */
 public class JenkinsRssPoller implements SerialPortEventListener
 {
-    private final long delay;
+    private final long POLL_DELAY;
     
     private BufferedReader input;
     
@@ -59,7 +64,8 @@ public class JenkinsRssPoller implements SerialPortEventListener
         String className = getClass().getName();
         logger = Logger.getLogger(className);
         
-        delay = Duration.ofSeconds(30).toMillis();
+//        POLL_DELAY = Duration.ofSeconds(30).toMillis();
+        POLL_DELAY = Duration.ofMinutes(5).toMillis();
         
         rssService = new HttpJenkinsRssFeedService();
         
@@ -99,11 +105,11 @@ public class JenkinsRssPoller implements SerialPortEventListener
 
         jobsToNeopixels.put("building-java-applications", 0);
         jobsToNeopixels.put("electronic-signs",           1);
-        jobsToNeopixels.put("java-libraries",             2);
+        jobsToNeopixels.put("electronics",             2);
         jobsToNeopixels.put("pixel",                      3);
     }
 
-    private List<JenkinsJob> obtainJobs() throws MalformedURLException
+    private List<JenkinsJob> obtainJobs() throws MalformedURLException, FeedException, IOException
     {
         URL url = new URL(rssUrl);
         
@@ -124,7 +130,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
             {
                 String inputLine = input.readLine();
 
-                System.out.println("received: " + inputLine);
+                System.out.println("\t\t\t\t\t" + "received: " + inputLine);
             } 
             catch (Exception e) 
             {
@@ -141,7 +147,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
         
         Date firstTime = new Date();
         
-        timer.schedule(pollerTask, firstTime, delay);
+        timer.schedule(pollerTask, firstTime, POLL_DELAY);
     }
     
     private void updateNeopixels(List<JenkinsJob> jobs)
@@ -153,11 +159,11 @@ public class JenkinsRssPoller implements SerialPortEventListener
             
             if(neopixelId == null)
             {
-                System.out.println("There is no pixel id for " + neopixelId);
+                System.out.println("There is no pixel id for " + key);
             }
             else
             {
-                System.out.println("Sending data for neopixel " + neopixelId);
+                System.out.println("\t\t\t\t\t" + "Sending data for " + key + " (neopixel " + neopixelId + ")");
                 output.println(neopixelId);
                 output.flush();                
             
@@ -173,7 +179,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
         @Override
         public void run() 
         {
-            System.out.println("I go off every " + delay + " millieseconds");
+            System.out.println("I go off every " + POLL_DELAY + " millieseconds");
 
             List<JenkinsJob> jobs;
             try 
@@ -181,9 +187,9 @@ public class JenkinsRssPoller implements SerialPortEventListener
                 jobs = obtainJobs();
                 updateNeopixels(jobs);
             } 
-            catch (MalformedURLException ex) 
+            catch (FeedException | IOException ex) 
             {
-                String message = "The URL is malformed.";
+                String message = "An error occured while obtaining the Jenkins jobs.";
                 logger.log(Level.SEVERE, message, ex);
             }
         }
