@@ -112,6 +112,8 @@ public class JenkinsRssPoller implements SerialPortEventListener
     {
         System.out.println("obtaining serial port");
         SerialPort serialPort = SerialPorts.get("COM7");
+        
+        System.out.println();
         System.out.println("serial port obtained");
         Sleeper.sleepo(2000);
 
@@ -226,9 +228,13 @@ public class JenkinsRssPoller implements SerialPortEventListener
             }
         }
         
+        System.out.println();
         System.out.print("There is no pixel id for: ");
-// TODO: Fix this so that it has a space character between unknown keys.        
-        unknownKeys.forEach(System.out::print);
+        unknownKeys.forEach( (s) ->
+        {
+            System.out.print(s);
+            System.out.print(", ");        
+        });
         System.out.println();
     }
     
@@ -237,7 +243,8 @@ public class JenkinsRssPoller implements SerialPortEventListener
         @Override
         public void run() 
         {
-            System.out.println("I go off every " + POLL_DELAY + " millieseconds");
+            System.out.println();
+            System.out.println("The Jenkins RSS Poller goes off every " + POLL_DELAY + " millieseconds.");
 
             List<JenkinsJob> jobs;
             try 

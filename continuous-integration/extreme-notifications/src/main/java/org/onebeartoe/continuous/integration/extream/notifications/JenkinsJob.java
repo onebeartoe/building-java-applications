@@ -17,8 +17,18 @@ public class JenkinsJob
     
     private JenkinsJobStatus jobStatus;
     
+    private String jobStatusDescription;
+    
     private int neopixelIndex;
 
+    public String getJobStatusDescription() {
+        return jobStatusDescription;
+    }
+
+    public void setJobStatusDescription(String jobStatusDescription) {
+        this.jobStatusDescription = jobStatusDescription;
+    }    
+    
     public int getNeopixelIndex() 
     {
         return neopixelIndex;
@@ -62,6 +72,7 @@ public class JenkinsJob
     public void setJobStatus(String jobStatus)
     {
         String enumName = jobStatus.toUpperCase();
+        enumName = enumName.replaceAll(" ", "_");
         
         try
         {
@@ -69,12 +80,43 @@ public class JenkinsJob
         }
         catch(IllegalArgumentException e)
         {
-            System.err.println("An error occured while loading status enum for: " + enumName);
+            // ignore error and check for status name variants
         }
         
         if(this.jobStatus == null)
         {
-            this.jobStatus = JenkinsJobStatus.UNKOWN;
+            switch(enumName)
+            {
+                case "BROKEN_FOR_A_LONG_TIME":
+                {
+                    // fall through to the FAILING case
+                }
+                case "BROKEN_SINCE_THIS_BUILD":
+                {
+                    this.jobStatus = JenkinsJobStatus.FAILING;
+                    
+                    break;
+                }
+                case "BACK_TO_NORMAL":
+                {
+                    this.jobStatus = JenkinsJobStatus.STABLE;
+                    
+                    break;
+                }
+                case "1_TEST_IS_STILL_FAILING":
+                {
+                    this.jobStatus = JenkinsJobStatus.UNSTABLE;
+                    
+                    break;
+                }
+                default:
+                {
+                    String errorMessage = "An unknown status was encountered: " + jobStatus;
+                    System.err.println(errorMessage);
+                    
+                    this.jobStatus = JenkinsJobStatus.UNKOWN;
+                }
+            }
         }
     }
 
@@ -95,6 +137,7 @@ public class JenkinsJob
         int startIndex = openParenIndex + 1;
         int closeParenIndex = rssTitle.lastIndexOf(')');
         String status = rssTitle.substring(startIndex, closeParenIndex);
+        job.setJobStatusDescription(status);
         job.setJobStatus(status);
         
         return job;

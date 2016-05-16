@@ -39,7 +39,7 @@ public class HttpJenkinsRssFeedService implements JenkinsRssFeedService
             job.setJobRunDate(jobRunDate);
             
 //            System.out.println(jobRunDate);
-            System.out.println(title);
+//            System.out.println(title);
 //            System.out.println();
 
             jobs.add(job);
