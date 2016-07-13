@@ -16,7 +16,7 @@
     
     <packaging>pom</packaging>
     
-    <name>onebeartoe-continuous-integration</name>
+    <name>onebeartoe-building-applications-continuous-integration</name>
     
     <modules>
         <module>extreme-notifications</module>

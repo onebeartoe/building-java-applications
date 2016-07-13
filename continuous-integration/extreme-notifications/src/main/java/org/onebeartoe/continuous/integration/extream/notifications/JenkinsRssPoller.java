@@ -61,17 +61,17 @@ public class JenkinsRssPoller implements SerialPortEventListener
     
     private Logger logger;
     
-    public JenkinsRssPoller() throws Exception
+    public JenkinsRssPoller(String port) throws Exception
     {
         String className = getClass().getName();
         logger = Logger.getLogger(className);
         
-//        POLL_DELAY = Duration.ofSeconds(30).toMillis();
-        POLL_DELAY = Duration.ofMinutes(5).toMillis();
+        POLL_DELAY = Duration.ofSeconds(30).toMillis();
+//        POLL_DELAY = Duration.ofMinutes(5).toMillis();
         
         rssService = new HttpJenkinsRssFeedService();
         
-        initializeSerialPort();
+        initializeSerialPort(port);
         
         mapJobsToNeopixels();
     }
@@ -108,10 +108,10 @@ public class JenkinsRssPoller implements SerialPortEventListener
         return message.toString();
     }
     
-    private void initializeSerialPort() throws Exception
+    private void initializeSerialPort(String port) throws Exception
     {
         System.out.println("obtaining serial port");
-        SerialPort serialPort = SerialPorts.get("COM7");
+        SerialPort serialPort = SerialPorts.get(port);
         
         System.out.println();
         System.out.println("serial port obtained");
@@ -128,9 +128,26 @@ public class JenkinsRssPoller implements SerialPortEventListener
         serialPort.addEventListener(this);        
     }
     
+    /**
+     * 
+     * @param args The first argument is either the path or name of the serial 
+     * communication port.
+     * 
+     * @throws Exception 
+     */
     public static void main (String [] args) throws Exception
     {
-        JenkinsRssPoller poller = new JenkinsRssPoller();
+        // The app uses the following as the defalut port descriptor on a MS 
+        // Windows environment.  On Linux environments, use a path to the serial 
+        // communication port.
+        String port = "COM7";
+        
+        if(args.length > 0)
+        {
+            port = args[0];
+        }
+        
+        JenkinsRssPoller poller = new JenkinsRssPoller(port);
         
         poller.start();
     }

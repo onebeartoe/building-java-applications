@@ -14,9 +14,13 @@
     
     <packaging>jar</packaging>
     
-    <name>onebeartoe-continuous-integration-utility</name>
+    <name>onebeartoe-building-applications-continuous-integration-utility</name>
     
     <dependencies>
-
+        <dependency>
+            <groupId>org.onebeartoe</groupId>
+            <artifactId>onebeartoe-system</artifactId>  
+            <version>1.0-SNAPSHOT</version>            
+        </dependency>
     </dependencies>
 </project>
