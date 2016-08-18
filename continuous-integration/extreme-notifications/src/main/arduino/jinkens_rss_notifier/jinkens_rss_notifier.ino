@@ -115,10 +115,10 @@ void loop()
             int g = s.substring(12, 15).toInt();
             int b = s.substring(16, 19).toInt();
             
-            uint32_t color = strip0.Color(r, g, b);
+            uint32_t color = strips[stripIndex].Color(r, g, b);
             
-            strip0.setPixelColor(ledIndex, color);
-            strip0.show();
+            strips[stripIndex].setPixelColor(ledIndex, color);
+            strips[stripIndex].show();
 
             Serial.print("color set: ");
             Serial.print(r);
