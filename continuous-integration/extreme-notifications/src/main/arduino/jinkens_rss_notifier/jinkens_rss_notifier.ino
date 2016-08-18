@@ -7,9 +7,11 @@
 
 #include <Adafruit_NeoPixel.h>
 
-#define PIN 6
+// these define the Arduino digial pins the connect to the Neopixel stips data line.
+#define PIN1 6
+#define PIN2 8
 
-#define NEOPIXEL_COUNT 4
+#define NEOPIXEL_COUNT 30
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = Arduino pin number (most are valid)
@@ -18,7 +20,11 @@
 //   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
 //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel strip0 = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN1, NEO_GRB + NEO_KHZ800);
+
+Adafruit_NeoPixel strip1 = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN2, NEO_GRB + NEO_KHZ800);
+
+Adafruit_NeoPixel strips[] = {strip0, strip1};
 
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
@@ -50,15 +56,19 @@ void setup()
    Serial.begin(9600);
    Serial.println("Hello Jenkins RSS notifier world!\n");
 
-  strip.begin();
+  strip0.begin();
+  strip1.begin();
 
   for(int p=0; p<NEOPIXEL_COUNT; p++)
   {
       // turn off all neopixels
-      strip.setPixelColor(p, 0);   
+      strip0.setPixelColor(p, 0);
+      strip1.setPixelColor(p, 0);
   }
   
-  strip.show(); // Initialize all pixels to 'off'
+  // Initialize all pixels to 'off'
+  strip0.show(); 
+  strip1.show();
 }
 
 /**
@@ -89,22 +99,26 @@ void loop()
         Serial.print("Arduino Received: ");
         Serial.println(s);
 
-        const long i = s.toInt();
-        Serial.print("int: ");
-        Serial.println(i);
+        const long stripIndex = s.toInt();
+        Serial.print("strip index: ");
+        Serial.println(stripIndex);
 
-        if(i >= 0)
+        if(stripIndex >= 0)
         {
-            // we have a valid index
+            // the strip index is valid
 
-            int r = s.substring(4,7).toInt();
-            int g = s.substring(8, 11).toInt();
-            int b = s.substring(12, 15).toInt();
+            int ledIndex = s.substring(4,7).toInt();
+            Serial.print("LED index: ");
+            Serial.println(ledIndex);
+        
+            int r = s.substring(8, 11).toInt();
+            int g = s.substring(12, 15).toInt();
+            int b = s.substring(16, 19).toInt();
             
-            uint32_t color = strip.Color(r, g, b);
+            uint32_t color = strip0.Color(r, g, b);
             
-            strip.setPixelColor(i, color);
-            strip.show();
+            strip0.setPixelColor(ledIndex, color);
+            strip0.show();
 
             Serial.print("color set: ");
             Serial.print(r);

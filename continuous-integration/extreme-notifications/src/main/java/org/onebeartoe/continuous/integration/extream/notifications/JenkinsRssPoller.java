@@ -96,14 +96,14 @@ public class JenkinsRssPoller implements SerialPortEventListener
         
         loadConfiguration();
     }
-    
+
     private String buildArduinoMessage(int strip, JenkinsJob job)
-    {
-        StringBuilder message = new StringBuilder();
-        
+    {        
         final String threeDigitFormat = "%03d";
+
+        String stripIndex = String.format(threeDigitFormat, strip);
         
-        String neopixelId = String.format(threeDigitFormat, job.getNeopixelIndex());
+        String neopixelIndex = String.format(threeDigitFormat, job.getNeopixelIndex());
         
         Color c = job.getJobStatus().getColor();
         
@@ -114,8 +114,12 @@ public class JenkinsRssPoller implements SerialPortEventListener
         String r = String.format(threeDigitFormat, red);
         String g = String.format(threeDigitFormat, green);
         String b = String.format(threeDigitFormat, blue);
-                
-        message.append(neopixelId);
+     
+        StringBuilder message = new StringBuilder();
+        message.append(stripIndex);
+        message.append(":");
+        
+        message.append(neopixelIndex);
         message.append(":");
         
         message.append(r);
