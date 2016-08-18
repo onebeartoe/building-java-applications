@@ -21,11 +21,13 @@ public class JenkinsJob
     
     private int neopixelIndex;
 
-    public String getJobStatusDescription() {
+    public String getJobStatusDescription() 
+    {
         return jobStatusDescription;
     }
 
-    public void setJobStatusDescription(String jobStatusDescription) {
+    public void setJobStatusDescription(String jobStatusDescription) 
+    {
         this.jobStatusDescription = jobStatusDescription;
     }    
     
@@ -39,7 +41,8 @@ public class JenkinsJob
         this.neopixelIndex = neopixelIndex;
     }
     
-    public String getJobName() {
+    public String getJobName() 
+    {
         return jobName;
     }
 

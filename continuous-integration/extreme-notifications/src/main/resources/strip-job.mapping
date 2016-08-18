@@ -1,0 +1,19 @@
+
+# Lines staring with the hash character are comments in this file.
+# Each non-blank or comment line is expected to have this format
+# [LED strip #]:[LED index]:[Jenkins job name]
+
+# For example,
+# 000:000:build-webapp
+# 000:001:deploy-webapp
+#
+# 001:000:build-util
+# 001:001:test-util
+# 001:002:deploy-util
+# means that LED strip 0 has 2 indicators (build-webapp on LED 0 and deploy-web-app on LED 1 and
+#            LED strip 1 has 3 indicators (build-util on LED 0, test-util on LED 1, and deploy-util on LED 2.
+
+000:000:building-java-applications
+000:001:electronic-signs
+#000:002:electronics
+000:003:pixel

@@ -8,6 +8,9 @@ import gnu.io.SerialPortEventListener;
 import java.awt.Color;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,6 +28,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.onebeartoe.io.TextFileReader;
+import org.onebeartoe.io.buffered.BufferedTextFileReader;
 
 import org.onebeartoe.io.serial.SerialPorts;
 import org.onebeartoe.system.Sleeper;
@@ -56,31 +61,47 @@ public class JenkinsRssPoller implements SerialPortEventListener
     public static final String rssUrl =
 //      "https://onebeartoe.ci.cloudbees.com/rssAll";
         "https://onebeartoe.ci.cloudbees.com/rssLatest";
-    
-    private Map<String, Integer> jobsToNeopixels;
+
+// TODO: Remove this    
+    private List< Map<String, Integer> > jobsToNeopixelsList;
     
     private Logger logger;
     
+    private String configPath;
+     
+//    private Map<Integer, List<JenkinsJob> > knownIndicatorStrips;
+      private Map<Integer, LedStatusIndicatorStrip> knownIndicatorStrips;
+      
     public JenkinsRssPoller(String port) throws Exception
+    {        
+        this(port, "./src/main/resources/strip-job.mapping");
+    }
+    
+    public JenkinsRssPoller(String port, String configPath) throws Exception
     {
+        this.configPath = configPath;
+        
         String className = getClass().getName();
         logger = Logger.getLogger(className);
         
         POLL_DELAY = Duration.ofSeconds(30).toMillis();
-//        POLL_DELAY = Duration.ofMinutes(5).toMillis();
         
         rssService = new HttpJenkinsRssFeedService();
         
         initializeSerialPort(port);
         
-        mapJobsToNeopixels();
+        knownIndicatorStrips = new HashMap();
+        
+        jobsToNeopixelsList = new ArrayList();
+        
+        loadConfiguration();
     }
     
-    private String buildArduinoMessage(JenkinsJob job)
+    private String buildArduinoMessage(int strip, JenkinsJob job)
     {
         StringBuilder message = new StringBuilder();
         
-        String threeDigitFormat = "%03d";
+        final String threeDigitFormat = "%03d";
         
         String neopixelId = String.format(threeDigitFormat, job.getNeopixelIndex());
         
@@ -142,27 +163,90 @@ public class JenkinsRssPoller implements SerialPortEventListener
         // communication port.
         String port = "COM7";
         
-        if(args.length > 0)
+        JenkinsRssPoller poller = null;
+        
+        System.out.println("args: ");
+        for(String a : args)
         {
-            port = args[0];
+           System.out.println(a + " ") ;
         }
         
-        JenkinsRssPoller poller = new JenkinsRssPoller(port);
+        if(args.length == 0)
+        {
+            poller = new JenkinsRssPoller(port);
+        }
+        
+        if(args.length > 0)
+        {
+            // grab the serial communiation port
+            port = args[0];
+            
+            poller = new JenkinsRssPoller(port);
+        }
+        
+        if(args.length > 1)
+        {
+            // grap the configuration path
+            String configPath = args[1];
+            
+            poller = new JenkinsRssPoller(port, configPath);
+        }
         
         poller.start();
     }
     
-    private void mapJobsToNeopixels()
+    /**
+     * This method is only called once per application run.
+     * It loads a configuration file with the LED strip to RSS feed mapping, 
+     * as well as the mapping per strip of the Jenkins job to strip index mapping.
+     * 
+     * @throws FileNotFoundException
+     * @throws IOException 
+     */
+    private void loadConfiguration() throws FileNotFoundException, IOException
     {
-        jobsToNeopixels = new HashMap();
+        TextFileReader textFileReader = new BufferedTextFileReader();
+        File infile = new File(configPath);
+        InputStream instream = new FileInputStream(infile);
+        List<String> lines = textFileReader.readLines(instream);
+        
+        lines.stream()
+            .filter( s -> !s.trim().startsWith("#") )
+            .filter( s -> s.trim().length() != 0 )
+            .forEach(c -> 
+            {
+                String[] split = c.split(":");
 
-        jobsToNeopixels.put("building-java-applications", 0);
-        jobsToNeopixels.put("electronic-signs",           1);
-        jobsToNeopixels.put("electronics",             2);
-        jobsToNeopixels.put("pixel",                      3);
+                int ledStrip = Integer.valueOf(split[0]);
+                int ledIndex = Integer.valueOf(split[1]);
+                String jobName = split[2];
+
+                JenkinsJob jj = new JenkinsJob();
+                jj.setJobName(jobName);
+                jj.setNeopixelIndex(ledIndex);
+                
+                LedStatusIndicatorStrip lsis = knownIndicatorStrips.get(ledStrip);
+                
+                if(lsis == null)
+                {
+                    lsis = new LedStatusIndicatorStrip();
+                    knownIndicatorStrips.put(ledStrip, lsis);
+                }
+
+                lsis.jobs.add(jj);
+            });
+        
+//        jobsToNeopixels = new HashMap();
+//        jobsToNeopixels.put("building-java-applications", 0);
+//        jobsToNeopixels.put("electronic-signs",           1);
+//        jobsToNeopixels.put("electronics",                2);
+//        jobsToNeopixels.put("pixel",                      3);
+
+        // TODO: load the RSS mapping
+        // TODO: populate the jobs with RSS URLs?
     }
 
-    private List<JenkinsJob> obtainJobs() throws MalformedURLException, FeedException, IOException
+    private List<JenkinsJob> obtainAllRssJobs() throws MalformedURLException, FeedException, IOException
     {
         URL url = new URL(rssUrl);
         
@@ -171,9 +255,9 @@ public class JenkinsRssPoller implements SerialPortEventListener
         return jobs;
     }
     
-    private void sendArduinoMessage(JenkinsJob job)
+    private void sendArduinoMessage(int strip, JenkinsJob job)
     {
-        String message = buildArduinoMessage(job);
+        String message = buildArduinoMessage(strip, job);
 
         output.println(message);
         output.flush();
@@ -207,6 +291,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
         }        
     }
 
+
     public void start()
     {
         TimerTask pollerTask = new PollerTask();
@@ -218,62 +303,109 @@ public class JenkinsRssPoller implements SerialPortEventListener
         timer.schedule(pollerTask, firstTime, POLL_DELAY);
     }
     
-    private void updateNeopixels(List<JenkinsJob> jobs)
-    {
-        List<String> unknownKeys = new ArrayList();
+    /**
+     * This method
+     * sends the Arduino/serial communication port the corresponding
+     * LED information.
+     * 
+     * @param strip
+     * @param configuredJobs 
+     */
+    private void updateNeopixelStrip(int strip, List<JenkinsJob> configuredJobs)
+    {   
+        LedStatusIndicatorStrip lsi = knownIndicatorStrips.get(strip);
         
-        for(JenkinsJob jj : jobs)
+        for(JenkinsJob jj : configuredJobs)
         {
             String key = jj.getJobName();
-            Integer id = jobsToNeopixels.get(key);
             
-            if(id == null)
-            {
-                unknownKeys.add(key);
-            }
-            else
-            {
-                System.out.println("\t\t\t\t\t" + "Sending data for " + key + " (neopixel " + id + ")");
-                
-                jj.setNeopixelIndex(id);
-                
-                sendArduinoMessage(jj);
-            
-                // Give the Arduino time to receive the data before sending the next one.
-                long iterationDelay = Duration.ofSeconds(4).toMillis();            
-                Sleeper.sleepo(iterationDelay);   
-            }
+            String consoleMessage = "\t\t\t\t\t" + "Sending data for " + key + 
+                                    " (neopixel " + jj.getNeopixelIndex() + ")";
+            System.out.println(consoleMessage);
+
+            sendArduinoMessage(strip, jj);
+
+            // Give the Arduino time to receive the data before sending the next one.
+            long iterationDelay = Duration.ofSeconds(4).toMillis();            
+            Sleeper.sleepo(iterationDelay);
         }
-        
-        System.out.println();
-        System.out.print("There is no pixel id for: ");
-        unknownKeys.forEach( (s) ->
-        {
-            System.out.print(s);
-            System.out.print(", ");        
-        });
-        System.out.println();
     }
     
+    /**
+     *  The task class is to 
+     *  poll the RSS feed for all jobs status entries.
+     */
     class PollerTask extends TimerTask
-    {
+    {   
+        private List<JenkinsJob> filter(int indicatorIndex, List<JenkinsJob> allRssJobs)
+        {
+            List<String> unknownKeys = new ArrayList();
+            
+            List<JenkinsJob> configuredJobs = new ArrayList();
+            
+            LedStatusIndicatorStrip configuredStrip = knownIndicatorStrips.get(indicatorIndex);
+            
+            allRssJobs.forEach(rssJob -> 
+            {
+                String targetName = rssJob.getJobName();
+                
+                boolean found = false;
+                for(JenkinsJob configuredJob : configuredStrip.jobs)
+                {
+                    if( targetName.equals(configuredJob.getJobName() ) )
+                    {
+                        rssJob.setNeopixelIndex( configuredJob.getNeopixelIndex() );
+                        configuredJobs.add(rssJob);
+                        
+                        found = true;
+
+                        break;
+                    }
+                };
+
+                if(!found)
+                {
+                    unknownKeys.add(rssJob.getJobName());
+                }                
+            });
+                    
+            printUnknownRssJobs(unknownKeys);
+        
+            return configuredJobs;
+        }
+        
+        private void printUnknownRssJobs(List<String> unknownRssJobs)
+        {
+            System.out.println();
+            System.out.print("There is no pixel id for: ");
+            unknownRssJobs.forEach( (s) ->
+            {
+                System.out.print(s);
+                System.out.print(", ");        
+            });
+            System.out.println();
+        }
+        
         @Override
         public void run() 
         {
             System.out.println();
             System.out.println("The Jenkins RSS Poller goes off every " + POLL_DELAY + " millieseconds.");
 
-            List<JenkinsJob> jobs;
+            List<JenkinsJob> allJobs;
             try 
             {
-                jobs = obtainJobs();
-                updateNeopixels(jobs);
+                allJobs = obtainAllRssJobs();
+                
+                List<JenkinsJob> configuredJobs = filter(0, allJobs);
+                
+                updateNeopixelStrip(0, configuredJobs);
             } 
             catch (FeedException | IOException ex) 
             {
                 String message = "An error occured while obtaining the Jenkins jobs.";
                 logger.log(Level.SEVERE, message, ex);
             }
-        }
+        }        
     }
 }

@@ -1,0 +1,5 @@
+Jenkins RSS
+	Show current status of electronics (failing)
+	Show github electronics erro in place
+	Fix error on github
+	Rebuild and watch light change color on next RSS poll

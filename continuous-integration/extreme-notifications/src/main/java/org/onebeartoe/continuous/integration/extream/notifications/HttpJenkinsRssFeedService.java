@@ -33,8 +33,10 @@ public class HttpJenkinsRssFeedService implements JenkinsRssFeedService
         {
             SyndEntry se = (SyndEntry) e;
             se.getAuthor();
+            
             String title = se.getTitle();
             JenkinsJob job = JenkinsJob.fromRssTitle(title);
+            
             Date jobRunDate = se.getPublishedDate();
             job.setJobRunDate(jobRunDate);
             
