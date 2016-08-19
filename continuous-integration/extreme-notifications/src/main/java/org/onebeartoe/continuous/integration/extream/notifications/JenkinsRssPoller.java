@@ -28,6 +28,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 import org.onebeartoe.io.TextFileReader;
 import org.onebeartoe.io.buffered.BufferedTextFileReader;
 
@@ -401,9 +402,13 @@ public class JenkinsRssPoller implements SerialPortEventListener
             {
                 allJobs = obtainAllRssJobs();
                 
-                List<JenkinsJob> configuredJobs = filter(0, allJobs);
-                
-                updateNeopixelStrip(0, configuredJobs);
+                IntStream.rangeClosed(0, 1).forEach( i ->
+                {
+                    List<JenkinsJob> configuredJobs = filter(i, allJobs);
+
+                    updateNeopixelStrip(i, configuredJobs);
+                });
+
             } 
             catch (FeedException | IOException ex) 
             {

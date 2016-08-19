@@ -13,7 +13,12 @@
 # means that LED strip 0 has 2 indicators (build-webapp on LED 0 and deploy-web-app on LED 1 and
 #            LED strip 1 has 3 indicators (build-util on LED 0, test-util on LED 1, and deploy-util on LED 2.
 
+# notification strip 0
 000:000:building-java-applications
 000:001:electronic-signs
 #000:002:electronics
 000:003:pixel
+
+
+# notification strip 1
+001:002:electronics
