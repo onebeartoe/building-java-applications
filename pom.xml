@@ -21,7 +21,6 @@
         <module>continuous-integration</module>
         <module>drinking-bird</module>
         <module>parent-child</module>
-        <module>serial-plotter</module>
         <module>onebeartoe-jar-diff</module>
     </modules>    
 
