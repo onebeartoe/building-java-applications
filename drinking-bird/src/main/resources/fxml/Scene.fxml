@@ -15,7 +15,7 @@
               <Label fx:id="label" alignment="CENTER" contentDisplay="CENTER" minHeight="16" minWidth="69" BorderPane.alignment="CENTER" />
          </top>
          <center>
-            <StackPane maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="131.0" prefWidth="320.0" BorderPane.alignment="CENTER">
+            <StackPane maxHeight="1.7976931348623157E308" minHeight="-Infinity" prefHeight="156.0" prefWidth="320.0" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -47,8 +47,7 @@
                      <VBox.margin>
                         <Insets bottom="10.0" />
                      </VBox.margin></Button>
-                  <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#handleCheckBoxAction" text="Automatically" />
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <HBox fillHeight="false" prefHeight="53.0" prefWidth="320.0">
                      <children>
                         <TextField fx:id="textField" onKeyReleased="#onDurationValueChanged" />
                         <ChoiceBox fx:id="durationChoiceBox" prefWidth="150.0" />
