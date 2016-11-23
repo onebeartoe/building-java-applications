@@ -1,10 +1,12 @@
 
 package org.onebeartoe.building.applications.drinking.bird;
 
+import com.sun.javafx.beans.event.AbstractNotifyListener;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.RotateTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,9 +29,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.util.Duration;
+//import javafx.util.Duration;
+import javafx.util.converter.IntegerStringConverter;
 
 public class FXMLController implements Initializable
 {    
@@ -43,6 +51,9 @@ public class FXMLController implements Initializable
     
     @FXML
     private CheckBox checkbox;
+    
+    @FXML
+    private TextField textField;
     
     @FXML
     private ChoiceBox<String> durationChoiceBox;
@@ -87,13 +98,7 @@ public class FXMLController implements Initializable
         
         if( checkbox.isSelected() )
         {
-            // start the automatic thread
-            Date firstTime = new Date();
-            clickTask = new ClickTask();
-
-            //TODO: Use the Duration class that was introduced in Java 8.
-            final long period = 1000 * 20;
-            timer.schedule(clickTask, firstTime, period);
+            scheduleTask();
         }
         else
         {
@@ -104,17 +109,18 @@ public class FXMLController implements Initializable
     }
     
     @FXML
-    private void onDurationChoiceChanged(MouseEvent e)
+    private void onDurationChoiceChanged()
     {
         System.out.println("love!");
-
-//TODO: Get the duration value from the screen        
-//        durationField
         
-        durationChoiceBox.getSelectionModel()
-                .getSelectedItem();
+        scheduleTask();
+    }
+    @FXML
+    private void onDurationValueChanged(KeyEvent ke)
+    {
+        System.out.println("key event love");
         
-//TODO:        
+        scheduleTask();
     }
     
     @Override
@@ -123,11 +129,24 @@ public class FXMLController implements Initializable
         List l = new ArrayList();
         
         ObservableList durationList = FXCollections.observableArrayList();
-        durationList.addAll("One Time", new ArrayList(),"5 minutes", "10 minutes", "20 minutes", "30 minutes", "1 hour", "2 hours", "3 hours");
+        durationList.addAll("Only Once", "Seconds", "Minutes", "Hours");
         durationChoiceBox.setItems(durationList);
-        durationChoiceBox.getSelectionModel().selectFirst();
+        durationChoiceBox.getSelectionModel()
+                .selectFirst();
+        durationChoiceBox.getSelectionModel()
+                .selectNext();
+        durationChoiceBox.valueProperty().addListener( new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) 
+            {
+                onDurationChoiceChanged();
+            }
+        });
+        
+        final TextFormatter<Integer> formatter = new TextFormatter<>(new IntegerStringConverter());
+        textField.setTextFormatter(formatter);
 
-        rotateTransition = new RotateTransition(Duration.millis(3000), birdBody);
+        rotateTransition = new RotateTransition(javafx.util.Duration.millis(3000), birdBody);
         rotateTransition.setByAngle(90f);
         rotateTransition.setCycleCount(2);
         rotateTransition.setAutoReverse(true);
@@ -145,7 +164,81 @@ public class FXMLController implements Initializable
         
         timer = new Timer();
         
+        clickTask = new ClickTask();
         cancelTask = new CancelTask();
+    }
+    
+    private void scheduleTask()
+    {
+        clickTask.cancel();
+        cancelTask.cancel();
+        
+        // Get the duration value from the screen        
+        String s = textField.getText();
+        
+        Integer value;
+        
+        if(s.trim().equals(""))
+        {
+            value = 0;
+        }
+        else
+        {
+            value = Integer.valueOf( s );
+        }
+        
+        
+        String durationTypeLabel = durationChoiceBox.getSelectionModel()
+                .getSelectedItem();
+        
+        Duration cancelWait;
+        
+        switch(durationTypeLabel)
+        {
+            case "Seconds":
+            {
+                cancelWait = Duration.ofSeconds(value);
+                
+                break;
+            }
+            case "Minutes":
+            {
+                cancelWait = Duration.ofMinutes(value);
+                
+                break;
+            }
+            case "Hours":
+            {
+                cancelWait = Duration.ofHours(value);
+                
+                break;
+            }
+            default:
+            {
+                System.out.println("An unknown duration type was encountered: " + durationTypeLabel);
+                cancelWait = null;
+            }
+        }
+        
+        // start the automatic thread
+        Date firstTime = new Date();
+        clickTask = new ClickTask();
+
+        if(cancelWait == null)
+        {
+            // "Just Once" is selected, and tash will not repeat.
+            timer.schedule(clickTask, firstTime);
+        }
+        else
+        {
+            // The clicking will repeat for the specified amount of time on the screen.
+            final long period = Duration.ofSeconds(20).toMillis();
+            timer.schedule(clickTask, firstTime, period);
+
+            cancelTask = new CancelTask();
+            long delay = cancelWait.toMillis();
+            timer.schedule(cancelTask, delay);
+        }
     }
     
     public void stopThreads()
@@ -159,6 +252,8 @@ public class FXMLController implements Initializable
         public void run()
         {
             clickTask.cancel();
+            
+            System.out.println("The click task was canceled.");
 
 //TODO:            
 //            anyting else?

@@ -48,7 +48,12 @@
                         <Insets bottom="10.0" />
                      </VBox.margin></Button>
                   <CheckBox fx:id="checkbox" mnemonicParsing="false" onAction="#handleCheckBoxAction" text="Automatically" />
-                  <ChoiceBox fx:id="durationChoiceBox" onMouseReleased="#onDurationChoiceChanged" prefWidth="150.0" />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="textField" onKeyReleased="#onDurationValueChanged" />
+                        <ChoiceBox fx:id="durationChoiceBox" prefWidth="150.0" />
+                     </children>
+                  </HBox>
                </children>
                <BorderPane.margin>
                   <Insets />
