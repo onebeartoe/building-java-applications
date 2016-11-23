@@ -1,16 +1,21 @@
+
 package org.onebeartoe.building.applications.drinking.bird;
 
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.RotateTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,8 +23,10 @@ import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
 public class FXMLController implements Initializable
@@ -37,7 +44,12 @@ public class FXMLController implements Initializable
     @FXML
     private CheckBox checkbox;
     
+    @FXML
+    private ChoiceBox<String> durationChoiceBox;
+    
     private TimerTask clickTask;
+    
+    private TimerTask cancelTask;
     
     private Timer timer;
     
@@ -89,11 +101,32 @@ public class FXMLController implements Initializable
             // note: you cancel the task and not the timer
             clickTask.cancel();
         }
-    }    
+    }
+    
+    @FXML
+    private void onDurationChoiceChanged(MouseEvent e)
+    {
+        System.out.println("love!");
+
+//TODO: Get the duration value from the screen        
+//        durationField
+        
+        durationChoiceBox.getSelectionModel()
+                .getSelectedItem();
+        
+//TODO:        
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) 
     {
+        List l = new ArrayList();
+        
+        ObservableList durationList = FXCollections.observableArrayList();
+        durationList.addAll("One Time", new ArrayList(),"5 minutes", "10 minutes", "20 minutes", "30 minutes", "1 hour", "2 hours", "3 hours");
+        durationChoiceBox.setItems(durationList);
+        durationChoiceBox.getSelectionModel().selectFirst();
+
         rotateTransition = new RotateTransition(Duration.millis(3000), birdBody);
         rotateTransition.setByAngle(90f);
         rotateTransition.setCycleCount(2);
@@ -111,6 +144,8 @@ public class FXMLController implements Initializable
         }        
         
         timer = new Timer();
+        
+        cancelTask = new CancelTask();
     }
     
     public void stopThreads()
@@ -118,6 +153,18 @@ public class FXMLController implements Initializable
         timer.cancel();
     }    
 
+    private class CancelTask extends TimerTask
+    {
+        @Override
+        public void run()
+        {
+            clickTask.cancel();
+
+//TODO:            
+//            anyting else?
+        }
+    }
+    
     private class ClickTask extends TimerTask
     {
         @Override
@@ -154,5 +201,12 @@ public class FXMLController implements Initializable
                 robot.mouseRelease(InputEvent.BUTTON1_MASK);
             }
         }
+    }
+    
+    private class DurationOption
+    {
+        Duration duration;
+        
+        
     }
 }
