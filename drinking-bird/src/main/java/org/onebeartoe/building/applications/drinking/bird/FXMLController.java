@@ -220,24 +220,25 @@ public class FXMLController implements Initializable
             }
         }
         
-        // start the automatic thread
+        // start the thread that clicks the button
         Date firstTime = new Date();
         clickTask = new ClickTask();
 
         if(cancelWait == null)
         {
-            // "Just Once" is selected, and tash will not repeat.
+            // "Just Once" is selected, and click task will not repeat.
             timer.schedule(clickTask, firstTime);
         }
         else
         {
-            // The clicking will repeat for the specified amount of time on the screen.
-            final long period = Duration.ofSeconds(20).toMillis();
-            timer.schedule(clickTask, firstTime, period);
+            // The clicking will repeat...
+            final long repeatDelay = Duration.ofSeconds(20).toMillis();
+            timer.schedule(clickTask, firstTime, repeatDelay);
 
+            // ...for the specified amount of time on the screen.
             cancelTask = new CancelTask();
-            long delay = cancelWait.toMillis();
-            timer.schedule(cancelTask, delay);
+            long cancelDelay = cancelWait.toMillis();
+            timer.schedule(cancelTask, cancelDelay);
         }
     }
     
