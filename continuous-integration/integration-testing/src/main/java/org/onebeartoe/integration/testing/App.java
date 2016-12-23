@@ -1,4 +1,4 @@
-package org.integration.testing;
+package org.onebeartoe.integration.testing;
 
 /**
  * Hello world!
