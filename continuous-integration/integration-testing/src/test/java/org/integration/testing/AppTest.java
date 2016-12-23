@@ -1,3 +1,4 @@
+
 package org.integration.testing;
 
 import java.io.File;
@@ -11,13 +12,15 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
 import net.anthavio.phanbedder.Phanbedder;
 
 /**
- * Unit test for simple App.
+ * Unit test for simple App that demonstrates the Phanbedder:
+ * 
+ * 		http://blog.anthavio.net/2014/04/phantomjs-embedder-for-selenium.html
  */
-public class AppTest 
-    extends TestCase
+public class AppTest extends TestCase
 {
     /**
      * Create the test case
