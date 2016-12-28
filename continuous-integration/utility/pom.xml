@@ -10,7 +10,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     
-    <artifactId>onebeartoe-continuous-integration-utility</artifactId>
+    <artifactId>onebeartoe-building-applications-continuous-integration-utility</artifactId>
     
     <packaging>jar</packaging>
     
