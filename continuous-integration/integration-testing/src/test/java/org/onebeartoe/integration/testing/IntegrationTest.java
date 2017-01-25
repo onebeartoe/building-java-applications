@@ -97,7 +97,7 @@ public class IntegrationTest
 
         driver = webdriverService.load(type, configuration);
 
-        driver.manage().window().maximize();
+//        driver.manage().window().maximize();
     }
     
 	private String sanitizeFilename(String dirty)

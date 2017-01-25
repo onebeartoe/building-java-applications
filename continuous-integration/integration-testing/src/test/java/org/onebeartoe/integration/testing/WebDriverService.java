@@ -59,11 +59,14 @@ public class WebDriverService
      */
     private RemoteWebDriver loadPhantomJs(DesiredCapabilities capabilities)
     {
-//    	String executablePath = "C:\\opt\\webdriver\\phantomjs.exe";
-        File phantomjs = Phanbedder.unpack(); //Phanbedder to the rescue!
     	DesiredCapabilities dcaps = new DesiredCapabilities();
-//    	dcaps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, executablePath);
-    	dcaps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, phantomjs.getAbsolutePath());
+    	
+    	String executablePath = "C:\\opt\\webdriver\\phantomjs.exe";
+    	dcaps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, executablePath);
+    	
+//        File phantomjs = Phanbedder.unpack(); //Phanbedder to the rescue!
+//    	dcaps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, phantomjs.getAbsolutePath());
+    	
     	PhantomJSDriver driver = new PhantomJSDriver(dcaps);
 
         return driver;
