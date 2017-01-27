@@ -167,6 +167,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
         // Windows environment.  On Linux environments, use a path to the serial 
         // communication port.
         String port = "COM7";
+        String configPath = null;
         
         JenkinsRssPoller poller = null;
         
@@ -192,10 +193,12 @@ public class JenkinsRssPoller implements SerialPortEventListener
         if(args.length > 1)
         {
             // grap the configuration path
-            String configPath = args[1];
+            configPath = args[1];
             
             poller = new JenkinsRssPoller(port, configPath);
         }
+        
+        System.out.println("staring poller with COM port and config path of: " + port + " / " + configPath);
         
         poller.start();
     }
