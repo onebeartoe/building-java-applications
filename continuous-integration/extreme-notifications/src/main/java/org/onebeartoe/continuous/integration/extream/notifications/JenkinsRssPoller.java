@@ -44,7 +44,11 @@ import org.onebeartoe.system.Sleeper;
  * Start the app with this command:
  * 
  *      java -Djava.library.path="C:\home\world\installs\software-development\java\ch-rxtx-2.2-20081207-win-x64\ch-rxtx-2.2-20081207-win-x64" -jar continuous-integration/extreme-notifications/target/extreme-notifications-1.0-SNAPSHOT-jar-with-dependencies.jar
- * 
+ *
+ * On Linux this command works with the RXTX provided by apt-get:
+ *
+ *       java -Djava.library.path=/usr/lib/jni/ -jar extreme-notifications-1.0-SNAPSHOT-jar-with-dependencies.jar /dev/ttyACM0 strip-job.mapping
+ *
  * To run/debug from Netbeans, add the -Djava.library.path="C:\home\......" path above to the VM arguments via 'Right Click Project' -> Properties -> Run.
  * 
  * @author Roberto Marquez
