@@ -198,7 +198,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
             poller = new JenkinsRssPoller(port, configPath);
         }
         
-        System.out.println("staring poller with COM port and config path of: " + port + " / " + configPath);
+        System.out.println("starting poller with COM port and config path of: " + port + " / " + configPath);
         
         poller.start();
     }
