@@ -1,9 +1,0 @@
-# this is actually documentation for the Arduino part of the project.
-
-# lines staring with the hash character are comments in this file.
-# the format is 
-# [LED strip]:[Arduino pin]
-
-# for example
-# 001:003
-# means that LED strip 1 is on Arduino pin 3

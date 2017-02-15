@@ -59,7 +59,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
     
     private JenkinsRssFeedService rssService;
     
-    public static final String rssUrl =
+    public static String rssUrl =
 //      "https://onebeartoe.ci.cloudbees.com/rssAll";
         "https://onebeartoe.ci.cloudbees.com/rssLatest";
 
@@ -134,6 +134,54 @@ public class JenkinsRssPoller implements SerialPortEventListener
         return message.toString();
     }
     
+    private static JenkinsRssPoller initialzeRssPoller(String [] args) throws Exception
+    {
+        // The app uses the following as the defalut port descriptor on a MS 
+        // Windows environment.  On Linux environments, use a path to the serial 
+        // communication port.
+        String port = "COM7";
+        
+        String configPath = null;
+        
+        JenkinsRssPoller poller = null;
+        
+        if(args.length == 0)
+        {
+            poller = new JenkinsRssPoller(port);
+        }
+        
+        if(args.length == 1)
+        {
+            // grab the serial communiation port
+            port = args[0];
+            
+            poller = new JenkinsRssPoller(port);
+        }
+        
+        if(args.length >= 2)
+        {
+            // There are at least 2 command line arguments.
+            // The first two are the same as above.
+            
+            port = args[0];
+            
+            // grab the configuration path
+            configPath = args[1];
+            
+            poller = new JenkinsRssPoller(port, configPath);
+            
+            if(args.length > 2)
+            {
+                // The third command line argument is the URL of the Jenkins RSS feed.
+                rssUrl = args[2];
+            }
+        }
+        
+        System.out.println("starting poller with COM port and config path of: " + port + " / " + configPath);
+        
+        return poller;
+    }
+    
     private void initializeSerialPort(String port) throws Exception
     {
         System.out.println("obtaining serial port");
@@ -163,47 +211,14 @@ public class JenkinsRssPoller implements SerialPortEventListener
      */
     public static void main (String [] args) throws Exception
     {
-        // The app uses the following as the defalut port descriptor on a MS 
-        // Windows environment.  On Linux environments, use a path to the serial 
-        // communication port.
-        String port = "COM7";
-        String configPath = null;
-        
-        JenkinsRssPoller poller = null;
-        
         System.out.println("args: ");
         for(String a : args)
         {
            System.out.println(a + " ") ;
         }
         
-        if(args.length == 0)
-        {
-            poller = new JenkinsRssPoller(port);
-        }
-        
-        if(args.length == 1)
-        {
-            // grab the serial communiation port
-            port = args[0];
-            
-            poller = new JenkinsRssPoller(port);
-        }
-        
-        if(args.length > 1)
-        {
-            // there are at least 2 command line arguments
-                        
-            port = args[0];
-            
-            // grab the configuration path
-            configPath = args[1];
-            
-            poller = new JenkinsRssPoller(port, configPath);
-        }
-        
-        System.out.println("starting poller with COM port and config path of: " + port + " / " + configPath);
-        
+        JenkinsRssPoller poller = initialzeRssPoller(args);
+                
         poller.start();
     }
     
@@ -247,15 +262,6 @@ public class JenkinsRssPoller implements SerialPortEventListener
 
                 lsis.jobs.add(jj);
             });
-        
-//        jobsToNeopixels = new HashMap();
-//        jobsToNeopixels.put("building-java-applications", 0);
-//        jobsToNeopixels.put("electronic-signs",           1);
-//        jobsToNeopixels.put("electronics",                2);
-//        jobsToNeopixels.put("pixel",                      3);
-
-        // TODO: load the RSS mapping
-        // TODO: populate the jobs with RSS URLs?
     }
 
     private List<JenkinsJob> obtainAllRssJobs() throws MalformedURLException, FeedException, IOException
