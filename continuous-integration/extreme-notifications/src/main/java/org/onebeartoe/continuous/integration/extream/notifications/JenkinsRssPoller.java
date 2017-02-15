@@ -182,7 +182,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
             poller = new JenkinsRssPoller(port);
         }
         
-        if(args.length > 0)
+        if(args.length == 1)
         {
             // grab the serial communiation port
             port = args[0];
