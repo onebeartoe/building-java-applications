@@ -192,7 +192,11 @@ public class JenkinsRssPoller implements SerialPortEventListener
         
         if(args.length > 1)
         {
-            // grap the configuration path
+            // there are at least 2 command line arguments
+                        
+            port = args[0];
+            
+            // grab the configuration path
             configPath = args[1];
             
             poller = new JenkinsRssPoller(port, configPath);
