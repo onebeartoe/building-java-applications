@@ -41,9 +41,9 @@ import org.onebeartoe.system.Sleeper;
  * 
  *      http://www.openremote.org/display/forums/Zwave+rxtxSerial+dll+Can't+load+IA+32bit
  * 
- * Start the app with this command:
+ * Start the app on MS Windows with this command:
  * 
- *      java -Djava.library.path="C:\home\world\installs\software-development\java\ch-rxtx-2.2-20081207-win-x64\ch-rxtx-2.2-20081207-win-x64" -jar continuous-integration/extreme-notifications/target/extreme-notifications-1.0-SNAPSHOT-jar-with-dependencies.jar
+ *      java -Djava.library.path="C:\home\world\installs\software-development\java\ch-rxtx-2.2-20081207-win-x64\ch-rxtx-2.2-20081207-win-x64" -jar continuous-integration/extreme-notifications/target/extreme-notifications-1.0-SNAPSHOT-jar-with-dependencies.jar COM7 strip-job.mapping http://jenkins-server/view/All/rssLatest
  *
  * On Linux this command works with the RXTX provided by apt-get:
  *
