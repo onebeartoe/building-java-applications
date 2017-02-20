@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class HttpJenkinsRssFeedService implements JenkinsRssFeedService
 {
-
     @Override
     public List<JenkinsJob> getJobs(URL rssUrl) throws IOException, FeedException 
     {

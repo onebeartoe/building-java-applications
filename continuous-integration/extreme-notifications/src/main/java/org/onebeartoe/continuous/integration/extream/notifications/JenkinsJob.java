@@ -24,7 +24,7 @@ public class JenkinsJob
     {
         System.out.println(jobStatusLabel);
         
-        s
+//        s
 
         if(jobStatus == null)
         {
@@ -160,8 +160,8 @@ public class JenkinsJob
         }
     }
 
-    public void setJobStatus(JenkinsJobStatus jobStatus) 
-    {
-        this.jobStatus = jobStatus;
-    }
+//    public void setJobStatus(JenkinsJobStatus jobStatus) 
+//    {
+//        this.jobStatus = jobStatus;
+//    }
 }
