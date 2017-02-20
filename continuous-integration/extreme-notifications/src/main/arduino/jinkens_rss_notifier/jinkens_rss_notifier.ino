@@ -26,6 +26,13 @@ Adafruit_NeoPixel strip1 = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN2, NEO_GRB + NEO
 
 Adafruit_NeoPixel strips[] = {strip0, strip1};
 
+int MAX_BRIGHTNESS = 254;
+
+/**
+ * Valid brighness values are 0 - 255.
+ */
+int stripBrightness [3] [NEOPIXEL_COUNT] = {MAX_BRIGHTNESS};  // set initial bright
+
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
 // and minimize distance between Arduino and first pixel.  Avoid connecting
@@ -115,6 +122,17 @@ void loop()
             int g = s.substring(12, 15).toInt();
             int b = s.substring(16, 19).toInt();
             
+            int pulsing = (int) s.charAt(20) - 48;  // subtract 48 to map from the ASCII value
+            Serial.print("pulsing is: ");
+            Serial.println(pulsing);
+            
+            if(pulsing == 1)  // the Java application sends '1' to indicate the job is in progress
+            {
+                g = nextPulseValue(stripIndex, ledIndex);
+                Serial.print("gonna pulse:");
+                Serial.println(g);
+            }
+            
             uint32_t color = strips[stripIndex].Color(r, g, b);
             
             strips[stripIndex].setPixelColor(ledIndex, color);
@@ -128,4 +146,16 @@ void loop()
             Serial.println(b);
         }
     }
+}
+
+int nextPulseValue(int stripIndex, int ledIndex)
+{
+    stripBrightness[stripIndex][ledIndex]++;
+    
+    if(stripBrightness[stripIndex][ledIndex] > MAX_BRIGHTNESS)
+    {
+        stripBrightness[stripIndex][ledIndex] = 0;
+    }
+    
+    return stripBrightness[stripIndex][ledIndex];
 }
