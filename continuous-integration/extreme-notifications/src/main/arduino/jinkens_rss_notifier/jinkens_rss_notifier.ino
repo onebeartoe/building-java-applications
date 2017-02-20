@@ -24,9 +24,16 @@ Adafruit_NeoPixel strip0 = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN1, NEO_GRB + NEO
 
 Adafruit_NeoPixel strip1 = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN2, NEO_GRB + NEO_KHZ800);
 
+int stripCount = 2;
 Adafruit_NeoPixel strips[] = {strip0, strip1};
 
 int MAX_BRIGHTNESS = 254;
+
+/**
+ * Holds the status of whether the LED is in pulsing mode or not.
+ * The initial status of all LEDs is not pulsing.
+ */
+int pulseStatuses [3] [NEOPIXEL_COUNT] = {0}; 
 
 /**
  * Valid brighness values are 0 - 255.
@@ -98,7 +105,7 @@ void loop()
     byte numBytesAvailable= Serial.available();
 
     if (numBytesAvailable > 0)
-    {    
+    {
         // there is something to read from the serial connection
         String s = Serial.readString();
 
@@ -125,13 +132,7 @@ void loop()
             int pulsing = (int) s.charAt(20) - 48;  // subtract 48 to map from the ASCII value
             Serial.print("pulsing is: ");
             Serial.println(pulsing);
-            
-            if(pulsing == 1)  // the Java application sends '1' to indicate the job is in progress
-            {
-                g = nextPulseValue(stripIndex, ledIndex);
-                Serial.print("gonna pulse:");
-                Serial.println(g);
-            }
+            pulseStatuses[stripIndex][ledIndex] = pulsing;
             
             uint32_t color = strips[stripIndex].Color(r, g, b);
             
@@ -146,6 +147,8 @@ void loop()
             Serial.println(b);
         }
     }
+    
+    updatePulsingLeds();
 }
 
 int nextPulseValue(int stripIndex, int ledIndex)
@@ -158,4 +161,24 @@ int nextPulseValue(int stripIndex, int ledIndex)
     }
     
     return stripBrightness[stripIndex][ledIndex];
+}
+
+void updatePulsingLeds()
+{
+    for(int s=0; s<stripCount; s++)
+    {
+        for(int l=0; l<NEOPIXEL_COUNT; l++)
+        {
+            if(pulseStatuses[s][l] == 1)  // the Java application sends '1' to indicate the job is in progress
+            {                  
+//TODO: get the old value with strip.getColor() and do the maths to get the individual R,G,B values
+                int g = nextPulseValue(s, l);
+                
+                strips[l].setPixelColor(l, g);
+                        
+//                Serial.print("gonna pulse:");
+//                Serial.println(g);
+            }            
+        }
+    }
 }

@@ -121,7 +121,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
         String b = String.format(threeDigitFormat, blue);
         
 //TODO: actually look up weather the job is in progress        
-        String pulsing = String.valueOf(0);
+        String pulsing = String.valueOf(1);
      
         StringBuilder message = new StringBuilder();
         message.append(stripIndex);
