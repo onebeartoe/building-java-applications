@@ -4,7 +4,6 @@ package org.onebeartoe.continuous.integration.extream.notifications;
 import java.util.Date;
 
 /**
- *
  * @author Roberto Marquez
  */
 public class JenkinsJob 
@@ -21,6 +20,70 @@ public class JenkinsJob
     
     private int neopixelIndex;
 
+    private void checkRegularExpressionStatuses(String jobStatusLabel)
+    {
+        System.out.println(jobStatusLabel);
+        
+        s
+
+        if(jobStatus == null)
+        {
+            String errorMessage = "An unknown status was encountered: " + jobStatus;
+            System.err.println(errorMessage);
+
+            jobStatus = JenkinsJobStatus.UNKOWN;
+        }        
+    }
+    
+    private void checkStatusNameVariants(String enumName)
+    {
+        switch(enumName)
+        {
+            case "BROKEN_FOR_A_LONG_TIME":
+            {
+                // fall through to the FAILING case
+            }
+            case "BROKEN_SINCE_THIS_BUILD":
+            {
+                this.jobStatus = JenkinsJobStatus.FAILING;
+
+                break;
+            }
+            case "BACK_TO_NORMAL":
+            {
+                this.jobStatus = JenkinsJobStatus.STABLE;
+
+                break;
+            }
+            case "1_TEST_IS_STILL_FAILING":
+            {
+                this.jobStatus = JenkinsJobStatus.UNSTABLE;
+
+                break;
+            }
+            // Use no default case, since the status that need regular expressions
+            // need checking.
+        }        
+    }
+    
+    public static JenkinsJob fromRssTitle(String rssTitle)
+    {
+        JenkinsJob job = new JenkinsJob();
+        
+        int hashIndex = rssTitle.indexOf('#');        
+        String name = rssTitle.substring(0, hashIndex).trim();        
+        job.setJobName(name);
+        
+        int openParenIndex = rssTitle.indexOf('(');
+        int startIndex = openParenIndex + 1;
+        int closeParenIndex = rssTitle.lastIndexOf(')');
+        String status = rssTitle.substring(startIndex, closeParenIndex);
+        job.setJobStatusDescription(status);
+        job.setJobStatus(status);
+        
+        return job;
+    }    
+    
     public String getJobStatusDescription() 
     {
         return jobStatusDescription;
@@ -72,77 +135,33 @@ public class JenkinsJob
         return jobStatus;
     }
     
-    public void setJobStatus(String jobStatus)
+    public void setJobStatus(String jobStatusLabel)
     {
-        String enumName = jobStatus.toUpperCase();
+        String enumName = jobStatusLabel.toUpperCase();
         enumName = enumName.replaceAll(" ", "_");
         
         try
         {
-            this.jobStatus = JenkinsJobStatus.valueOf(enumName);
+            jobStatus = JenkinsJobStatus.valueOf(enumName);
         }
         catch(IllegalArgumentException e)
         {
             // ignore error and check for status name variants
         }
         
-        if(this.jobStatus == null)
+        if(jobStatus == null)
         {
-            switch(enumName)
-            {
-                case "BROKEN_FOR_A_LONG_TIME":
-                {
-                    // fall through to the FAILING case
-                }
-                case "BROKEN_SINCE_THIS_BUILD":
-                {
-                    this.jobStatus = JenkinsJobStatus.FAILING;
-                    
-                    break;
-                }
-                case "BACK_TO_NORMAL":
-                {
-                    this.jobStatus = JenkinsJobStatus.STABLE;
-                    
-                    break;
-                }
-                case "1_TEST_IS_STILL_FAILING":
-                {
-                    this.jobStatus = JenkinsJobStatus.UNSTABLE;
-                    
-                    break;
-                }
-                default:
-                {
-                    String errorMessage = "An unknown status was encountered: " + jobStatus;
-                    System.err.println(errorMessage);
-                    
-                    this.jobStatus = JenkinsJobStatus.UNKOWN;
-                }
-            }
+            checkStatusNameVariants(enumName);
+        }
+        
+        if(jobStatus == null)
+        {
+            checkRegularExpressionStatuses(jobStatusLabel);
         }
     }
 
     public void setJobStatus(JenkinsJobStatus jobStatus) 
     {
         this.jobStatus = jobStatus;
-    }
-    
-    public static JenkinsJob fromRssTitle(String rssTitle)
-    {
-        JenkinsJob job = new JenkinsJob();
-        
-        int hashIndex = rssTitle.indexOf('#');        
-        String name = rssTitle.substring(0, hashIndex).trim();        
-        job.setJobName(name);
-        
-        int openParenIndex = rssTitle.indexOf('(');
-        int startIndex = openParenIndex + 1;
-        int closeParenIndex = rssTitle.lastIndexOf(')');
-        String status = rssTitle.substring(startIndex, closeParenIndex);
-        job.setJobStatusDescription(status);
-        job.setJobStatus(status);
-        
-        return job;
     }
 }

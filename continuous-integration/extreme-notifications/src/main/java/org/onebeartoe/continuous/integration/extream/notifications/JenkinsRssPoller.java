@@ -66,15 +66,11 @@ public class JenkinsRssPoller implements SerialPortEventListener
     public static String rssUrl =
 //      "https://onebeartoe.ci.cloudbees.com/rssAll";
         "https://onebeartoe.ci.cloudbees.com/rssLatest";
-
-// TODO: Remove this    
-    private List< Map<String, Integer> > jobsToNeopixelsList;
     
     private Logger logger;
     
     private String configPath;
      
-//    private Map<Integer, List<JenkinsJob> > knownIndicatorStrips;
       private Map<Integer, LedStatusIndicatorStrip> knownIndicatorStrips;
       
     public JenkinsRssPoller(String port) throws Exception
@@ -96,8 +92,6 @@ public class JenkinsRssPoller implements SerialPortEventListener
         initializeSerialPort(port);
         
         knownIndicatorStrips = new HashMap();
-        
-        jobsToNeopixelsList = new ArrayList();
         
         loadConfiguration();
     }

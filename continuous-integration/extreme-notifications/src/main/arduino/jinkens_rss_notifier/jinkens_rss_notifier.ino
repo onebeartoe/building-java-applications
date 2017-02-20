@@ -1,8 +1,8 @@
 
 /**
- * This sketch is intened for the Arduino Uno.
  * 
- *    
+ * This sketch is intended for the Arduino Uno.
+ *
  */
 
 #include <Adafruit_NeoPixel.h>
