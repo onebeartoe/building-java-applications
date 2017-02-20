@@ -413,6 +413,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
             {
                 allJobs = obtainAllRssJobs();
                 
+                // TODO: remove the hard-coded nature of assuming there will always be 2 strips
                 IntStream.rangeClosed(0, 1).forEach( i ->
                 {
                     List<JenkinsJob> configuredJobs = filter(i, allJobs);

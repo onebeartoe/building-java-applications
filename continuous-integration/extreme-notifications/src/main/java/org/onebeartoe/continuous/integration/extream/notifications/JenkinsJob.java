@@ -27,6 +27,12 @@ public class JenkinsJob
             jobStatus = JenkinsJobStatus.FAILING;
         }
         
+        if( jobStatusLabel.matches("\\d+ tests  started to fail")
+            || jobStatusLabel.matches("\\d+ tests are still failing") )
+        {
+            jobStatus = JenkinsJobStatus.UNSTABLE;
+        }
+        
         if(jobStatus == null)
         {
             String errorMessage = "An unknown status was encountered: " + jobStatusLabel;

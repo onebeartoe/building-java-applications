@@ -4,11 +4,11 @@ package org.onebeartoe.continuous.integration.extream.notifications;
 import java.awt.Color;
 
 /**
- *
- * @author URHM020
+ * @author RobertoMarquez
  */
 public enum JenkinsJobStatus 
-{    
+{
+    DISABLED(Color.GRAY),
     FAILING(Color.RED),
     STABLE(Color.GREEN),
     UNKOWN(Color.PINK),
