@@ -22,13 +22,14 @@ public class JenkinsJob
 
     private void checkRegularExpressionStatuses(String jobStatusLabel)
     {
-        System.out.println(jobStatusLabel);
+        if( jobStatusLabel.matches("broken since build #\\d+") )
+        {
+            jobStatus = JenkinsJobStatus.FAILING;
+        }
         
-//        s
-
         if(jobStatus == null)
         {
-            String errorMessage = "An unknown status was encountered: " + jobStatus;
+            String errorMessage = "An unknown status was encountered: " + jobStatusLabel;
             System.err.println(errorMessage);
 
             jobStatus = JenkinsJobStatus.UNKOWN;
@@ -164,4 +165,10 @@ public class JenkinsJob
 //    {
 //        this.jobStatus = jobStatus;
 //    }
+    
+    @Override
+    public String toString()
+    {
+        return jobStatus + " - >" + jobStatusDescription + "< for job: " + jobName;
+    }
 }

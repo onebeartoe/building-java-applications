@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.onebeartoe.continuous.integration.extream.notifications.HttpJenkinsRssFeedService;
 import org.onebeartoe.continuous.integration.extream.notifications.JenkinsJob;
+import org.onebeartoe.continuous.integration.extream.notifications.JenkinsJobStatus;
 import org.onebeartoe.continuous.integration.extream.notifications.JenkinsRssFeedService;
 
 /**
@@ -27,7 +28,7 @@ public class JenkisJobTest
         this.jj = jj;
     }
     
-    @Parameterized.Parameters//name="{index} - url: {0}")
+    @Parameterized.Parameters(name="{index} - {0}")
     public static Collection<Object[]> dataSet() throws MalformedURLException, FeedException, IOException
     {
         String u = "https://onebeartoe.ci.cloudbees.com/rssLatest";
@@ -49,6 +50,8 @@ public class JenkisJobTest
     @Test
     public void setJobStatus()
     {
+        JenkinsJobStatus jobStatus = jj.getJobStatus();
         
+        assert(jobStatus != JenkinsJobStatus.UNKOWN);
     }
 }
