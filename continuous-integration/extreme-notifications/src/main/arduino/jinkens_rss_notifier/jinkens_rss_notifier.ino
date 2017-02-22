@@ -30,7 +30,7 @@ Adafruit_NeoPixel strip2 = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN3, NEO_GRB + NEO
 int stripCount = 3;
 Adafruit_NeoPixel strips[] = {strip0, strip1, strip2};
 
-int MAX_BRIGHTNESS = 254;
+int PULSE_MAX = 254;
 
 /**
  * Holds the status of whether the LED is in pulsing mode or not.
@@ -41,7 +41,7 @@ int pulseStatuses [3] [NEOPIXEL_COUNT] = {0};
 /**
  * Valid brighness values are 0 - 255.
  */
-int stripBrightness [3] [NEOPIXEL_COUNT] = {MAX_BRIGHTNESS};  // set initial bright
+int stripBrightness [3] [NEOPIXEL_COUNT] = {PULSE_MAX};  // set initial bright
 
 // IMPORTANT: To reduce NeoPixel burnout risk, add 1000 uF capacitor across
 // pixel power leads, add 300 - 500 Ohm resistor on first pixel's data input
@@ -77,6 +77,7 @@ void setup()
     for(int s=0; s<stripCount; s++)
     {
         strips[s].begin();
+        strips[s].setBrightness(130);
     }
 
     // turn off all neopixels
@@ -166,7 +167,7 @@ int nextPulseValue(int stripIndex, int ledIndex)
 {
     stripBrightness[stripIndex][ledIndex]++;
     
-    if(stripBrightness[stripIndex][ledIndex] > MAX_BRIGHTNESS)
+    if(stripBrightness[stripIndex][ledIndex] > PULSE_MAX)
     {
         stripBrightness[stripIndex][ledIndex] = 0;
     }

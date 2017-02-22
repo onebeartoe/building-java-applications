@@ -372,7 +372,8 @@ public class JenkinsRssPoller implements SerialPortEventListener
             sendArduinoMessage(strip, jj);
 
             // Give the Arduino time to receive the data before sending the next one.
-            long iterationDelay = Duration.ofSeconds(4).toMillis();            
+            int delayInSeconds = 2;  // used to be 4
+            long iterationDelay = Duration.ofSeconds(delayInSeconds).toMillis();
             Sleeper.sleepo(iterationDelay);
         }
     }
