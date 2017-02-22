@@ -133,7 +133,6 @@ public class JenkinsRssPoller implements SerialPortEventListener
         String g = String.format(threeDigitFormat, green);
         String b = String.format(threeDigitFormat, blue);
         
-//TODO: actually look up weather the job is in progress
         int pulseCode = 0;
         if(job.getJobStatus() == JenkinsJobStatus.IN_PROGRESS)
         {
@@ -445,13 +444,12 @@ public class JenkinsRssPoller implements SerialPortEventListener
                 allJobs = obtainAllRssJobs();
                 
                 // TODO: remove the hard-coded nature of assuming there will always be 2 strips
-                IntStream.rangeClosed(0, 1).forEach( i ->
+                IntStream.rangeClosed(0, 2).forEach( i ->
                 {
                     List<JenkinsJob> configuredJobs = filter(i, allJobs);
 
                     updateNeopixelStrip(i, configuredJobs);
                 });
-
             } 
             catch (FeedException | IOException ex) 
             {

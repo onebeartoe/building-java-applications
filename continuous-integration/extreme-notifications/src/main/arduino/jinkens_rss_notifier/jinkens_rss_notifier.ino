@@ -10,6 +10,7 @@
 // these define the Arduino digial pins the connect to the Neopixel stips data line.
 #define PIN1 6
 #define PIN2 8
+#define PIN3 10
 
 #define NEOPIXEL_COUNT 30
 
@@ -24,8 +25,10 @@ Adafruit_NeoPixel strip0 = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN1, NEO_GRB + NEO
 
 Adafruit_NeoPixel strip1 = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN2, NEO_GRB + NEO_KHZ800);
 
-int stripCount = 2;
-Adafruit_NeoPixel strips[] = {strip0, strip1};
+Adafruit_NeoPixel strip2 = Adafruit_NeoPixel(NEOPIXEL_COUNT, PIN3, NEO_GRB + NEO_KHZ800);
+
+int stripCount = 3;
+Adafruit_NeoPixel strips[] = {strip0, strip1, strip2};
 
 int MAX_BRIGHTNESS = 254;
 
@@ -70,19 +73,27 @@ void setup()
    Serial.begin(9600);
    Serial.println("Hello Jenkins RSS notifier world!\n");
 
-  strip0.begin();
-  strip1.begin();
+    // initialize all strips
+    for(int s=0; s<stripCount; s++)
+    {
+        strips[s].begin();
+    }
 
-  for(int p=0; p<NEOPIXEL_COUNT; p++)
-  {
-      // turn off all neopixels
-      strip0.setPixelColor(p, 0);
-      strip1.setPixelColor(p, 0);
-  }
+    // turn off all neopixels
+    int black = 0;
+    for(int p=0; p<NEOPIXEL_COUNT; p++)
+    {
+        for(int s=0; s<stripCount; s++)
+        {
+            strips[s].setPixelColor(p, black);
+        }
+    }
   
   // Initialize all pixels to 'off'
-  strip0.show(); 
-  strip1.show();
+  for(int s=0; s<stripCount; s++)
+  {
+      strips[s].show();
+  }
 }
 
 /**
@@ -176,9 +187,6 @@ void updatePulsingLeds()
                 
                 strips[s].setPixelColor(l, g);
                 strips[s].show();
-                        
-//                Serial.print("gonna pulse:");
-//                Serial.println(g);
             }            
         }
     }
