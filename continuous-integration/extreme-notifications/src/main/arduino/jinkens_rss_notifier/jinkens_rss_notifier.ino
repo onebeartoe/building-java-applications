@@ -174,11 +174,14 @@ void updatePulsingLeds()
 //TODO: get the old value with strip.getColor() and do the maths to get the individual R,G,B values
                 int g = nextPulseValue(s, l);
                 
-                strips[l].setPixelColor(l, g);
+                strips[s].setPixelColor(l, g);
+                strips[s].show();
                         
 //                Serial.print("gonna pulse:");
 //                Serial.println(g);
             }            
         }
     }
+    
+    
 }

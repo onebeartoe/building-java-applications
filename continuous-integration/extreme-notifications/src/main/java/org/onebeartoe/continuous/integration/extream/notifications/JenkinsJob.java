@@ -33,6 +33,11 @@ public class JenkinsJob
             jobStatus = JenkinsJobStatus.UNSTABLE;
         }
         
+        if( jobStatusLabel.endsWith("?") )
+        {
+            jobStatus = JenkinsJobStatus.IN_PROGRESS;
+        }
+        
         if(jobStatus == null)
         {
             String errorMessage = "An unknown status was encountered: " + jobStatusLabel;

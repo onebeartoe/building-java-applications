@@ -101,6 +101,19 @@ public class JenkinsRssPoller implements SerialPortEventListener
      * @param strip
      * @param job
      * @return example value: '000:000:000:255:000:1', which means strip 0, led 0, rgb(0,255,0), pulsing = true
+     * 
+     *         other examples:
+     * 
+     * 
+                    green
+                    000:000:000:255:000:1
+
+                    blue
+                    000:000:000:000:130:1
+
+                    medium
+                    000:000:130:130:130:1
+     * 
      */
     private String buildArduinoMessage(int strip, JenkinsJob job)
     {        
@@ -120,8 +133,13 @@ public class JenkinsRssPoller implements SerialPortEventListener
         String g = String.format(threeDigitFormat, green);
         String b = String.format(threeDigitFormat, blue);
         
-//TODO: actually look up weather the job is in progress        
-        String pulsing = String.valueOf(1);
+//TODO: actually look up weather the job is in progress
+        int pulseCode = 0;
+        if(job.getJobStatus() == JenkinsJobStatus.IN_PROGRESS)
+        {
+            pulseCode = 1;
+        }
+        String pulsing = String.valueOf(pulseCode);
      
         StringBuilder message = new StringBuilder();
         message.append(stripIndex);
