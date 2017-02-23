@@ -28,7 +28,9 @@ public class JenkinsJob
         }
         
         if( jobStatusLabel.matches("\\d+ tests  started to fail")
-            || jobStatusLabel.matches("\\d+ tests are still failing") )
+            || jobStatusLabel.matches("\\d+ tests are still failing")
+            || jobStatusLabel.matches("1 less test is failing \\(total \\d+\\)")
+            || jobStatusLabel.matches("\\d+ less tests are failing \\(total \\d+\\)") )
         {
             jobStatus = JenkinsJobStatus.UNSTABLE;
         }

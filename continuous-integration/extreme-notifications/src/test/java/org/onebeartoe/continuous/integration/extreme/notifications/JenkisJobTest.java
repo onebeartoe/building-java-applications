@@ -1,3 +1,4 @@
+
 package org.onebeartoe.continuous.integration.extreme.notifications;
 
 import com.sun.syndication.io.FeedException;
@@ -30,7 +31,7 @@ public class JenkisJobTest
     
     @Parameterized.Parameters(name="{index} - {0}")
     public static Collection<Object[]> dataSet() throws MalformedURLException, FeedException, IOException
-    {
+    {                
         String u = "https://onebeartoe.ci.cloudbees.com/rssLatest";
         URL rssUrl = new URL(u);
         JenkinsRssFeedService rssService = new HttpJenkinsRssFeedService();

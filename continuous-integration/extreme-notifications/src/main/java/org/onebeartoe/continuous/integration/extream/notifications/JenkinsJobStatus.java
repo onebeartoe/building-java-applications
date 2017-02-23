@@ -8,11 +8,7 @@ import java.awt.Color;
  */
 public enum JenkinsJobStatus 
 {
-//    todo: get this working correctly
     IN_PROGRESS(Color.YELLOW),
-    
-//    todo: account for this job status: '1 less test is failing (total 3)'
-
     DISABLED(Color.GRAY),
     FAILING(Color.RED),
     STABLE(Color.GREEN),
