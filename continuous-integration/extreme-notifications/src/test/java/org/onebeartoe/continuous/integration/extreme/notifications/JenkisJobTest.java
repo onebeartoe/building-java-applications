@@ -16,6 +16,7 @@ import org.onebeartoe.continuous.integration.extream.notifications.JenkinsJob;
 import org.onebeartoe.continuous.integration.extream.notifications.JenkinsJobStatus;
 import org.onebeartoe.continuous.integration.extream.notifications.JenkinsRssFeedService;
 
+//todo: Correct the spelling
 /**
  * @author Roberto Marquez <https://www.youtube.com/user/onebeartoe>
  */
@@ -33,6 +34,7 @@ public class JenkisJobTest
     public static Collection<Object[]> dataSet() throws MalformedURLException, FeedException, IOException
     {                
         String u = "https://onebeartoe.ci.cloudbees.com/rssLatest";
+        
         URL rssUrl = new URL(u);
         JenkinsRssFeedService rssService = new HttpJenkinsRssFeedService();
         List jobs = rssService.getJobs(rssUrl);

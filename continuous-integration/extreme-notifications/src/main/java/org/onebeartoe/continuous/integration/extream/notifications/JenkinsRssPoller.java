@@ -1,6 +1,8 @@
 
 package org.onebeartoe.continuous.integration.extream.notifications;
 
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 import com.sun.syndication.io.FeedException;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
@@ -16,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
@@ -33,6 +36,8 @@ import org.onebeartoe.io.TextFileReader;
 import org.onebeartoe.io.buffered.BufferedTextFileReader;
 
 import org.onebeartoe.io.serial.SerialPorts;
+import org.onebeartoe.network.ClasspathResourceHttpHandler;
+import org.onebeartoe.network.EndOfRunHttpHandler;
 import org.onebeartoe.system.Sleeper;
 
 /**
@@ -71,7 +76,9 @@ public class JenkinsRssPoller implements SerialPortEventListener
     
     private String configPath;
      
-      private Map<Integer, LedStatusIndicatorStrip> knownIndicatorStrips;
+    private Map<Integer, LedStatusIndicatorStrip> knownIndicatorStrips;
+    
+    private HttpServer server;
       
     public JenkinsRssPoller(String port) throws Exception
     {        
@@ -337,7 +344,6 @@ public class JenkinsRssPoller implements SerialPortEventListener
         }        
     }
 
-
     public void start()
     {
         TimerTask pollerTask = new PollerTask();
@@ -347,6 +353,31 @@ public class JenkinsRssPoller implements SerialPortEventListener
         Date firstTime = new Date();
         
         timer.schedule(pollerTask, firstTime, POLL_DELAY);
+        
+        startHttpServer();
+    }
+    
+    private void startHttpServer()
+    {
+        try 
+        {
+            InetSocketAddress anyhost = new InetSocketAddress(1951);
+            int connectionMax = 10;
+            
+            server = HttpServer.create(anyhost, connectionMax);
+            
+            HttpHandler userInterfaceHttpHander = new ClasspathResourceHttpHandler();
+            HttpHandler quitHttpHandler = new EndOfRunHttpHandler(server);
+            
+            server.createContext("/", userInterfaceHttpHander);
+            server.createContext("/quit", quitHttpHandler);
+            
+            server.start();
+        } 
+        catch (IOException ex) 
+        {
+            logger.log(Level.SEVERE, null, ex);
+        }
     }
     
     /**
