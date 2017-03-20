@@ -1,6 +1,7 @@
 
 package org.onebeartoe.continuous.integration.extream.notifications;
 
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.syndication.io.FeedException;
@@ -38,6 +39,7 @@ import org.onebeartoe.io.buffered.BufferedTextFileReader;
 import org.onebeartoe.io.serial.SerialPorts;
 import org.onebeartoe.network.ClasspathResourceHttpHandler;
 import org.onebeartoe.network.EndOfRunHttpHandler;
+import org.onebeartoe.network.TextHttpHandler;
 import org.onebeartoe.system.Sleeper;
 
 /**
@@ -68,7 +70,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
     
     private JenkinsRssFeedService rssService;
     
-    public static String rssUrl =
+    private String rssUrl =
 //      "https://onebeartoe.ci.cloudbees.com/rssAll";
         "https://onebeartoe.ci.cloudbees.com/rssLatest";
     
@@ -208,7 +210,8 @@ public class JenkinsRssPoller implements SerialPortEventListener
             if(args.length > 2)
             {
                 // The third command line argument is the URL of the Jenkins RSS feed.
-                rssUrl = args[2];
+                String rssUrl = args[2];
+                poller.setRssUrl(rssUrl);
             }
         }
         
@@ -288,7 +291,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
                 jj.setNeopixelIndex(ledIndex);
                 
                 LedStatusIndicatorStrip lsis = knownIndicatorStrips.get(ledStrip);
-                
+            
                 if(lsis == null)
                 {
                     lsis = new LedStatusIndicatorStrip();
@@ -344,6 +347,11 @@ public class JenkinsRssPoller implements SerialPortEventListener
         }        
     }
 
+    public void setRssUrl(String url)
+    {
+        rssUrl = url;
+    }
+    
     public void start()
     {
         TimerTask pollerTask = new PollerTask();
@@ -368,9 +376,11 @@ public class JenkinsRssPoller implements SerialPortEventListener
             
             HttpHandler userInterfaceHttpHander = new ClasspathResourceHttpHandler();
             HttpHandler quitHttpHandler = new EndOfRunHttpHandler(server);
+            HttpHandler configHttpHandler = new ConfigHttpHandler();
             
             server.createContext("/", userInterfaceHttpHander);
             server.createContext("/quit", quitHttpHandler);
+            server.createContext("/reload-configurtion", configHttpHandler);
             
             server.start();
         } 
@@ -409,11 +419,33 @@ public class JenkinsRssPoller implements SerialPortEventListener
         }
     }
     
+    private class ConfigHttpHandler extends TextHttpHandler
+    {
+        @Override
+        protected String getHttpText(HttpExchange exchange) 
+        {
+            String message = "The job configuration re-loaded.";
+            
+            knownIndicatorStrips.clear();
+            try 
+            {
+                loadConfiguration();
+            } 
+            catch (IOException ex) 
+            {
+                message = "An error occured while reloading the job configuration.";
+                logger.log(Level.SEVERE, message, ex);
+            }
+            
+            return message;
+        }
+    }
+    
     /**
      *  The task class is to 
      *  poll the RSS feed for all jobs status entries.
      */
-    class PollerTask extends TimerTask
+    private class PollerTask extends TimerTask
     {   
         private List<JenkinsJob> filter(int indicatorIndex, List<JenkinsJob> allRssJobs)
         {
