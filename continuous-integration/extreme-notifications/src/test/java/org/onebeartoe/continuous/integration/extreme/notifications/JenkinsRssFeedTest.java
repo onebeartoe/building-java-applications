@@ -61,7 +61,7 @@ public class JenkinsRssFeedTest
         String key = "EXTREME_NOTIFICATIONS_RSSURL";
         String rssUrl = System.getenv(key);
 
-        rssUrl = JenkinsRssPoller.rssUrl;
+        rssUrl = "https://onebeartoe.ci.cloudbees.com/rssLatest";
         
         System.out.println(" env - rssUrl: " + rssUrl);                
         assertNotNull(rssUrl);        
@@ -83,11 +83,7 @@ public class JenkinsRssFeedTest
             
             List entries = feed.getEntries();
             
-//            List <String> titles = entries.stream()
-//                   .map( p -> p.getTitle() )
-//                   .collectforEach( p -> {});
-            
-// steams and lambda this baby
+// TODO: streams and lambda this baby
             List<String> titles = new ArrayList();
             for(Object e : entries)
             {
