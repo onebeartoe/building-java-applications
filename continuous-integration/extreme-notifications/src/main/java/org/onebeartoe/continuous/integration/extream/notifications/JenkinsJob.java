@@ -174,11 +174,6 @@ public class JenkinsJob
             checkRegularExpressionStatuses(jobStatusLabel);
         }
     }
-
-//    public void setJobStatus(JenkinsJobStatus jobStatus) 
-//    {
-//        this.jobStatus = jobStatus;
-//    }
     
     @Override
     public String toString()
