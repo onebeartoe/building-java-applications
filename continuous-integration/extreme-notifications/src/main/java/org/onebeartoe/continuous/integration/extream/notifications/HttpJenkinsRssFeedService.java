@@ -34,7 +34,8 @@ public class HttpJenkinsRssFeedService implements JenkinsRssFeedService
             se.getAuthor();
             
             String title = se.getTitle();
-            JenkinsJob job = JenkinsJob.fromRssTitle(title);
+            String uri = se.getUri();
+            JenkinsJob job = JenkinsJob.fromRssTitle(title, uri);
             
             Date jobRunDate = se.getPublishedDate();
             job.setJobRunDate(jobRunDate);

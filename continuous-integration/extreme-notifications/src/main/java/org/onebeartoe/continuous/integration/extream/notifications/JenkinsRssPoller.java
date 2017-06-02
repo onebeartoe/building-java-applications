@@ -98,7 +98,16 @@ public class JenkinsRssPoller implements SerialPortEventListener
         
         rssService = new HttpJenkinsRssFeedService();
         
-        initializeSerialPort(port);
+        try
+        {
+            initializeSerialPort(port);
+        }
+        catch(Exception e)
+        {
+            String message = "The serial port was not obtained.";
+            System.err.println(message);
+            e.printStackTrace();
+        }
         
         knownIndicatorStrips = new HashMap();
         

@@ -81,12 +81,24 @@ public class JenkinsJob
         }        
     }
     
-    public static JenkinsJob fromRssTitle(String rssTitle)
+    /**
+     * The job name is obtained from the title.  If the title does not contain the 
+     * job name, then the code looks for the job name in the URI fields passed.
+     * 
+     * @param rssTitle
+     * @param uri
+     * @return 
+     */
+    public static JenkinsJob fromRssTitle(String rssTitle, String uri)
     {
         JenkinsJob job = new JenkinsJob();
         
         int hashIndex = rssTitle.indexOf('#');        
-        String name = rssTitle.substring(0, hashIndex).trim();        
+        String name = rssTitle.substring(0, hashIndex).trim();
+        if(name.trim().equals(""))
+        {
+            name = jobNameFromUri(uri);
+        }
         job.setJobName(name);
         
         int openParenIndex = rssTitle.indexOf('(');
@@ -112,6 +124,17 @@ public class JenkinsJob
     public int getNeopixelIndex() 
     {
         return neopixelIndex;
+    }
+    
+    private static String jobNameFromUri(String uri)
+    {
+        int end = uri.lastIndexOf("/");
+                        
+        int start = uri.lastIndexOf("/", end-1) + 1;
+        
+        String name = uri.substring(start, end);
+        
+        return name;
     }
 
     public void setNeopixelIndex(int neopixelIndex) 
