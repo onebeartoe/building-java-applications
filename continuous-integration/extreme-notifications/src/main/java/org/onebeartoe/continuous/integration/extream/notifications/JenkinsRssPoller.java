@@ -322,10 +322,17 @@ public class JenkinsRssPoller implements SerialPortEventListener
     
     private void sendArduinoMessage(int strip, JenkinsJob job)
     {
-        String message = buildArduinoMessage(strip, job);
-
-        output.println(message);
-        output.flush();
+        if(output == null)
+        {
+            System.err.println("The variable, output, is null;");
+            System.err.println("No message sent to the serial port connection.");
+        }
+        else
+        {
+            String message = buildArduinoMessage(strip, job);
+            output.println(message);
+            output.flush();
+        }
     }
     
     /**
