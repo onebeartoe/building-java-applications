@@ -103,14 +103,20 @@ void setup()
  * If there is data available on the Serial buffer, then it parses the line as follows:
  * 
  * sample input:
- *           1 
- * 01234567890123456789
- * 002:000:155:000    
+ *           1         2     
+ * 012345678901234567890123456789
+ * 002:000:155:000:200:0
  * 
- * 0-2 -> neopixel index on the stip
- *     4-6 -> red component (0-255)
- *         8-10 -> green component (0-225)  
- *             12-14 -> blue component (0-225)
+ * 0-2 -> strip index
+ *     4-6 -> neopixel index on the stip
+ *         8-10 -> red component (0-255)
+ *             12-14 -> green component (0-225)  
+ *                 16-18 -> blue component (0-225)
+ *                     20 -> pulsing flag 
+ * 
+ * Example payload:
+ * '000:000:000:255:000:1', which means strip 0, led 0, rgb(0,255,0), pulsing = true
+ * 
  */
 void loop() 
 {
