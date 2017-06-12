@@ -43,7 +43,6 @@ import org.onebeartoe.network.TextHttpHandler;
 import org.onebeartoe.system.Sleeper;
 
 /**
- * 
  * I found a 64bit version of rxtx for Windows here:
  * 
  *      http://www.openremote.org/display/forums/Zwave+rxtxSerial+dll+Can't+load+IA+32bit
@@ -95,6 +94,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
         logger = Logger.getLogger(className);
         
         POLL_DELAY = Duration.ofSeconds(30).toMillis();
+//        POLL_DELAY = Duration.ofMinutes(5).toMillis();
         
         rssService = new HttpJenkinsRssFeedService();
         
@@ -523,7 +523,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
             {
                 allJobs = obtainAllRssJobs();
                 
-                // TODO: remove the hard-coded nature of assuming there will always be 2 strips
+                // TODO: remove the hard-coded nature of assuming there will always be 3 strips
                 IntStream.rangeClosed(0, 2).forEach( i ->
                 {
                     List<JenkinsJob> configuredJobs = filter(i, allJobs);
