@@ -27,7 +27,8 @@ public class JenkinsJob
             jobStatus = JenkinsJobStatus.FAILING;
         }
         
-        if( jobStatusLabel.matches("\\d+ more tests are failing \\(total \\d+\\)")
+        if( jobStatusLabel.matches("1 more test is failing \\(total \\d+\\)")
+            || jobStatusLabel.matches("\\d+ more tests are failing \\(total \\d+\\)")
             || jobStatusLabel.matches("\\d+ test failures")
             || jobStatusLabel.matches("1 test  started to fail")
             || jobStatusLabel.matches("\\d+ tests  started to fail")
