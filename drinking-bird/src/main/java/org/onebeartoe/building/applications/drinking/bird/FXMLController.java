@@ -1,7 +1,6 @@
 
 package org.onebeartoe.building.applications.drinking.bird;
 
-import com.sun.javafx.beans.event.AbstractNotifyListener;
 import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
@@ -33,8 +32,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-//import javafx.util.Duration;
 import javafx.util.converter.IntegerStringConverter;
 
 public class FXMLController implements Initializable

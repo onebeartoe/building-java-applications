@@ -1,3 +1,4 @@
+
 package org.onebeartoe.building.applications.drinking.bird;
 
 import java.net.URL;
@@ -8,7 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class MainApp extends Application 
+public class JavafxDrinkingBirdApp extends Application
 {
     private FXMLLoader loader;
 
