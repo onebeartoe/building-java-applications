@@ -20,6 +20,7 @@
     <modules>
         <module>continuous-integration</module>
         <module>drinking-bird</module>
+        <module>log-diver</module>
         <module>parent-child</module>
     </modules>    
 
