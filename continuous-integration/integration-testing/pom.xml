@@ -13,7 +13,7 @@
 
     <artifactId>integration-testing</artifactId>
   
-    <name>onebeartoe-building-apps-continuous-integration-testing</name>
+    <name>onebeartoe-building-applications-continuous-integration-testing</name>
 
     <url>http://maven.apache.org</url>
 
