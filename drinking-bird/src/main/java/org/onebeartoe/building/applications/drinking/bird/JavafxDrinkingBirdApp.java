@@ -20,8 +20,6 @@ public class JavafxDrinkingBirdApp extends Application
 {
     private FXMLLoader loader;
     
-    private WindowProperties wp;
-    
     private Logger logger;
     
     private JavafxApplication guiConiguration;
@@ -36,7 +34,7 @@ public class JavafxDrinkingBirdApp extends Application
     @Override
     public void init()
     {
-        guiConiguration = new JavafxApplication();        
+        loadDefaultGuiConfig();
     }
     
     /**
@@ -52,38 +50,35 @@ public class JavafxDrinkingBirdApp extends Application
         launch(args);
     }    
     
-    private void restoreWindowProperties(Stage stage)
+    private void loadDefaultGuiConfig()
     {
-        try
+
+        guiConiguration = new JavafxApplication(applicationId)
         {
-            wp = new WindowProperties();
-            wp.id = applicationId;
-            wp = guiConiguration.loadWindowProperties(wp);
-            guiConiguration.restoreWindowProperties(wp, stage);
-        } 
-        catch (IOException | ClassNotFoundException ex) 
-        {
-            Logger.getLogger(JavafxDrinkingBirdApp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        if(wp == null)
-        {
-            // Prvoide default values if someting goes wrong with retoring the 
-            // persisted values.
-            wp = new WindowProperties();
-            
-            wp.id = getClass().getName();
-            wp.applicationName = getClass().getSimpleName();
-            
-            // use the default values
-            wp.width = 337;
-            wp.height = 319;
-            
-            wp.locationX = 50;
-            wp.locationY = 100;
-            
-            guiConiguration.restoreWindowProperties(wp, stage);
-        }
+            @Override
+            public int defaultX() 
+            {
+                return 50;
+            }
+
+            @Override
+            public int defaultY() 
+            {
+                return 100;
+            }
+
+            @Override
+            public int defaultWidth() 
+            {
+                return 337;
+            }
+
+            @Override
+            public int defaultHeight() 
+            {
+                return 319;
+            }
+        };                
     }
     
     @Override
@@ -101,7 +96,7 @@ public class JavafxDrinkingBirdApp extends Application
         stage.setTitle("Drinking Bird Bot");
         stage.setScene(scene);
         
-        restoreWindowProperties(stage);
+        guiConiguration.restoreWindowProperties(stage);
         
         stage.setOnCloseRequest( new EventHandler<WindowEvent>() 
         {
@@ -109,13 +104,13 @@ public class JavafxDrinkingBirdApp extends Application
             public void handle(WindowEvent event) 
             {
                 System.out.println("bye");
-                
-                wp = guiConiguration.currentConfiguration(stage);
-                wp.id = applicationId;
+
+                guiConiguration.currentConfiguration(stage);
+                guiConiguration.setApplicationId(applicationId);
                 
                 try
                 {
-                    guiConiguration.persistWindowProperties(wp);
+                    guiConiguration.persistWindowProperties();
                 } 
                 catch (IOException ex) 
                 {
