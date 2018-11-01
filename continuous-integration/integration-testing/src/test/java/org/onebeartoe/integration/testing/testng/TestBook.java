@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 
 public class TestBook 
 {
-    @Test
+//    @Test(groups = {"browswer"})
     public void testFireFox() 
     {
         WebDriver driver = new FirefoxDriver();
