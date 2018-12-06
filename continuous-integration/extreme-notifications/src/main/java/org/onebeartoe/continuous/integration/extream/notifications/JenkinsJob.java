@@ -79,8 +79,13 @@ public class JenkinsJob
 
                 break;
             }
-            // Use no default case, since the status that need regular expressions
-            // need checking.
+            default:
+            {
+                // Use no default case, since the status that need regular expressions
+                // need checking.
+                
+                this.jobStatus = null;
+            }
         }        
     }
     
