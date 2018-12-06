@@ -5,13 +5,17 @@
 
     <parent>
         <groupId>org.onebeartoe</groupId>
-        <artifactId>onebeartoe-web</artifactId>
+        <artifactId>onebeartoe-building-applications-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     
-    <artifactId>web-automation</artifactId>
+    <artifactId>onebeartoe-web</artifactId>
     
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+
+    <name>onebeartoe-building-applications-web</name>
     
-    <name>onebeartoe-building-applications-web-automation</name>
+    <modules>
+        <module>automation</module>
+    </modules>
 </project>
