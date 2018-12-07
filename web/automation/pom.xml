@@ -15,6 +15,10 @@
     
     <name>onebeartoe-building-applications-web-automation</name>
 
+    <properties>
+        <unit.of.work.test.url>http://localhost:8080/onebeartoe-com/productivity/income-calculator/salary-to-rate/</unit.of.work.test.url>
+    </properties>
+
     <dependencies>
 <!--
         <dependency>
@@ -46,6 +50,13 @@
     </dependencies>
     
     <build>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -85,6 +96,10 @@
         
         <profile>
             <id>production</id>
+
+            <properties>
+                <test.url>http://www.onebeartoe.com/productivity/income-calculator/salary-to-rate/</test.url>
+            </properties>
         </profile>
     </profiles>
 </project>
