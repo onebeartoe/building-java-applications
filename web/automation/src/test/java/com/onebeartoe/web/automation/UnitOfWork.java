@@ -1,16 +1,10 @@
 
 package com.onebeartoe.web.automation;
 
-//import com.github.paulakimenko.webdriver.service.Driver;
-//import com.github.paulakimenko.webdriver.service.WDProperties;
-//
-//import com.github.paulakimenko.webdriver.service.WDService;
-//import com.github.paulakimenko.webdriver.service.WDServiceProvider;
-
-
 import java.util.logging.Logger;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.annotations.AfterTest;
 
 /**
  * The class represents the units of work that are preformed on any given Web 
@@ -28,33 +22,20 @@ public class UnitOfWork
 
     protected Logger logger;
 
-//    protected WDService webdriverService;
-
     public UnitOfWork()
     {
         logger = Logger.getLogger( getClass().getName() );
         
-//        String driverPath = "/usr/bin/google-chrome";
+
         String driverPath = "/opt/google/chromedriver/chromedriver-2.37/chromedriver";
         System.setProperty("webdriver.chrome.driver", driverPath);
-        
-//        WDProperties properties = new WDProperties.Builder()
-//        .driver(Driver.CHROME)
-//        .implicitlyWait(5)
-//        .fluentWaitTimeout(10)
-//        .timeUnit(TimeUnit.SECONDS)
-//        .build();
-//        
-//        webdriverService = WDServiceProvider.getInstance();
-//        webdriverService.setProperties(properties);
-//        webdriverService.init();
-        
-        //TODO: Wah?
-//        driver = (RemoteWebDriver) webdriverService.getDriver();
 
-            driver = new ChromeDriver();
+        driver = new ChromeDriver();
+    }
+    
+    @AfterTest
+    protected void tearDown()
+    {
+        driver.close();
     }
 }
-
-
-

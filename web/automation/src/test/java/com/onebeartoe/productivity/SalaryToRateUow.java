@@ -18,7 +18,7 @@ public class SalaryToRateUow extends UnitOfWork
        
         driver.get("http://www.onebeartoe.com/productivity/income-calculator/salary-to-rate/");       
 
-        driver.findElement(By.id("id")).click();
+//        driver.findElement(By.id("id")).click();
    }
 }
 
