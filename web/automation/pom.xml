@@ -14,4 +14,84 @@
     <packaging>jar</packaging>
     
     <name>onebeartoe-building-applications-web-automation</name>
+
+    <dependencies>
+<!--
+        <dependency>
+             Github url: https://github.com/paulakimenko/webdriver-service/ 
+            <groupId>com.github.paulakimenko</groupId>
+            <artifactId>webdriver-service</artifactId>
+            <version>0.5</version>
+        </dependency>        
+
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>24.1-jre</version>
+    </dependency>
+        
+-->
+
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>24.1-jre</version>
+    </dependency>
+
+<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>3.11.0</version>
+</dependency>         
+        
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.14.3</version>
+            <scope>test</scope>
+        </dependency>        
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.1</version>
+
+                <configuration>
+                  <suiteXmlFiles>
+                      <suiteXmlFile>src/test/resources/testng-web-automation.xml</suiteXmlFile>
+                  </suiteXmlFiles>
+                </configuration>
+              
+                <executions>
+                      <execution>
+                        <goals>
+                          <goal>integration-test</goal>
+                          <goal>verify</goal>
+                        </goals>
+                      </execution>
+                </executions>              
+            </plugin>            
+        </plugins>
+    </build>
+    
+    <profiles>
+        <profile>
+            <id>chrome</id>
+        </profile>
+        
+        <profile>
+            <id>firefox</id>
+        </profile>
+        
+        <profile>
+            <id>headless</id>
+        </profile>
+        
+        <profile>
+            <id>production</id>
+        </profile>
+    </profiles>
 </project>

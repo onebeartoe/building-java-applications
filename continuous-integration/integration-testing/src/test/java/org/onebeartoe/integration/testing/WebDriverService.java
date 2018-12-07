@@ -1,9 +1,8 @@
 
 package org.onebeartoe.integration.testing;
 
-import java.io.File;
 import java.net.MalformedURLException;
-import net.anthavio.phanbedder.Phanbedder;
+
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -12,7 +11,9 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-public class WebDriverService 
+//TODO: Is the ready for deprecation?
+//TODO: See https://github.com/paulakimenko/webdriver-service/
+public class WebDriverService
 {
     public RemoteWebDriver load(WebDriverType type, Configuration configggg) throws ConfigurationException, MalformedURLException
     {

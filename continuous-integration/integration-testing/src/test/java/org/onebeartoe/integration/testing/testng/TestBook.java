@@ -8,14 +8,15 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.Test;
 
+//TODO: Remove this test.
 public class TestBook 
 {
-//    @Test(groups = {"browswer"})
+    @Test(groups = {"browswer"})
     public void testFireFox() 
     {
         WebDriver driver = new FirefoxDriver();
 
-        driver.manage().window().maximize();
+//        driver.manage().window().maximize();
 
         driver.get("http://www.facebook.com");
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="building-java-applications-web-abutomation-test-suite" parallel="none">
+    <test name="web-automation-tests-tests">
+        <groups>
+            <run>
+                <include name="web-automation" />
+            </run>
+        </groups>
+
+        <packages>
+            <package name="com.onebeartoe.productivity"/>
+        </packages>
+    </test>    
+</suite>

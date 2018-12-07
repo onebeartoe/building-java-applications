@@ -1,0 +1,18 @@
+
+As a Web automation developer,
+I need object oriented test software,
+so that components are reused as much as possible to test applications.
+
+The test software has run-time configuration and,
+the default run-time configuration is to run in a desktop environment with the Firefox browser and,
+run-time configuration exists to execute tests in a desktop  environment with the Chrome browser and,
+run-time configuration exists to execute tests in a headless environment with Chrome and,
+the URL under test is specified by run-time configuration and,
+Maven profiles exist for specifying the browser and URL used for testing and,
+the continuous integration server runs the test software in a headless environment.
+
+
+
+!!!
+
+Web automtion tests use PageObject design pattern to move between pages.
