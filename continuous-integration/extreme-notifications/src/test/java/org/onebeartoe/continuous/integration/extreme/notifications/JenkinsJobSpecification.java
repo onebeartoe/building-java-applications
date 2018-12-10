@@ -10,9 +10,10 @@ import org.testng.annotations.Test;
 public class JenkinsJobSpecification
 {
     private JenkinsJob implementation;
-    
-    @BeforeClass
-    public void initialize()
+  
+    public JenkinsJobSpecification()
+//    @BeforeClass
+//    public void initialize()
     {
         implementation = new JenkinsJob();
     }
