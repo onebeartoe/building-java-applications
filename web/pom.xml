@@ -9,6 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     
+    <groupId>org.onebeartoe.building</groupId>
     <artifactId>onebeartoe-web</artifactId>
     
     <packaging>pom</packaging>
