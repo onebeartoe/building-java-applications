@@ -1,5 +1,5 @@
 
-package org.onebeartoe.continuous.integration.extream.notifications;
+package org.onebeartoe.continuous.integration.extreme.notifications;
 
 import java.util.Date;
 

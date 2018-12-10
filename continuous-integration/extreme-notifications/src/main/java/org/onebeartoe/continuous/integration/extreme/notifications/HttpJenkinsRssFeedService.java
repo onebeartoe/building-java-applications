@@ -1,5 +1,5 @@
 
-package org.onebeartoe.continuous.integration.extream.notifications;
+package org.onebeartoe.continuous.integration.extreme.notifications;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;

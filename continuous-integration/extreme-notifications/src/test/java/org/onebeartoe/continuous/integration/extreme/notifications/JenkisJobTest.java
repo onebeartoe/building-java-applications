@@ -11,10 +11,6 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.onebeartoe.continuous.integration.extream.notifications.HttpJenkinsRssFeedService;
-import org.onebeartoe.continuous.integration.extream.notifications.JenkinsJob;
-import org.onebeartoe.continuous.integration.extream.notifications.JenkinsJobStatus;
-import org.onebeartoe.continuous.integration.extream.notifications.JenkinsRssFeedService;
 
 //todo: Correct the spelling
 /**
