@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 
 /**
  * The class represents the units of work that are preformed on any given Web 
@@ -28,8 +29,10 @@ public class UnitOfWork
     protected String testUrl;
     
     protected Properties properites;
-    
-    public UnitOfWork() throws IOException, Exception
+  
+    @BeforeClass
+    public void initializeClass() throws IOException, Exception
+//    public UnitOfWork() throws IOException, Exception
     {
         logger = Logger.getLogger( getClass().getName() );
         
