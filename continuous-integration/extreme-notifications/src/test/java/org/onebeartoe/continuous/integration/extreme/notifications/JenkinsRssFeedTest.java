@@ -1,4 +1,5 @@
 
+//TODO: Convert this from a unit test to an integration test.
 package org.onebeartoe.continuous.integration.extreme.notifications;
 
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -11,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.dom4j.DocumentException;
 
@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
  */
 public class JenkinsRssFeedTest
 {
+//TODO: Convert this from a unit test to an integration test.    
     @Test
     public void builds() throws MalformedURLException, IOException, DocumentException
     {
@@ -55,7 +56,6 @@ public class JenkinsRssFeedTest
             
             List entries = feed.getEntries();
             
-// TODO: streams and lambda this baby
             List<String> titles = new ArrayList();
             for(Object e : entries)
             {
@@ -93,23 +93,5 @@ public class JenkinsRssFeedTest
             
         }
     }
-
-    @Test
-    public void deploys()
-    {
-/*        
-        String key = "temp";
-        String rssUrl = System.getenv(key);        
-        System.out.println(" env -   PATH: " + rssUrl);        
-        assertNotNull(rssUrl);
-        assertNotSame(rssUrl, "");
-  */      
-        Map<String, String> env = System.getenv();
-//        for (String envName : env.keySet()) 
-        {
-//            System.out.format("%s=%s%n",
-//                              envName,
-//                              env.get(envName));
-        }
-    }
 }
+//TODO: Convert this from a unit test to an integration test.

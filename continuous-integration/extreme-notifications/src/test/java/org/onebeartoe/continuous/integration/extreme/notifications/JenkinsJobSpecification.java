@@ -18,6 +18,15 @@ public class JenkinsJobSpecification
         implementation = new JenkinsJob();
     }
     
+    @Test(groups = {"unit"}, expectedExceptions = StringIndexOutOfBoundsException.class)
+    public void fromRssTitle_fail_badTitle()
+    {
+        String rssTitle = "bad-title";
+        String uri = "http://some.url/";
+        
+        JenkinsJob jenkinsJob = JenkinsJob.fromRssTitle(rssTitle, uri);
+    }
+    
     @Test(groups = {"unit"})
     public void toString_pass()
     {
