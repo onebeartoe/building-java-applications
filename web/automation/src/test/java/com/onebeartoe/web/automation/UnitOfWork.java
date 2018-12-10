@@ -32,7 +32,6 @@ public class UnitOfWork
   
     @BeforeClass
     public void initializeClass() throws IOException, Exception
-//    public UnitOfWork() throws IOException, Exception
     {
         logger = Logger.getLogger( getClass().getName() );
         

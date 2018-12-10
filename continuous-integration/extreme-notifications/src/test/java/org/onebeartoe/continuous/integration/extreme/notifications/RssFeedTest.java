@@ -14,13 +14,10 @@ import org.dom4j.DocumentFactory;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.dom4j.tree.DefaultElement;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertNotSame;
+import org.testng.annotations.Test;
 
 /**
  * This test is for CruiseControl builds.
@@ -29,32 +26,6 @@ import org.junit.Ignore;
  */
 public class RssFeedTest
 {
-
-    public RssFeedTest()
-    {
-    }
-
-    @BeforeClass
-    public static void setUpClass()
-    {
-    }
-
-    @AfterClass
-    public static void tearDownClass()
-    {
-    }
-
-    @Before
-    public void setUp()
-    {
-    }
-
-    @After
-    public void tearDown()
-    {
-    }
-
-    @Ignore
     @Test
     public void builds() throws MalformedURLException, IOException, DocumentException
     {
@@ -107,23 +78,5 @@ rssUrl = "http://some.other.host/ci/builds";
         }
         
         inputStream.close();
-    }
-
-    @Test
-    public void deploys()
-    {
-        String key = "temp";
-        String rssUrl = System.getenv(key);        
-        System.out.println(" env -   PATH: " + rssUrl);        
-        assertNotNull(rssUrl);
-        assertNotSame(rssUrl, "");
-        
-        Map<String, String> env = System.getenv();
-//        for (String envName : env.keySet()) 
-        {
-//            System.out.format("%s=%s%n",
-//                              envName,
-//                              env.get(envName));
-        }
     }
 }

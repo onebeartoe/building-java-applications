@@ -15,13 +15,10 @@ import java.util.Map;
 
 import org.dom4j.DocumentException;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.onebeartoe.continuous.integration.extream.notifications.JenkinsRssPoller;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertNotNull;
+import static org.testng.AssertJUnit.assertNotSame;
+import org.testng.annotations.Test;
 
 /**
  * This test is for the RSS feeds provided by Jenkins builds.
@@ -30,31 +27,6 @@ import org.onebeartoe.continuous.integration.extream.notifications.JenkinsRssPol
  */
 public class JenkinsRssFeedTest
 {
-
-    public JenkinsRssFeedTest()
-    {
-    }
-
-    @BeforeClass
-    public static void setUpClass()
-    {
-    }
-
-    @AfterClass
-    public static void tearDownClass()
-    {
-    }
-
-    @Before
-    public void setUp()
-    {
-    }
-
-    @After
-    public void tearDown()
-    {
-    }
-
     @Test
     public void builds() throws MalformedURLException, IOException, DocumentException
     {

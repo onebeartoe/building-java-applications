@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * @author Roberto Marquez
  */
-public class JenkinsJob 
+public class JenkinsJob
 {
     private String jobName;
     
