@@ -23,8 +23,9 @@ public class UnitOfWorkSpecification
     
     protected Properties properites;
   
-    @BeforeClass
-    public void initializeClass() throws IOException, Exception
+    public UnitOfWorkSpecification() throws IOException, Exception
+//    @BeforeClass
+//    public void initializeClass() throws IOException, Exception
     {
         logger = Logger.getLogger( getClass().getName() );
         

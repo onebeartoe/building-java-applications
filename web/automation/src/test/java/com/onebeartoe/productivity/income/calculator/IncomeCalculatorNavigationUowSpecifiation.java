@@ -8,8 +8,5 @@ import org.onebeartoe.web.automation.UnitOfWorkSpecification;
  */
 public class IncomeCalculatorNavigationUowSpecifiation extends UnitOfWorkSpecification
 {
-    public IncomeCalculatorNavigationUowSpecifiation()
-    {
-        
-    }
+    
 }

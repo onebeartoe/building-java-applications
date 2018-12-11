@@ -1,18 +1,20 @@
 
 package com.onebeartoe.development.tools.longs.to.date;
 
+import java.io.IOException;
+import org.onebeartoe.web.automation.UnitOfWorkSpecification;
 import org.testng.annotations.Test;
 
 /**
  * @author Roberto Marquez
  */
-public class JavaLongToDateUowSpecification
+public class JavaLongToDateUowSpecification extends UnitOfWorkSpecification
 {
-    private JavaLongToDateUow unitsOfWork;
+    private final JavaLongToDateUow unitsOfWork;
 
-    public JavaLongToDateUowSpecification()
+    public JavaLongToDateUowSpecification() throws IOException, Exception
     {
-        unitsOfWork = new JavaLongToDateUow();
+        unitsOfWork = new JavaLongToDateUow(driver);
     }
     
     @Test(groups = {"web-automation"})
@@ -26,5 +28,6 @@ public class JavaLongToDateUowSpecification
         
         assert( convertedDate.contains("1969") );
     }
-    
+
+//TODO: Implement Date to milliseconds.    
 }

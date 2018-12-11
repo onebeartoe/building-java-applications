@@ -10,5 +10,8 @@ public class WebAutomationPage
 {
    protected RemoteWebDriver driver;
    
-   
+   public WebAutomationPage(RemoteWebDriver driver)
+   {
+       this.driver = driver;
+   }
 }
