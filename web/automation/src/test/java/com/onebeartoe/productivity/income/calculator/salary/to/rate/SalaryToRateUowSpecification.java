@@ -1,7 +1,7 @@
 
 package com.onebeartoe.productivity.income.calculator.salary.to.rate;
 
-import com.onebeartoe.web.automation.UnitOfWorkSpecification;
+import org.onebeartoe.web.automation.UnitOfWorkSpecification;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
@@ -17,12 +17,12 @@ public class SalaryToRateUowSpecification extends UnitOfWorkSpecification
        
         driver.get(testUrl);
 
-        String target1 = "Consider earning $55000 annually.  Having worked 52 weeks";
-
         WebElement bodyElement = driver.findElementByTagName("body");
 
         String text = bodyElement.getText();
         
+        String target1 = "Consider earning $55000 annually.  Having worked 52 weeks";        
+
         assert( text.contains(target1) );
         
         String target2 = "$26.44230842590332 an hour";

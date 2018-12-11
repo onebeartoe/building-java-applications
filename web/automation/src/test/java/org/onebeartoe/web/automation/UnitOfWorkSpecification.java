@@ -1,5 +1,5 @@
 
-package com.onebeartoe.web.automation;
+package org.onebeartoe.web.automation;
 
 import java.io.IOException;
 import java.io.InputStream;
