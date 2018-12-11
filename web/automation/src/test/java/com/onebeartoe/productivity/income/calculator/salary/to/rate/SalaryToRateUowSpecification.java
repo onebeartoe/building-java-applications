@@ -1,15 +1,14 @@
-//TODO: Implement java-long-to-date
 
-package com.onebeartoe.productivity;
+package com.onebeartoe.productivity.income.calculator.salary.to.rate;
 
-import com.onebeartoe.web.automation.UnitOfWork;
+import com.onebeartoe.web.automation.UnitOfWorkSpecification;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 /**
  * @author Roberto Marquez
  */
-public class SalaryToRateUow extends UnitOfWork
+public class SalaryToRateUowSpecification extends UnitOfWorkSpecification
 {
     @Test(groups = {"web-automation"})
    public void defaults()
@@ -29,7 +28,5 @@ public class SalaryToRateUow extends UnitOfWork
         String target2 = "$26.44230842590332 an hour";
         
         assert( text.contains(target2) );
-   }
+   }    
 }
-
-//TODO: Implement java-long-to-date
