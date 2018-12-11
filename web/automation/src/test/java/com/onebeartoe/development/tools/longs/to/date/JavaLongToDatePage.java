@@ -15,21 +15,15 @@ public class JavaLongToDatePage extends WebAutomationPage
     private final String MILLISECONDS_FIELD_ID = "milliseconds";
     
     private final String SUBMIT_MILLIS_BUTTON_ID = "submitMillis";
-    
-//    private final RemoteWebDriver driver;
 
     public JavaLongToDatePage(RemoteWebDriver driver)
     {
         super(driver);
     }
-    
-    
-    
+
     public String getConvertedDate()
-    {
-        String id = CONVERTED_DATE_TEXT_ID;
-        
-        WebElement element = driver.findElementById(id);
+    {        
+        WebElement element = driver.findElementById(CONVERTED_DATE_TEXT_ID);
         
         return element.getText();
     }

@@ -1,6 +1,7 @@
 
 package com.onebeartoe.productivity.income.calculator;
 
+import java.io.IOException;
 import org.onebeartoe.web.automation.UnitOfWorkSpecification;
 
 /**
@@ -8,5 +9,8 @@ import org.onebeartoe.web.automation.UnitOfWorkSpecification;
  */
 public class IncomeCalculatorNavigationUowSpecifiation extends UnitOfWorkSpecification
 {
-    
+    public IncomeCalculatorNavigationUowSpecifiation() throws IOException, Exception
+    {
+        
+    }
 }

@@ -3,9 +3,7 @@
 package com.onebeartoe.productivity.income.calculator.salary.to.rate;
 
 import org.onebeartoe.web.automation.UnitsOfWork;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testng.annotations.Test;
 
 /**
  * @author Roberto Marquez

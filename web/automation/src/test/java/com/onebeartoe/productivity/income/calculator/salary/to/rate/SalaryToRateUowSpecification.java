@@ -1,6 +1,7 @@
 
 package com.onebeartoe.productivity.income.calculator.salary.to.rate;
 
+import java.io.IOException;
 import org.onebeartoe.web.automation.UnitOfWorkSpecification;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
@@ -10,7 +11,12 @@ import org.testng.annotations.Test;
  */
 public class SalaryToRateUowSpecification extends UnitOfWorkSpecification
 {
-    @Test(groups = {"web-automation"})
+    public SalaryToRateUowSpecification() throws IOException, Exception
+    {
+        
+    }
+    
+   @Test(groups = {"web-automation"})
    public void defaults()
    {
         logger.info(" testing the print");
