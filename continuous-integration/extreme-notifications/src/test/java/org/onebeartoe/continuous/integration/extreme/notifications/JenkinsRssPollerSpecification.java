@@ -25,12 +25,12 @@ public class JenkinsRssPollerSpecification
     }
 
     @Test(groups = {"unit"})
-    public void initialzeRssPoller() throws Exception
+    public void start() throws Exception
     {
         String [] args = {};
 //TODO: Call impl.start() one this class is refactored to use a RunProfile,
 //TODO: instead having many overloaded constructors.
-        implementation.start();
+//        implementation.start();
     }
     
     @Test(groups = {"unit"}, expectedExceptions = IllegalArgumentException.class )
