@@ -19,9 +19,9 @@ public class SalaryToRateUowSpecification extends UnitOfWorkSpecification
    @Test(groups = {"web-automation"})
    public void defaults()
    {
-        logger.info(" testing the print");
+        logger.info(" testing the printing remove");
        
-        driver.get(testUrl);
+//        driver.get(testUrl);
 
         WebElement bodyElement = driver.findElementByTagName("body");
 
@@ -34,10 +34,11 @@ public class SalaryToRateUowSpecification extends UnitOfWorkSpecification
         String target2 = "$26.44230842590332 an hour";
         
         assert( text.contains(target2) );
-   }    
+   }
+   
+   @Override
+   public String subpath()
+   {
+       return "productivity/income-calculator/salary-to-rate/";
+   }
 }
-
-
-
-
-

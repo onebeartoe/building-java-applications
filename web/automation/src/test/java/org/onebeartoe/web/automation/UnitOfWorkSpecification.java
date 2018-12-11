@@ -8,9 +8,11 @@ import java.util.logging.Logger;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeClass;
 
 /**
+ * A UnitOfWorkSpecification is the Web automation test that invokes operations 
+ * on a UnitsOfWork instnace.
+ * 
  * @author Roberto Marquez
  */
 public class UnitOfWorkSpecification
@@ -24,6 +26,7 @@ public class UnitOfWorkSpecification
     protected Properties properites;
   
     public UnitOfWorkSpecification() throws IOException, Exception
+// With the current configuration, the @BeforeClass annotation is not working on Travis-CI.            
 //    @BeforeClass
 //    public void initializeClass() throws IOException, Exception
     {
@@ -45,7 +48,23 @@ public class UnitOfWorkSpecification
             throw new Exception("the test url is null.");
         }
         
+        // Append any subpath that inheriting classes override.
+        testUrl += subpath();
+        
         driver = new ChromeDriver();
+        
+        driver.get(testUrl);
+    }
+    
+    /**
+     * Override this method to provide a subpath to the Web appliation 
+     * under test (AUT).
+     * 
+     * @return 
+     */
+    protected String subpath()
+    {
+        return "";
     }
     
     @AfterTest

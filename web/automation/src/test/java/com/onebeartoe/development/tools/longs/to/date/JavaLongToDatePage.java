@@ -12,7 +12,8 @@ public class JavaLongToDatePage extends WebAutomationPage
 {
     private final String CONVERTED_DATE_TEXT_ID = "convertedDate";
     
-    private final String MILLISECONDS_FIELD_ID = "milliseconds";
+//TODO: Change the applicaigton to use an 'id' selector instead of a name selector.    
+    private final String MILLISECONDS_FIELD_NAME = "milliseconds";
     
     private final String SUBMIT_MILLIS_BUTTON_ID = "submitMillis";
 
@@ -30,7 +31,7 @@ public class JavaLongToDatePage extends WebAutomationPage
 
     public void setMilliseconds(long milliseconds)
     {
-        WebElement element = driver.findElementById(MILLISECONDS_FIELD_ID);
+        WebElement element = driver.findElementByName(MILLISECONDS_FIELD_NAME);
         
         String ms = String.valueOf(milliseconds);
         
@@ -39,7 +40,7 @@ public class JavaLongToDatePage extends WebAutomationPage
 
     public JavaLongToDatePage submitMilliseconds()
     {
-        WebElement submitButton = driver.findElementById(SUBMIT_MILLIS_BUTTON_ID);
+        WebElement submitButton = driver.findElementByName(SUBMIT_MILLIS_BUTTON_ID);
         
         submitButton.click();
         

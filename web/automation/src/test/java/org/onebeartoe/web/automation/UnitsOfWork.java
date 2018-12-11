@@ -7,6 +7,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
  * The class represents the units of work that are preformed on any given Web 
  * page.
  * 
+ * The UnitsOfWork class' operations navigate between Page objects.
+ * 
  * Some setup configuration was inspired by this blog entry:
  * 
  *      https://www.hindsightsoftware.com/blog/selenium-webdriver-java
