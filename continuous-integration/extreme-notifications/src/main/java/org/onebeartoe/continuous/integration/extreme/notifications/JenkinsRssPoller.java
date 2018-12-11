@@ -33,6 +33,11 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
 import org.onebeartoe.io.TextFileReader;
 import org.onebeartoe.io.buffered.BufferedTextFileReader;
 
@@ -61,6 +66,12 @@ import org.onebeartoe.system.Sleeper;
  */
 public class JenkinsRssPoller implements SerialPortEventListener
 {
+    private final static String JOB_MAPPING_PATH = "jobMappingPath";
+    
+    private final static String PORT = "port";
+    
+    private final static String RSS_URL = "rssUrl";
+    
     private final long POLL_DELAY;
     
     private BufferedReader input;
@@ -75,20 +86,19 @@ public class JenkinsRssPoller implements SerialPortEventListener
     
     private Logger logger;
     
-    private String configPath;
+//    private String configPath;
      
     private Map<Integer, LedStatusIndicatorStrip> knownIndicatorStrips;
     
     private HttpServer server;
-      
-    public JenkinsRssPoller(String port) throws Exception
-    {        
-        this(port, "./src/main/resources/strip-job.mapping");
-    }
     
-    public JenkinsRssPoller(String port, String configPath) throws Exception
+    private JenkinsRssRunProfile runProfile;
+    
+    public JenkinsRssPoller(JenkinsRssRunProfile runProfile) throws Exception
+ //   public JenkinsRssPoller(String port, String jobMappingPath) throws Exception
     {
-        this.configPath = configPath;
+//        this.configPath = jobMappingPath;
+    this.runProfile = runProfile;
         
         String className = getClass().getName();
         logger = Logger.getLogger(className);
@@ -98,6 +108,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
         
         rssService = new HttpJenkinsRssFeedService();
         
+        String port = runProfile.getPort();
         try
         {
             initializeSerialPort(port);
@@ -180,53 +191,78 @@ public class JenkinsRssPoller implements SerialPortEventListener
         return message.toString();
     }
     
-    private static JenkinsRssPoller initialzeRssPoller(String [] args) throws Exception
+    public static Options buildOptions()
+    {
+        Option port = Option.builder()
+                                .hasArg()
+                                .longOpt(PORT)
+                                .build();
+        
+        Option jobMappingPath = Option.builder()
+                .hasArg()
+                .longOpt(JOB_MAPPING_PATH)
+                .build();
+        
+        Option rssUrl = Option.builder()
+                .hasArg()
+                .longOpt(RSS_URL)
+                .build();
+        
+        Options options = new Options();
+        options.addOption(port);
+        options.addOption(jobMappingPath);
+        options.addOption(rssUrl);
+        
+        return options;
+    }    
+    
+//TODO: Refactor this to use a RunProfile instead of having many 
+//TODO: overloaded constructors.
+//TODO: Rename this to parseRunProfile()    
+    private static JenkinsRssRunProfile parseRunProfile(String [] args, Options options) throws Exception
+//    private static JenkinsRssPoller parseRunProfile(String [] args) throws Exception
     {
         // The app uses the following as the defalut port descriptor on a MS 
         // Windows environment.  On Linux environments, use a path to the serial 
         // communication port.
-        String port = "COM7";
+        String port = null;
         
         String configPath = null;
+
+        CommandLineParser parser = new DefaultParser();
+        CommandLine cl = parser.parse(options, args);
         
-        JenkinsRssPoller poller = null;
-        
-        if(args.length == 0)
+        if( cl.hasOption(PORT) )
         {
-            poller = new JenkinsRssPoller(port);
+            port = cl.getOptionValue(PORT);
         }
-        
-        if(args.length == 1)
+        else
         {
-            // grab the serial communiation port
-            port = args[0];
-            
-            poller = new JenkinsRssPoller(port);
+            port = "COM7";
         }
+        JenkinsRssRunProfile rp = new JenkinsRssRunProfile();
+        rp.setPort(port);
         
-        if(args.length >= 2)
+        if( cl.hasOption(JOB_MAPPING_PATH) )
         {
-            // There are at least 2 command line arguments.
-            // The first two are the same as above.
-            
-            port = args[0];
-            
-            // grab the configuration path
-            configPath = args[1];
-            
-            poller = new JenkinsRssPoller(port, configPath);
-            
-            if(args.length > 2)
-            {
-                // The third command line argument is the URL of the Jenkins RSS feed.
-                String rssUrl = args[2];
-                poller.setRssUrl(rssUrl);
-            }
+            String mappingPath = cl.getOptionValue(JOB_MAPPING_PATH);
+            rp.setJobMappingPath(mappingPath);
         }
-        
+        else
+        {
+            configPath =  "./src/main/resources/strip-job.mapping";
+        }
+
+        if( cl.hasOption(RSS_URL) )
+        {
+            // This command line argument is the URL of the Jenkins RSS feed.
+            String rssUrl = cl.getOptionValue(RSS_URL);
+            rp.setRssUrl(rssUrl);
+        }
+
         System.out.println("starting poller with COM port and config path of: " + port + " / " + configPath);
         
-        return poller;
+        return rp;
     }
     
     private void initializeSerialPort(String port) throws Exception
@@ -264,8 +300,14 @@ public class JenkinsRssPoller implements SerialPortEventListener
            System.out.println(a + " ") ;
         }
         
-        JenkinsRssPoller poller = initialzeRssPoller(args);
-                
+        
+        Options options = buildOptions();
+        
+//TODO: Create a parseRunProfile() method that take the args and
+//TODO: returns a RunProfile
+        JenkinsRssRunProfile runProfile = parseRunProfile(args, options);
+
+        JenkinsRssPoller poller = new JenkinsRssPoller(runProfile);
         poller.start();
     }
     
@@ -280,6 +322,9 @@ public class JenkinsRssPoller implements SerialPortEventListener
     private void loadConfiguration() throws FileNotFoundException, IOException
     {
         TextFileReader textFileReader = new BufferedTextFileReader();
+        
+        String configPath = runProfile.getJobMappingPath();
+        
         File infile = new File(configPath);
         InputStream instream = new FileInputStream(infile);
         List<String> lines = textFileReader.readLines(instream);
@@ -368,6 +413,7 @@ public class JenkinsRssPoller implements SerialPortEventListener
         rssUrl = url;
     }
     
+//    @Override
     public void start()
     {
         TimerTask pollerTask = new PollerTask();

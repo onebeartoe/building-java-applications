@@ -18,7 +18,19 @@ public class JenkinsRssPollerSpecification
     {
         String port = "/some/fake/port";
         
-        implementation = new JenkinsRssPoller(port);
+        JenkinsRssRunProfile rp = new JenkinsRssRunProfile();
+        rp.setPort(port);
+        
+        implementation = new JenkinsRssPoller(rp);
+    }
+
+    @Test(groups = {"unit"})
+    public void initialzeRssPoller() throws Exception
+    {
+        String [] args = {};
+//TODO: Call impl.start() one this class is refactored to use a RunProfile,
+//TODO: instead having many overloaded constructors.
+        implementation.start();
     }
     
     @Test(groups = {"unit"}, expectedExceptions = IllegalArgumentException.class )

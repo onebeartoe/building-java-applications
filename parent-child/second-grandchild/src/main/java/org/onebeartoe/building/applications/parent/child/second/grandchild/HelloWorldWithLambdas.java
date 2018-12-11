@@ -4,7 +4,7 @@ package org.onebeartoe.building.applications.parent.child.second.grandchild;
 /**
  * @author Roberto Marquez (http://electronics.onebeartoe.org/)
  */
-public class SecondGrandchildMain
+public class HelloWorldWithLambdas
 {
     /**
      * This is 'Hello World' implementation using Java 8 Lambdas and Streams
