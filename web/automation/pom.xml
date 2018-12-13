@@ -17,6 +17,7 @@
 
     <properties>
         <unit.of.work.test.url>http://localhost:8080/onebeartoe-com/</unit.of.work.test.url>
+        <unit.of.work.webdriver.type>firefox</unit.of.work.webdriver.type>
     </properties>
 
     <dependencies>
@@ -99,6 +100,10 @@
     <profiles>
         <profile>
             <id>chrome</id>
+            
+            <properties>
+                <unit.of.work.webdriver.type>chrome</unit.of.work.webdriver.type>
+            </properties>
         </profile>
         
         <profile>

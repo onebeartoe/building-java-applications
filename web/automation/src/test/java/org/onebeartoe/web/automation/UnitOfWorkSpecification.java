@@ -22,7 +22,7 @@ public class UnitOfWorkSpecification
 
     protected String testUrl;
     
-    protected Properties properites;
+    protected Properties properties;
     
     private WebDriverService webdriverService;
   
@@ -30,12 +30,12 @@ public class UnitOfWorkSpecification
     {
         logger = Logger.getLogger( getClass().getName() );
 
-        properites = new Properties();
+        properties = new Properties();
         String classpathInpath = "/unit-of-work.properties";
         InputStream inStream = getClass().getResourceAsStream(classpathInpath);
-        properites.load(inStream);
+        properties.load(inStream);
         
-        testUrl = properites.getProperty("test.url");
+        testUrl = properties.getProperty("test.url");
         
         if(testUrl == null)
         {
@@ -45,7 +45,11 @@ public class UnitOfWorkSpecification
         // Append any subpath that inheriting classes override.
         testUrl += subpath();
 
-        WebDriverType type = WebDriverType.CHROME;
+        String s = properties.getProperty("webdriver.type");
+        String name = s.toUpperCase();
+        WebDriverType type = WebDriverType.valueOf(name);
+        
+//        WebDriverType type = WebDriverType.CHROME;
 
         webdriverService = new WebDriverService();
         

@@ -46,35 +46,35 @@ public class IntegrationTest
     
     
 //TODO: Extract this method to a the web-automation module.    
-	public void takeScreenshot(String screenshotName) throws ScreenshotException, IOException
-	{
-		// apparently this is how you take a screen shot in Selenium (cast to TakesScreenshot)
-		TakesScreenshot pjsd = ( (TakesScreenshot) driver );
-		Object o = pjsd.getScreenshotAs(OutputType.BASE64);
+    public void takeScreenshot(String screenshotName) throws ScreenshotException, IOException
+    {
+        // apparently this is how you take a screen shot in Selenium (cast to TakesScreenshot)
+        TakesScreenshot pjsd = ( (TakesScreenshot) driver );
+        Object o = pjsd.getScreenshotAs(OutputType.BASE64);
 
-		byte [] bytes = o.toString().getBytes();
+        byte [] bytes = o.toString().getBytes();
 
-		byte [] outdata = Base64.decodeBase64(bytes);
+        byte [] outdata = Base64.decodeBase64(bytes);
 
-		String testClass = getClass().getSimpleName();
-		String testName = this.testName.getMethodName();
+        String testClass = getClass().getSimpleName();
+        String testName = this.testName.getMethodName();
 
-		String outpath = "./target/screenshots/";
-		File outdir = new File(outpath);
-		outdir.mkdirs();
+        String outpath = "./target/screenshots/";
+        File outdir = new File(outpath);
+        outdir.mkdirs();
 
-                //TODO: Change to use the logger object
-		String outname = testClass + "-" + testName + "-" + screenshotName + "-"
-							+ "screenshot.png";
+        //TODO: Change to use the logger object
+        String outname = testClass + "-" + testName + "-" + screenshotName + "-"
+                                                + "screenshot.png";
 
-		outname = sanitizeFilename(outname);
+        outname = sanitizeFilename(outname);
 
-		File outfile = new File (outdir, outname);
-		FileOutputStream fos = new FileOutputStream(outfile);
-		fos.write(outdata);
-		fos.flush();
-		fos.close();
-	}   
+        File outfile = new File (outdir, outname);
+        FileOutputStream fos = new FileOutputStream(outfile);
+        fos.write(outdata);
+        fos.flush();
+        fos.close();
+    }   
     
     @BeforeClass
     public static void loadConfiguration() throws ConfigurationException
@@ -106,12 +106,12 @@ public class IntegrationTest
         }
     }
     
-	private String sanitizeFilename(String dirty)
-	{
-		String clean = dirty.replace(":", "");
-		clean = clean.replace("[", "");
-		clean = clean.replace("]",  "");
+    private String sanitizeFilename(String dirty)
+    {
+            String clean = dirty.replace(":", "");
+            clean = clean.replace("[", "");
+            clean = clean.replace("]",  "");
 
-		return clean;
-	}    
+            return clean;
+    }
 }
