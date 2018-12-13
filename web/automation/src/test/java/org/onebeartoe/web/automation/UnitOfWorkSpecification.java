@@ -116,8 +116,6 @@ public class UnitOfWorkSpecification
 
         String testClass = getClass().getSimpleName();
         
-//        String testName = currentMethodName();
-        
         String outpath = "./target/screenshots/";
         File outdir = new File(outpath);
         outdir.mkdirs();
@@ -126,8 +124,6 @@ public class UnitOfWorkSpecification
         String outname = testClass + 
                         "-" +
                         currentTest +
-//                        "-" +
-//                        testName + 
                         "-" + 
                         screenshotName + 
                         "-" + 
@@ -144,23 +140,11 @@ public class UnitOfWorkSpecification
     
     // this is done after each test method
     @AfterMethod
-//    @AfterTest
     protected void endOfTestScreenShot() throws ScreenshotException, IOException
-//    protected void tearDown(ITestContext method) throws ScreenshotException, IOException
-    {
-//        XmlTest currentXmlTest = method.getCurrentXmlTest();
-        
-//        String methodName = method.getName();
-        
-    	String screenshotName = 
-//                methodName + "-" +
-                "tearDown";
+    {        
+    	String screenshotName = "tearDown";
 
         takeScreenshot(screenshotName);
-    	
-//        driver.close();
-                
-//        driver.quit();
     }
     
     @AfterTest
