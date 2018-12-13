@@ -144,7 +144,7 @@ public class UnitOfWorkSpecification
     }    
     
     // this is done after each test method
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     protected void endOfTestScreenShot() throws ScreenshotException, IOException
     {        
     	String screenshotName = "tearDown";
