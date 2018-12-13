@@ -11,6 +11,7 @@ Without this configuration present, some functionality in the IDE may be limited
             <configuration id="desktop-chrome" profiles="chrome"/>
             <configuration id="desktop-firefox" profiles="firefox"/>
             <configuration id="headless-chrom" profiles="chrome headless"/>
+            <configuration id="desktop-chrome-production" profiles="chrome headless production"/>
         </configurations>
     </config-data>
 </project-shared-configuration>
