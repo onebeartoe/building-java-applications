@@ -85,6 +85,7 @@ public class UnitOfWorkSpecification
                 
         driver = webdriverService.load(testProfile);
 
+        logger.info("getting: " + testUrl);
         driver.get(testUrl);
     }
 

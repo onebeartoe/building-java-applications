@@ -121,7 +121,7 @@
             <id>production</id>
 
             <properties>
-                <test.url>http://www.onebeartoe.com/productivity/income-calculator/salary-to-rate/</test.url>
+                <unit.of.work.test.url>http://www.onebeartoe.com/</unit.of.work.test.url>
             </properties>
         </profile>
     </profiles>
