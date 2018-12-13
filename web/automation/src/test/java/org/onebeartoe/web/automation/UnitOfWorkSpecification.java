@@ -5,16 +5,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.Properties;
 import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
-import org.junit.Rule;
-import org.junit.rules.TestName;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
+import org.testng.xml.XmlTest;
 
 /**
  * A UnitOfWorkSpecification is the Web automation test that invokes operations 
@@ -33,12 +35,32 @@ public class UnitOfWorkSpecification
     protected Properties properties;
     
     private WebDriverService webdriverService;
+    
+private String currentTest = "test-name-not-set";
 
-    @Rule
-    /**
-     * This is used for adding the test name to the screenshot file name.
-     */
-    public TestName testName = new TestName();
+    @BeforeMethod
+    public void testName(Method method)
+    {
+        currentTest  = method.getName();
+    }
+    
+//TODO:move me 
+    public String currentMethodName()
+    {
+//        return new Object(){}.getClass()
+//                    .getEnclosingMethod()                
+//                    .getName();
+        
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for(int i=0; i< stackTrace.length; i++)
+        {
+            // this method is not directly called from the @Test method 
+            // so we don't have the method name on the stack trace :(
+            System.out.println("method " + i + ": " + stackTrace[i].getMethodName());
+        }
+        
+        return Thread.currentThread().getStackTrace()[2].getMethodName();
+    }
     
     public UnitOfWorkSpecification() throws IOException, Exception
     {
@@ -103,15 +125,26 @@ public class UnitOfWorkSpecification
         byte [] outdata = Base64.decodeBase64(bytes);
 
         String testClass = getClass().getSimpleName();
-        String testName = this.testName.getMethodName();
-
+        
+//        testName = new TestName();
+//        String testName = this.testName.getMethodName();
+        String testName = currentMethodName();
+        
         String outpath = "./target/screenshots/";
         File outdir = new File(outpath);
         outdir.mkdirs();
 
         //TODO: Change to use the logger object
-        String outname = testClass + "-" + testName + "-" + screenshotName + "-"
-                                                + "screenshot.png";
+        String outname = testClass + 
+                        "-" +
+                        currentTest +
+                        "-" +
+//TODO: find a way to get the current test method name
+                        testName + 
+                        "-" + 
+                        screenshotName + 
+                        "-" + 
+                        "screenshot.png";
 
         outname = sanitizeFilename(outname);
 
@@ -123,13 +156,21 @@ public class UnitOfWorkSpecification
     }    
     
     @AfterTest
-    protected void tearDown() throws ScreenshotException, IOException
+    protected void tearDown(ITestContext method) throws ScreenshotException, IOException
     {
-    	String screenshotName = "tearDown";
-    	takeScreenshot(screenshotName);
-    	
-        driver.quit();        
+        XmlTest currentXmlTest = method.getCurrentXmlTest();
         
+//        String methodName = currentXmlTest.getName();
+        String methodName = method.getName();
+        
+    	String screenshotName = 
+                methodName + "-" +
+                "tearDown";
+
+        takeScreenshot(screenshotName);
+    	
         driver.close();
+                
+        driver.quit();
     }
 }

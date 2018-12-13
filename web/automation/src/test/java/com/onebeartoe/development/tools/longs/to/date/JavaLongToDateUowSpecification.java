@@ -19,7 +19,7 @@ public class JavaLongToDateUowSpecification extends UnitOfWorkSpecification
         unitsOfWork = new JavaLongToDateUow(driver);
     }
     
-    @Test(groups = {"web-automation"})
+    @Test(groups = {"web-automation"}, testName="milis2secs")
     public void millisecondsToDate()
     {
         long milliseconds = 8;
