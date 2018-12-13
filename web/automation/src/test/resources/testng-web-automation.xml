@@ -11,7 +11,10 @@
         </groups>
 
         <packages>
-            <package name="com.onebeartoe.productivity"/>
+            <package name="com.onebeartoe.productivity.income.calculator"/>
+            <package name="com.onebeartoe.productivity.income.calculator.rate.to.salary"/>
+            <package name="com.onebeartoe.productivity.income.calculator.salary.to.rate"/>
+            <package name="com.onebeartoe.development.tools.longs.to.date"/>
         </packages>
     </test>    
 </suite>
