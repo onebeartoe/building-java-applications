@@ -13,10 +13,9 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.ScreenshotException;
-import org.testng.ITestContext;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
-import org.testng.xml.XmlTest;
 
 /**
  * A UnitOfWorkSpecification is the Web automation test that invokes operations 
@@ -41,27 +40,11 @@ private String currentTest = "test-name-not-set";
     @BeforeMethod
     public void testName(Method method)
     {
-        currentTest  = method.getName();
-    }
-    
-//TODO:move me 
-    public String currentMethodName()
-    {
-//        return new Object(){}.getClass()
-//                    .getEnclosingMethod()                
-//                    .getName();
+        currentTest = method.getName();
         
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        for(int i=0; i< stackTrace.length; i++)
-        {
-            // this method is not directly called from the @Test method 
-            // so we don't have the method name on the stack trace :(
-            System.out.println("method " + i + ": " + stackTrace[i].getMethodName());
-        }
-        
-        return Thread.currentThread().getStackTrace()[2].getMethodName();
+        System.out.println("test name set as: " + currentTest);
     }
-    
+
     public UnitOfWorkSpecification() throws IOException, Exception
     {
         logger = Logger.getLogger( getClass().getName() );
@@ -84,8 +67,6 @@ private String currentTest = "test-name-not-set";
         String s = properties.getProperty("webdriver.type");
         String name = s.toUpperCase();
         WebDriverType type = WebDriverType.valueOf(name);
-        
-//        WebDriverType type = WebDriverType.CHROME;
 
         webdriverService = new WebDriverService();
         
@@ -126,9 +107,7 @@ private String currentTest = "test-name-not-set";
 
         String testClass = getClass().getSimpleName();
         
-//        testName = new TestName();
-//        String testName = this.testName.getMethodName();
-        String testName = currentMethodName();
+//        String testName = currentMethodName();
         
         String outpath = "./target/screenshots/";
         File outdir = new File(outpath);
@@ -138,9 +117,8 @@ private String currentTest = "test-name-not-set";
         String outname = testClass + 
                         "-" +
                         currentTest +
-                        "-" +
-//TODO: find a way to get the current test method name
-                        testName + 
+//                        "-" +
+//                        testName + 
                         "-" + 
                         screenshotName + 
                         "-" + 
@@ -155,22 +133,32 @@ private String currentTest = "test-name-not-set";
         fos.close();
     }    
     
-    @AfterTest
-    protected void tearDown(ITestContext method) throws ScreenshotException, IOException
+    // this is done after each test method
+    @AfterMethod
+//    @AfterTest
+    protected void endOfTestScreenShot() throws ScreenshotException, IOException
+//    protected void tearDown(ITestContext method) throws ScreenshotException, IOException
     {
-        XmlTest currentXmlTest = method.getCurrentXmlTest();
+//        XmlTest currentXmlTest = method.getCurrentXmlTest();
         
-//        String methodName = currentXmlTest.getName();
-        String methodName = method.getName();
+//        String methodName = method.getName();
         
     	String screenshotName = 
-                methodName + "-" +
+//                methodName + "-" +
                 "tearDown";
 
         takeScreenshot(screenshotName);
     	
+//        driver.close();
+                
+//        driver.quit();
+    }
+    
+    @AfterTest
+    protected void tearDown()
+    {
         driver.close();
                 
-        driver.quit();
+//        driver.quit();        
     }
 }

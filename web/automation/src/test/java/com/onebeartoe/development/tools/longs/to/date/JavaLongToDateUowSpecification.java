@@ -19,7 +19,7 @@ public class JavaLongToDateUowSpecification extends UnitOfWorkSpecification
         unitsOfWork = new JavaLongToDateUow(driver);
     }
     
-    @Test(groups = {"web-automation"}, testName="milis2secs")
+    @Test(groups = {"web-automation"})
     public void millisecondsToDate()
     {
         long milliseconds = 8;
@@ -30,12 +30,21 @@ public class JavaLongToDateUowSpecification extends UnitOfWorkSpecification
         
         assert( convertedDate.contains("1969") );
     }
+    
+    @Test(groups = {"web-automation"})
+    public void dateToMilliseconds()
+    {
+//TODO: implement this test
+JavaLongToDatePage resultPage = unitsOfWork.convert(9);
 
-   @Override
-   public String subpath()
-   {
+        assert( 1 == 2-1);
+    }
+
+    @Override
+    public String subpath()
+    {
        return "development-tools/java-long-to-date-converter/";
-   }    
+    }    
     
 //TODO: Implement Date to milliseconds.    
 }
