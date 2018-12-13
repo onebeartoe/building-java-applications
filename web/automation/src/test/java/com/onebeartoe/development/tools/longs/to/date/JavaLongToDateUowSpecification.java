@@ -30,7 +30,7 @@ public class JavaLongToDateUowSpecification extends UnitOfWorkSpecification
         
         assert( convertedDate.contains("1969") );
     }
-    
+
     @Test(groups = {"web-automation"})
     public void dateToMilliseconds()
     {

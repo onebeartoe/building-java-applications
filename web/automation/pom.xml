@@ -17,7 +17,11 @@
 
     <properties>
         <unit.of.work.test.url>http://localhost:8080/onebeartoe-com/</unit.of.work.test.url>
+        
         <unit.of.work.webdriver.type>firefox</unit.of.work.webdriver.type>
+        <unit.of.work.webdriver.pathKey>webdriver.gecko.driver</unit.of.work.webdriver.pathKey>
+        <unit.of.work.webdriver.path>/opt/mozilla/firefox/webdriver/geckodriver-v0.23.0/geckodriver</unit.of.work.webdriver.path>
+        
     </properties>
 
     <dependencies>
@@ -38,18 +42,7 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
-<!--    
-            <scope>test</scope>
--->
         </dependency>
-
-<!--
-        <dependency>
-            <groupId>org.onebeartoe.continuous.integration</groupId>
-            <artifactId>integration-testing</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
--->
 
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -103,6 +96,8 @@
             
             <properties>
                 <unit.of.work.webdriver.type>chrome</unit.of.work.webdriver.type>
+                <unit.of.work.webdriver.pathKey>webdriver.chrome.driver</unit.of.work.webdriver.pathKey>
+                <unit.of.work.webdriver.path>/opt/google/chromedriver/chromedriver-2.37/chromedriver</unit.of.work.webdriver.path>                
             </properties>
         </profile>
         

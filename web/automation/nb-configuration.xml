@@ -9,6 +9,7 @@ Without this configuration present, some functionality in the IDE may be limited
     <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
         <configurations>
             <configuration id="desktop-chrome" profiles="chrome"/>
+            <configuration id="desktop-firefox" profiles="firefox"/>
         </configurations>
     </config-data>
 </project-shared-configuration>

@@ -8,28 +8,31 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class WebDriverService
 {
-    public RemoteWebDriver load(WebDriverType type) throws ConfigurationException, MalformedURLException
+    public RemoteWebDriver load(TestProfile testProfile) throws ConfigurationException, MalformedURLException
     {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-
         RemoteWebDriver driver;
 
-        //TODO find a better way to choose the driver implementation
+        String driverPathKey = testProfile.getDriverPathKey();
+        
+        String driverPath = testProfile.getDriverPath();
+        
+        boolean headless = testProfile.isHeadless();
+        
+        WebDriverType type = testProfile.getType();
+
         switch (type) 
         {
             case CHROME:
             {
-                String driverPath = "/opt/google/chromedriver/chromedriver-2.37/chromedriver";
-                System.setProperty("webdriver.chrome.driver", driverPath);
-                
+                System.setProperty(driverPathKey, driverPath);
+
                 ChromeOptions options = new ChromeOptions();
-                options.setHeadless(true);
+                options.setHeadless(headless);
                 
                 driver = new ChromeDriver(options);
 
@@ -37,7 +40,12 @@ public class WebDriverService
             }
             case FIREFOX:
             {
-                driver = loadFirefox(capabilities);
+                System.setProperty(driverPathKey, driverPath);
+                
+                FirefoxOptions options = new FirefoxOptions();
+                options.setHeadless(headless);
+                
+                driver = new FirefoxDriver();
 
                 break;
             }
@@ -49,21 +57,14 @@ public class WebDriverService
                 break;
             }
         }
+        
+//TODO: Add this to the run time configuration
+        boolean maximize = false;
+        if(maximize)
+        {
+            driver.manage().window().maximize();
+        }        
 
         return driver; 
-    }
-
-    /**
-     * This has the webdriver.tests through Firefox browser.
-     * 
-     * @return
-     */
-    private RemoteWebDriver loadFirefox(DesiredCapabilities capabilities)
-    {
-        FirefoxProfile profile = new FirefoxProfile();
-        capabilities.setCapability(FirefoxDriver.PROFILE, profile);
-        RemoteWebDriver driver = new FirefoxDriver(capabilities);
-
-        return driver;
     }
 }

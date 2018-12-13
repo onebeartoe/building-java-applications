@@ -35,7 +35,7 @@ public class UnitOfWorkSpecification
     
     private WebDriverService webdriverService;
     
-private String currentTest = "test-name-not-set";
+    private String currentTest = "test-name-not-set";
 
     @BeforeMethod
     public void testName(Method method)
@@ -68,9 +68,18 @@ private String currentTest = "test-name-not-set";
         String name = s.toUpperCase();
         WebDriverType type = WebDriverType.valueOf(name);
 
-        webdriverService = new WebDriverService();
+        String driverPathKey = properties.getProperty("webdriver.pathKey");
         
-        driver = webdriverService.load(type);
+        String driverPath = properties.getProperty("webdriver.path");
+
+        TestProfile testProfile = new TestProfile();
+        testProfile.setType(type);
+        testProfile.setDriverPathKey(driverPathKey);
+        testProfile.setDriverPath(driverPath);
+        
+        webdriverService = new WebDriverService();
+                
+        driver = webdriverService.load(testProfile);
 
         driver.get(testUrl);
     }
