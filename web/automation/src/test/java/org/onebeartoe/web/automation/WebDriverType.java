@@ -1,5 +1,5 @@
 
-package org.onebeartoe.integration.testing;
+package org.onebeartoe.web.automation;
 
 /**
  *
@@ -8,5 +8,5 @@ package org.onebeartoe.integration.testing;
 public enum WebDriverType 
 {
     CHROME,
-    PHANTOM_JS    
+    FIREFOX
 }

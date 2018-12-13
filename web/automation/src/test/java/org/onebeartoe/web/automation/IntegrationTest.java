@@ -1,5 +1,5 @@
 
-package org.onebeartoe.integration.testing;
+package org.onebeartoe.web.automation;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -45,6 +44,8 @@ public class IntegrationTest
         driver.quit();
     }
     
+    
+//TODO: Extract this method to a the web-automation module.    
 	public void takeScreenshot(String screenshotName) throws ScreenshotException, IOException
 	{
 		// apparently this is how you take a screen shot in Selenium (cast to TakesScreenshot)
@@ -95,9 +96,14 @@ public class IntegrationTest
 
         WebDriverType type = WebDriverType.valueOf(s);
 
-        driver = webdriverService.load(type, configuration);
+        driver = webdriverService.load(type);
 
-//        driver.manage().window().maximize();
+//TODO: Add this to the run time configuration
+        boolean maximize = false;
+        if(maximize)
+        {
+            driver.manage().window().maximize();
+        }
     }
     
 	private String sanitizeFilename(String dirty)

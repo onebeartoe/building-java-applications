@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterTest;
 
@@ -24,17 +23,12 @@ public class UnitOfWorkSpecification
     protected String testUrl;
     
     protected Properties properites;
+    
+    private WebDriverService webdriverService;
   
     public UnitOfWorkSpecification() throws IOException, Exception
-// With the current configuration, the @BeforeClass annotation is not working on Travis-CI.            
-//    @BeforeClass
-//    public void initializeClass() throws IOException, Exception
     {
         logger = Logger.getLogger( getClass().getName() );
-        
-
-        String driverPath = "/opt/google/chromedriver/chromedriver-2.37/chromedriver";
-        System.setProperty("webdriver.chrome.driver", driverPath);
 
         properites = new Properties();
         String classpathInpath = "/unit-of-work.properties";
@@ -50,9 +44,13 @@ public class UnitOfWorkSpecification
         
         // Append any subpath that inheriting classes override.
         testUrl += subpath();
+
+        WebDriverType type = WebDriverType.CHROME;
+
+        webdriverService = new WebDriverService();
         
-        driver = new ChromeDriver();
-        
+        driver = webdriverService.load(type);
+
         driver.get(testUrl);
     }
     
