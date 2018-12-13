@@ -1,11 +1,19 @@
 
 package org.onebeartoe.web.automation;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
+import org.apache.commons.codec.binary.Base64;
+import org.junit.Rule;
+import org.junit.rules.TestName;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.ScreenshotException;
 import org.testng.annotations.AfterTest;
 
 /**
@@ -25,7 +33,13 @@ public class UnitOfWorkSpecification
     protected Properties properties;
     
     private WebDriverService webdriverService;
-  
+
+    @Rule
+    /**
+     * This is used for adding the test name to the screenshot file name.
+     */
+    public TestName testName = new TestName();
+    
     public UnitOfWorkSpecification() throws IOException, Exception
     {
         logger = Logger.getLogger( getClass().getName() );
@@ -57,6 +71,15 @@ public class UnitOfWorkSpecification
 
         driver.get(testUrl);
     }
+
+    private String sanitizeFilename(String dirty)
+    {
+            String clean = dirty.replace(":", "");
+            clean = clean.replace("[", "");
+            clean = clean.replace("]",  "");
+
+            return clean;
+    }
     
     /**
      * Override this method to provide a subpath to the Web appliation 
@@ -69,9 +92,44 @@ public class UnitOfWorkSpecification
         return "";
     }
     
-    @AfterTest
-    protected void tearDown()
+    public void takeScreenshot(String screenshotName) throws ScreenshotException, IOException
     {
+        // apparently this is how you take a screen shot in Selenium (cast to TakesScreenshot)
+        TakesScreenshot pjsd = ( (TakesScreenshot) driver );
+        Object o = pjsd.getScreenshotAs(OutputType.BASE64);
+
+        byte [] bytes = o.toString().getBytes();
+
+        byte [] outdata = Base64.decodeBase64(bytes);
+
+        String testClass = getClass().getSimpleName();
+        String testName = this.testName.getMethodName();
+
+        String outpath = "./target/screenshots/";
+        File outdir = new File(outpath);
+        outdir.mkdirs();
+
+        //TODO: Change to use the logger object
+        String outname = testClass + "-" + testName + "-" + screenshotName + "-"
+                                                + "screenshot.png";
+
+        outname = sanitizeFilename(outname);
+
+        File outfile = new File (outdir, outname);
+        FileOutputStream fos = new FileOutputStream(outfile);
+        fos.write(outdata);
+        fos.flush();
+        fos.close();
+    }    
+    
+    @AfterTest
+    protected void tearDown() throws ScreenshotException, IOException
+    {
+    	String screenshotName = "tearDown";
+    	takeScreenshot(screenshotName);
+    	
+        driver.quit();        
+        
         driver.close();
     }
 }

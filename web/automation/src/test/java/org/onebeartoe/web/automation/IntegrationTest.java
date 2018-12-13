@@ -27,54 +27,16 @@ public class IntegrationTest
     
     protected WebDriverService webdriverService;
 
-    @Rule
-    /**
-     * This is used for adding the test name to the screenshot file name.
-     */
-    public TestName testName = new TestName();
-    
     private static PropertiesConfiguration configuration;
     
     @After
     public void tearDown() throws ScreenshotException, IOException
     {
     	String screenshotName = "tearDown";
-    	takeScreenshot(screenshotName);
+//    	takeScreenshot(screenshotName);
     	
         driver.quit();
     }
-    
-    
-//TODO: Extract this method to a the web-automation module.    
-    public void takeScreenshot(String screenshotName) throws ScreenshotException, IOException
-    {
-        // apparently this is how you take a screen shot in Selenium (cast to TakesScreenshot)
-        TakesScreenshot pjsd = ( (TakesScreenshot) driver );
-        Object o = pjsd.getScreenshotAs(OutputType.BASE64);
-
-        byte [] bytes = o.toString().getBytes();
-
-        byte [] outdata = Base64.decodeBase64(bytes);
-
-        String testClass = getClass().getSimpleName();
-        String testName = this.testName.getMethodName();
-
-        String outpath = "./target/screenshots/";
-        File outdir = new File(outpath);
-        outdir.mkdirs();
-
-        //TODO: Change to use the logger object
-        String outname = testClass + "-" + testName + "-" + screenshotName + "-"
-                                                + "screenshot.png";
-
-        outname = sanitizeFilename(outname);
-
-        File outfile = new File (outdir, outname);
-        FileOutputStream fos = new FileOutputStream(outfile);
-        fos.write(outdata);
-        fos.flush();
-        fos.close();
-    }   
     
     @BeforeClass
     public static void loadConfiguration() throws ConfigurationException
@@ -104,14 +66,5 @@ public class IntegrationTest
         {
             driver.manage().window().maximize();
         }
-    }
-    
-    private String sanitizeFilename(String dirty)
-    {
-            String clean = dirty.replace(":", "");
-            clean = clean.replace("[", "");
-            clean = clean.replace("]",  "");
-
-            return clean;
     }
 }
