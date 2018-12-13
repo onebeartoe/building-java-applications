@@ -10,6 +10,7 @@ Without this configuration present, some functionality in the IDE may be limited
         <configurations>
             <configuration id="desktop-chrome" profiles="chrome"/>
             <configuration id="desktop-firefox" profiles="firefox"/>
+            <configuration id="headless-chrom" profiles="chrome headless"/>
         </configurations>
     </config-data>
 </project-shared-configuration>

@@ -72,10 +72,14 @@ public class UnitOfWorkSpecification
         
         String driverPath = properties.getProperty("webdriver.path");
 
+        String b = properties.getProperty("webdriver.headless");
+        boolean headless = Boolean.valueOf(b);
+        
         TestProfile testProfile = new TestProfile();
         testProfile.setType(type);
         testProfile.setDriverPathKey(driverPathKey);
         testProfile.setDriverPath(driverPath);
+        testProfile.setHeadless(headless);
         
         webdriverService = new WebDriverService();
                 

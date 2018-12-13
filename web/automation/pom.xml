@@ -21,6 +21,7 @@
         <unit.of.work.webdriver.type>firefox</unit.of.work.webdriver.type>
         <unit.of.work.webdriver.pathKey>webdriver.gecko.driver</unit.of.work.webdriver.pathKey>
         <unit.of.work.webdriver.path>/opt/mozilla/firefox/webdriver/geckodriver-v0.23.0/geckodriver</unit.of.work.webdriver.path>
+        <unit.of.work.webdriver.headless>false</unit.of.work.webdriver.headless>
         
     </properties>
 
@@ -107,6 +108,10 @@
         
         <profile>
             <id>headless</id>
+            
+            <properties>
+                <unit.of.work.webdriver.headless>true</unit.of.work.webdriver.headless>
+            </properties>
         </profile>
         
         <profile>
