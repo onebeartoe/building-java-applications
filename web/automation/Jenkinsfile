@@ -27,7 +27,7 @@ pipeline
                 echo "Verifying..."
 
                 sh '''
-                    mvn verify
+                    mvn -P chrome,headless,production verify
                 '''
             }
         }
