@@ -98,7 +98,10 @@
             <properties>
                 <unit.of.work.webdriver.type>chrome</unit.of.work.webdriver.type>
                 <unit.of.work.webdriver.pathKey>webdriver.chrome.driver</unit.of.work.webdriver.pathKey>
-                <unit.of.work.webdriver.path>/opt/google/chromedriver/chromedriver-2.37/chromedriver</unit.of.work.webdriver.path>                
+                <unit.of.work.webdriver.path>src/test/resources/chromedriver-2.37/chromedriver</unit.of.work.webdriver.path>
+<!--
+                <unit.of.work.webdriver.path>/opt/google/chromedriver/chromedriver-2.37/chromedriver</unit.of.work.webdriver.path>
+-->                
             </properties>
         </profile>
         

@@ -1,4 +1,3 @@
-
 //TODO: Implement Date to milliseconds.    
 
 package com.onebeartoe.development.tools.longs.to.date;
@@ -35,7 +34,7 @@ public class JavaLongToDateUowSpecification extends UnitOfWorkSpecification
     public void dateToMilliseconds()
     {
 //TODO: implement this test
-JavaLongToDatePage resultPage = unitsOfWork.convert(9);
+        JavaLongToDatePage resultPage = unitsOfWork.convert(9);
 
         assert( 1 == 2-1);
     }
