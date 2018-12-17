@@ -3,6 +3,8 @@ As a Web automation developer,
 I need object oriented test software,
 so that components are reused as much as possible to test applications.
 
+Acceptance Criteria
+
 The test software has run-time configuration and,
 the Web automation tests use the Page object design pattern to move between pages and
 the default run-time configuration is to run in a desktop environment with the Firefox browser and,
