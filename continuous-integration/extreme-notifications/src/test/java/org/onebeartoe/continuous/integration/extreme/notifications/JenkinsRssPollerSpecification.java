@@ -1,8 +1,8 @@
 
 package org.onebeartoe.continuous.integration.extreme.notifications;
 
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
+import java.io.IOException;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**
@@ -13,16 +13,22 @@ public class JenkinsRssPollerSpecification
 {
     private JenkinsRssPoller implementation;
     
-    @Test(groups = {"unit"}, expectedExceptions = UnsatisfiedLinkError.class)
-    public void construtor_fail() throws Exception
+    @BeforeTest
+    public void setup() throws Exception
     {
         String port = "/some/fake/port";
         
         JenkinsRssRunProfile rp = new JenkinsRssRunProfile();
         rp.setPort(port);
-
-//TODO: We can't test the implementation until there is a way to resolve the UnsatisfiedLinkError        
+        
         implementation = new JenkinsRssPoller(rp);
+    }
+    
+    public void setRssUrl() throws Exception
+    {
+        String url = "some.host.tld/rss";
+        
+        implementation.setRssUrl(url);        
     }
 
     @Test(groups = {"unit"})
@@ -33,14 +39,9 @@ public class JenkinsRssPollerSpecification
 //        implementation.start();
     }
     
-    @Test(groups = {"unit"}, expectedExceptions = IllegalArgumentException.class )
-    public void serialEvent_fail_badSource()
+//    @Test(groups = {"unit"}, expectedExceptions = IllegalArgumentException.class )
+    public void serialEvent_fail_iniialize() throws IOException
     {
-        SerialPort sp = null;
-        
-        SerialPortEvent event = new SerialPortEvent(sp, 0, false, false);
-
-//TODO: We can't test the implementation until there is a way to resolve the UnsatisfiedLinkError        
-//        implementation.serialEvent(event);
+        implementation.initialize();
     }
 }

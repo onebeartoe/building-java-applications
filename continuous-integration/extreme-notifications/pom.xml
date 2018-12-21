@@ -43,13 +43,13 @@
         <dependency>
             <groupId>org.onebeartoe</groupId>
             <artifactId>network</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.onebeartoe</groupId>
             <artifactId>onebeartoe-system</artifactId>  
-            <version>1.0-SNAPSHOT</version>            
+            <version>1.0</version>
         </dependency>
 
         <dependency>
@@ -74,48 +74,13 @@
             <scope>test</scope>
         </dependency>
 
-<!--
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.14.3</version>
-            <scope>test</scope>
-        </dependency>
--->
-
         <dependency>
             <groupId>rome</groupId>
             <artifactId>rome</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
-    
-<!-- this is what we used to get the URL into an environment variable for the JUnit tests -->
-    <!--build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <comment-me we are using this plugin to pass enviromnent varialbes 
-                         to JUnit tests comment-me>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <environmentVariables>
-                            <EXTREME_NOTIFICATIONS_RSSURL>${EXTREME_NOTIFICATIONS_RSSURL}</EXTREME_NOTIFICATIONS_RSSURL>
-                        </environmentVariables>
-                    </configuration>
-                </plugin>                            
-            </plugins>
-        </pluginManagement>	            
-    </build-->
-    
+
     <build>
         <plugins>
             <plugin>

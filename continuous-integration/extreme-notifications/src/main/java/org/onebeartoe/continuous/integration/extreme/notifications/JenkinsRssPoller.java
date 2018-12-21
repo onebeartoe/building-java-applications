@@ -5,9 +5,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.syndication.io.FeedException;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
+
 import java.awt.Color;
 
 import java.io.BufferedReader;
@@ -16,8 +14,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -41,7 +37,6 @@ import org.apache.commons.cli.Options;
 import org.onebeartoe.io.TextFileReader;
 import org.onebeartoe.io.buffered.BufferedTextFileReader;
 
-import org.onebeartoe.io.serial.SerialPorts;
 import org.onebeartoe.network.ClasspathResourceHttpHandler;
 import org.onebeartoe.network.EndOfRunHttpHandler;
 import org.onebeartoe.network.TextHttpHandler;
@@ -64,7 +59,7 @@ import org.onebeartoe.system.Sleeper;
  * 
  * @author Roberto Marquez
  */
-public class JenkinsRssPoller implements SerialPortEventListener
+public class JenkinsRssPoller
 {
     private final static String JOB_MAPPING_PATH = "jobMappingPath";
     
@@ -85,8 +80,6 @@ public class JenkinsRssPoller implements SerialPortEventListener
         "https://onebeartoe.ci.cloudbees.com/rssLatest";
     
     private Logger logger;
-    
-//    private String configPath;
      
     private Map<Integer, LedStatusIndicatorStrip> knownIndicatorStrips;
     
@@ -95,34 +88,15 @@ public class JenkinsRssPoller implements SerialPortEventListener
     private JenkinsRssRunProfile runProfile;
     
     public JenkinsRssPoller(JenkinsRssRunProfile runProfile) throws Exception
- //   public JenkinsRssPoller(String port, String jobMappingPath) throws Exception
     {
-//        this.configPath = jobMappingPath;
-    this.runProfile = runProfile;
+        this.runProfile = runProfile;
         
         String className = getClass().getName();
         logger = Logger.getLogger(className);
         
         POLL_DELAY = Duration.ofSeconds(30).toMillis();
-//        POLL_DELAY = Duration.ofMinutes(5).toMillis();
         
         rssService = new HttpJenkinsRssFeedService();
-        
-        String port = runProfile.getPort();
-        try
-        {
-            initializeSerialPort(port);
-        }
-        catch(Exception e)
-        {
-            String message = "The serial port was not obtained.";
-            System.err.println(message);
-            e.printStackTrace();
-        }
-        
-        knownIndicatorStrips = new HashMap();
-        
-        loadConfiguration();
     }
 
     /**
@@ -216,11 +190,14 @@ public class JenkinsRssPoller implements SerialPortEventListener
         return options;
     }    
     
-//TODO: Refactor this to use a RunProfile instead of having many 
-//TODO: overloaded constructors.
-//TODO: Rename this to parseRunProfile()    
+    /**
+     * 
+     * @param args
+     * @param options
+     * @return
+     * @throws Exception 
+     */
     private static JenkinsRssRunProfile parseRunProfile(String [] args, Options options) throws Exception
-//    private static JenkinsRssPoller parseRunProfile(String [] args) throws Exception
     {
         // The app uses the following as the defalut port descriptor on a MS 
         // Windows environment.  On Linux environments, use a path to the serial 
@@ -264,25 +241,33 @@ public class JenkinsRssPoller implements SerialPortEventListener
         
         return rp;
     }
+ 
+    public void initialize() throws IOException
+    {
+        knownIndicatorStrips = new HashMap();
+        
+        loadConfiguration();
+        
+        String port = runProfile.getPort();
+        try
+        {
+            initializeSerialPort(port);
+        }
+        catch(Exception e)
+        {
+            String message = "The serial port was not obtained.";
+            System.err.println(message);
+            e.printStackTrace();
+        }
+    }
     
     private void initializeSerialPort(String port) throws Exception
     {
-        System.out.println("obtaining serial port");
-        SerialPort serialPort = SerialPorts.get(port);
+        ArduinoListener arduinoListener = new ArduinoListener(port);
         
-        System.out.println();
-        System.out.println("serial port obtained");
-        Sleeper.sleepo(2000);
-
-        InputStream is = serialPort.getInputStream();
-        InputStreamReader isr = new InputStreamReader(is);
-        input = new BufferedReader(isr);
+        input = arduinoListener.getInputStream();
         
-        OutputStream outputStream = serialPort.getOutputStream();
-        
-        output = new PrintWriter(outputStream);
-
-        serialPort.addEventListener(this);        
+        output = arduinoListener.getOutputStream();
     }
     
     /**
@@ -295,19 +280,20 @@ public class JenkinsRssPoller implements SerialPortEventListener
     public static void main (String [] args) throws Exception
     {
         System.out.println("args: ");
+
         for(String a : args)
         {
            System.out.println(a + " ") ;
         }
         
-        
         Options options = buildOptions();
-        
-//TODO: Create a parseRunProfile() method that take the args and
-//TODO: returns a RunProfile
+
         JenkinsRssRunProfile runProfile = parseRunProfile(args, options);
 
         JenkinsRssPoller poller = new JenkinsRssPoller(runProfile);
+        
+        poller.initialize();
+        
         poller.start();
     }
     
@@ -379,41 +365,12 @@ public class JenkinsRssPoller implements SerialPortEventListener
             output.flush();
         }
     }
-    
-    /**
-     * Handle an event on the serial port. Read the data and print it.
-     */
-    @Override
-    public synchronized void serialEvent(SerialPortEvent event) 
-    {
-        if(event.getEventType() == SerialPortEvent.DATA_AVAILABLE) 
-        {
-            try 
-            {
-                String inputLine = input.readLine();
-                
-                if(inputLine.trim().equals(""))
-                {
-                    System.out.println();
-                }
-                else
-                {
-                    System.out.println("\t\t\t\t\t" + "received from Arduino: " + inputLine);
-                }
-            } 
-            catch (Exception e) 
-            {
-                System.err.println(e.toString());
-            }
-        }        
-    }
 
     public void setRssUrl(String url)
     {
         rssUrl = url;
     }
-    
-//    @Override
+
     public void start()
     {
         TimerTask pollerTask = new PollerTask();

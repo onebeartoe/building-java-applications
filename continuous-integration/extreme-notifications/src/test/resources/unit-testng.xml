@@ -4,12 +4,6 @@
 
 <suite name="ci-extream-notifications-test-suite" parallel="none">
     <test name="ci-extream-notifications-unit-tests">
-        <groups>
-            <run>
-                <include name="unit" />
-            </run>
-        </groups>
-
         <packages>
             <package name="org.onebeartoe.continuous.integration.extreme.notifications"/>
         </packages>
