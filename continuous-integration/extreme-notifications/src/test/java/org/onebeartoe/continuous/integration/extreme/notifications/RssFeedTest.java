@@ -33,14 +33,15 @@ public class RssFeedTest
     {
         String key = "EXTREME_NOTIFICATIONS_RSSURL";
         String rssUrl = System.getenv(key);
-        
-rssUrl = "http://some.other.host/ci/builds";        
 
-        
+rssUrl = "https://jenkins.mono-project.com/rssLatest";
+//rssUrl = "http://xml.weather.yahoo.com/ns/rss/1.0";
+
         System.out.println(" env - rssUrl: " + rssUrl);                
         assertNotNull(rssUrl);        
         assertNotSame(rssUrl, "");
         assertFalse( rssUrl.equals("null") );
+
         // if we dont make it here then make sure that the 'Build Environment' section 
         // in the Jenkins job configuration has the 'Inject environment variables to the build process'
         // checkbox selected and that environments variables are correctly set in the 
@@ -48,7 +49,7 @@ rssUrl = "http://some.other.host/ci/builds";
         
         Map<String,String> uris = new HashMap<String,String>();
 //            uris.put( "y", "http://xml.weather.yahoo.com/ns/rss/1.0" );
-        
+
         DocumentFactory factory = new DocumentFactory();
         factory.setXPathNamespaceURIs( uris );
 
