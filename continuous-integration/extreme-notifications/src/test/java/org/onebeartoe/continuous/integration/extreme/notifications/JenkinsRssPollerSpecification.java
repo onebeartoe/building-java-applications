@@ -6,7 +6,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**
- *
  * @author Roberto Marquez
  */
 public class JenkinsRssPollerSpecification
@@ -22,24 +21,22 @@ public class JenkinsRssPollerSpecification
         rp.setPort(port);
         
         implementation = new JenkinsRssPoller(rp);
-    }
-    
-    public void setRssUrl() throws Exception
-    {
-        String url = "some.host.tld/rss";
         
-        implementation.setRssUrl(url);        
+        String url = "https://jenkins.mono-project.com/rssLatest";
+        
+        implementation.setRssUrl(url);
+        
+        String path = "src/main/resources/strip-job.mapping";
+        rp.setJobMappingPath(path);
     }
 
-    @Test(groups = {"unit"})
+    @Test
     public void start() throws Exception
     {
-        String [] args = {};
-//TODO: We can't test the implementation until there is a way to resolve the UnsatisfiedLinkError
-//        implementation.start();
+        implementation.start();
     }
     
-//    @Test(groups = {"unit"}, expectedExceptions = IllegalArgumentException.class )
+    @Test(expectedExceptions = UnsatisfiedLinkError.class)
     public void serialEvent_fail_iniialize() throws IOException
     {
         implementation.initialize();
