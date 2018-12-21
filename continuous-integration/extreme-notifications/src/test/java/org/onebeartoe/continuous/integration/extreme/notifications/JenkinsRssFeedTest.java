@@ -34,7 +34,8 @@ public class JenkinsRssFeedTest
         String key = "EXTREME_NOTIFICATIONS_RSSURL";
         String rssUrl = System.getenv(key);
 
-        rssUrl = "https://onebeartoe.ci.cloudbees.com/rssLatest";
+//        rssUrl = "https://onebeartoe.ci.cloudbees.com/rssLatest";
+rssUrl = "https://jenkins.mono-project.com/rssLatest";
         
         System.out.println(" env - rssUrl: " + rssUrl);                
         assertNotNull(rssUrl);        
