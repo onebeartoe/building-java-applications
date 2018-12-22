@@ -28,14 +28,15 @@ import org.testng.annotations.Test;
  */
 public class RssFeedSpecification
 {
+    public static final String rssUrl = "https://jenkins.mono-project.com/rssLatest";
+    
     @Test
     public void builds() throws MalformedURLException, IOException, DocumentException
     {
         String key = "EXTREME_NOTIFICATIONS_RSSURL";
-        String rssUrl = System.getenv(key);
+//        String rssUrl = System.getenv(key);
+//rssUrl = "https://jenkins.mono-project.com/rssLatest";
 
-rssUrl = "https://jenkins.mono-project.com/rssLatest";
-//rssUrl = "http://xml.weather.yahoo.com/ns/rss/1.0";
 
         System.out.println(" env - rssUrl: " + rssUrl);                
         assertNotNull(rssUrl);        

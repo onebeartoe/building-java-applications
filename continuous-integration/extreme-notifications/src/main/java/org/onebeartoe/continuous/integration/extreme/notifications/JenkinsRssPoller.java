@@ -265,11 +265,6 @@ public class JenkinsRssPoller
             });
     }
 
-//    public void setRssUrl(String url)
-//    {
-//        rssUrl = url;
-//    }
-
     public void start()
     {
         PollerProfile pp = new PollerProfile();
@@ -278,8 +273,6 @@ public class JenkinsRssPoller
         pp.setOutput(output);
         pp.setRssUrl( runProfile.getRssUrl() );
         pp.setRssServie(rssService);
-        
- //       pp.set
                 
         TimerTask pollerTask = new PollerTask(pp);
 

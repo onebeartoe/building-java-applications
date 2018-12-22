@@ -103,7 +103,7 @@ public class JenkinsJob
         
         // the title is giving inconsistant reslts...
         int hashIndex = rssTitle.indexOf('#');        
-        String name = rssTitle.substring(0, hashIndex).trim();
+        String name = null;//rssTitle.substring(0, hashIndex).trim();
         
         // so we are going to always get it from the URI
 //        if(name.trim().equals(""))
