@@ -31,6 +31,6 @@ public class PollerTaskSpecification
     @Test(expectedExceptions = NullPointerException.class)
     public void run()
     {
-        implementation.run();
+        implementation.run();        
     }
 }

@@ -1,5 +1,4 @@
-/*
- */
+
 package org.onebeartoe.continuous.integration.extreme.notifications;
 
 import java.awt.Color;

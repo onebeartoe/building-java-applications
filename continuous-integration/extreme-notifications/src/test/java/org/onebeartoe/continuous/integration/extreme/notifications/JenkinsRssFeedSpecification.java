@@ -68,7 +68,6 @@ rssUrl = "https://jenkins.mono-project.com/rssLatest";
                 
                 System.out.println(published);
                 System.out.println(title);
-//                links.forEach(System.out::println);
                 System.out.println();
                 
                 titles.add(title);

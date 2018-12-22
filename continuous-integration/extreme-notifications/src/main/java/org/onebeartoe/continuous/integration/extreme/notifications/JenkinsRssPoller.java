@@ -1,23 +1,17 @@
 
 package org.onebeartoe.continuous.integration.extreme.notifications;
 
-import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -28,12 +22,9 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.onebeartoe.io.TextFileReader;
-import org.onebeartoe.io.buffered.BufferedTextFileReader;
 
 import org.onebeartoe.network.ClasspathResourceHttpHandler;
 import org.onebeartoe.network.EndOfRunHttpHandler;
-import org.onebeartoe.network.TextHttpHandler;
 
 /**
  * I found a 64bit version of rxtx for Windows here:
@@ -78,8 +69,12 @@ public class JenkinsRssPoller
 
     private JenkinsRssRunProfile runProfile;
     
+    private JenkinsRssPollerService pollerServie;
+    
     public JenkinsRssPoller(String [] args) throws Exception
     {
+        pollerServie = new JenkinsRssPollerService();
+        
         Options options = buildOptions();
 
         runProfile = parseRunProfile(args, options);
@@ -173,11 +168,11 @@ public class JenkinsRssPoller
     {
         knownIndicatorStrips = new HashMap();
         
-        loadConfiguration();
-        
-        String port = runProfile.getPort();
+        pollerServie.loadConfiguration(runProfile, knownIndicatorStrips);
+
         try
         {
+            String port = runProfile.getPort();
             initializeSerialPort(port);
         }
         catch(Exception e)
@@ -219,51 +214,6 @@ public class JenkinsRssPoller
         
         poller.start();
     }
-    
-    /**
-     * This method is only called once per application run.
-     * It loads a configuration file with the LED strip to RSS feed mapping, 
-     * as well as the mapping per strip of the Jenkins job to strip index mapping.
-     * 
-     * @throws FileNotFoundException
-     * @throws IOException 
-     */
-    private void loadConfiguration() throws FileNotFoundException, IOException
-    {
-        TextFileReader textFileReader = new BufferedTextFileReader();
-        
-        String configPath = runProfile.getJobMappingPath();
-        
-        File infile = new File(configPath);
-        InputStream instream = new FileInputStream(infile);
-        List<String> lines = textFileReader.readLines(instream);
-        
-        lines.stream()
-            .filter( s -> !s.trim().startsWith("#") )
-            .filter( s -> s.trim().length() != 0 )
-            .forEach(c -> 
-            {
-                String[] split = c.split(":");
-
-                int ledStrip = Integer.valueOf(split[0]);
-                int ledIndex = Integer.valueOf(split[1]);
-                String jobName = split[2];
-
-                JenkinsJob jj = new JenkinsJob();
-                jj.setJobName(jobName);
-                jj.setNeopixelIndex(ledIndex);
-                
-                LedStatusIndicatorStrip lsis = knownIndicatorStrips.get(ledStrip);
-            
-                if(lsis == null)
-                {
-                    lsis = new LedStatusIndicatorStrip();
-                    knownIndicatorStrips.put(ledStrip, lsis);
-                }
-
-                lsis.jobs.add(jj);
-            });
-    }
 
     public void start()
     {
@@ -296,7 +246,10 @@ public class JenkinsRssPoller
             
             HttpHandler userInterfaceHttpHander = new ClasspathResourceHttpHandler();
             HttpHandler quitHttpHandler = new EndOfRunHttpHandler(server);
-            HttpHandler configHttpHandler = new ConfigHttpHandler();
+            
+            HttpHandler configHttpHandler = new ConfigHttpHandler(knownIndicatorStrips,
+                                                                  pollerServie,
+                                                                  runProfile);
             
             server.createContext("/", userInterfaceHttpHander);
             server.createContext("/quit", quitHttpHandler);
@@ -307,28 +260,6 @@ public class JenkinsRssPoller
         catch (IOException ex) 
         {
             logger.log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    private class ConfigHttpHandler extends TextHttpHandler
-    {
-        @Override
-        protected String getHttpText(HttpExchange exchange) 
-        {
-            String message = "The job configuration re-loaded.";
-            
-            knownIndicatorStrips.clear();
-            try 
-            {
-                loadConfiguration();
-            } 
-            catch (IOException ex) 
-            {
-                message = "An error occured while reloading the job configuration.";
-                logger.log(Level.SEVERE, message, ex);
-            }
-            
-            return message;
         }
     }
 }

@@ -1,7 +1,6 @@
 
 package org.onebeartoe.continuous.integration.extreme.notifications;
 
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -12,8 +11,6 @@ public class JenkinsJobSpecification
     private JenkinsJob implementation;
   
     public JenkinsJobSpecification()
-//    @BeforeClass
-//    public void initialize()
     {
         implementation = new JenkinsJob();
     }

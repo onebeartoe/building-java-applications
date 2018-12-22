@@ -12,19 +12,19 @@ public class JenkinsRssPollerSpecification
 {
     private JenkinsRssPoller implementation;
     
+    public static final String jobMappingPath = "src/main/resources/strip-job.mapping";
+    
     @BeforeTest
     public void setup() throws Exception
     {
         String port = "/some/fake/port";
         
         String url = "https://jenkins.mono-project.com/rssLatest";
-
-        String path = "src/main/resources/strip-job.mapping";
         
         String [] args = {
                             "--port", port,
                             "--rssUrl", url,
-                            "--jobMappingPath", path
+                            "--jobMappingPath", jobMappingPath
                          };
                 
         implementation = new JenkinsRssPoller(args);
