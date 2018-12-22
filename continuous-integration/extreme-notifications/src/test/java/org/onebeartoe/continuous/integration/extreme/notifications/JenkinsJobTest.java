@@ -49,6 +49,15 @@ public class JenkinsJobTest
     }
     
     @Test
+    public void fromRssTitle()
+    {
+        String rssTitle = "none#after(some stuff)other";
+        String uri = "some.host.tld/path/rss";
+        
+        JenkinsJob jj = JenkinsJob.fromRssTitle(rssTitle, uri);
+    }
+    
+    @Test
     public void setJobStatus()
     {
         implementation.setJobStatus("none");
