@@ -4,7 +4,6 @@ package org.onebeartoe.continuous.integration.extreme.notifications;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import com.sun.syndication.io.FeedException;
 
 import java.awt.Color;
 
@@ -16,10 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +24,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.IntStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -75,94 +70,26 @@ public class JenkinsRssPoller
     
     private JenkinsRssFeedService rssService;
     
-    private String rssUrl =
-//      "https://onebeartoe.ci.cloudbees.com/rssAll";
-        "https://onebeartoe.ci.cloudbees.com/rssLatest";
+    private String rssUrl = "https://onebeartoe.ci.cloudbees.com/rssLatest";
     
     private Logger logger;
      
     private Map<Integer, LedStatusIndicatorStrip> knownIndicatorStrips;
     
     private HttpServer server;
-    
+
     private JenkinsRssRunProfile runProfile;
     
     public JenkinsRssPoller(JenkinsRssRunProfile runProfile) throws Exception
     {
         this.runProfile = runProfile;
-        
+
         String className = getClass().getName();
         logger = Logger.getLogger(className);
         
         POLL_DELAY = Duration.ofSeconds(30).toMillis();
         
         rssService = new HttpJenkinsRssFeedService();
-    }
-
-    /**
-     * Builds an Arduino messages in this format 'stip-index:led-index:rrr:ggg:bbb:pulse'
-     * @param strip
-     * @param job
-     * @return example value: '000:000:000:255:000:1', which means strip 0, led 0, rgb(0,255,0), pulsing = true
-     * 
-     *         other examples:
-     * 
-     * 
-                    green
-                    000:000:000:255:000:1
-
-                    blue
-                    000:000:000:000:130:1
-
-                    medium
-                    000:000:130:130:130:1
-     * 
-     */
-    private String buildArduinoMessage(int strip, JenkinsJob job)
-    {        
-        final String threeDigitFormat = "%03d";
-
-        String stripIndex = String.format(threeDigitFormat, strip);
-        
-        String neopixelIndex = String.format(threeDigitFormat, job.getNeopixelIndex());
-        
-        Color c = job.getJobStatus().getColor();
-        
-        int red = c.getRed();
-        int green = c.getGreen();
-        int blue = c.getBlue();
-        
-        String r = String.format(threeDigitFormat, red);
-        String g = String.format(threeDigitFormat, green);
-        String b = String.format(threeDigitFormat, blue);
-        
-        int pulseCode = 0;
-        if(job.getJobStatus() == JenkinsJobStatus.IN_PROGRESS)
-        {
-            pulseCode = 1;
-        }
-        String pulsing = String.valueOf(pulseCode);
-     
-        StringBuilder message = new StringBuilder();
-        message.append(stripIndex);
-        message.append(":");
-        
-        message.append(neopixelIndex);
-        message.append(":");
-        
-        message.append(r);
-        message.append(":");
-        
-        message.append(g);
-        message.append(":");
-        
-        message.append(b);
-        message.append(":");
-        
-        // specify whether the LED is pulsing or not
-        message.append(pulsing);
-        
-        return message.toString();
     }
     
     public static Options buildOptions()
@@ -342,39 +269,24 @@ public class JenkinsRssPoller
             });
     }
 
-    private List<JenkinsJob> obtainAllRssJobs() throws MalformedURLException, FeedException, IOException
-    {
-        URL url = new URL(rssUrl);
-        
-        List<JenkinsJob> jobs = rssService.getJobs(url);
-        
-        return jobs;
-    }
-    
-    private void sendArduinoMessage(int strip, JenkinsJob job)
-    {
-        if(output == null)
-        {
-            System.err.println("The variable, output, is null;");
-            System.err.println("No message sent to the serial port connection.");
-        }
-        else
-        {
-            String message = buildArduinoMessage(strip, job);
-            output.println(message);
-            output.flush();
-        }
-    }
-
-    public void setRssUrl(String url)
-    {
-        rssUrl = url;
-    }
+//    public void setRssUrl(String url)
+//    {
+//        rssUrl = url;
+//    }
 
     public void start()
     {
-        TimerTask pollerTask = new PollerTask();
+        PollerProfile pp = new PollerProfile();
+        pp.setKnownIndicatorStrips(knownIndicatorStrips);
+        pp.setPollDelay(POLL_DELAY);
+        pp.setOutput(output);
+        pp.setRssUrl( runProfile.getRssUrl() );
+        pp.setRssServie(rssService);
         
+ //       pp.set
+                
+        TimerTask pollerTask = new PollerTask(pp);
+
         Timer timer = new Timer();
         
         Date firstTime = new Date();
@@ -409,35 +321,6 @@ public class JenkinsRssPoller
         }
     }
     
-    /**
-     * This method
-     * sends the Arduino/serial communication port the corresponding
-     * LED information.
-     * 
-     * @param strip
-     * @param configuredJobs 
-     */
-    private void updateNeopixelStrip(int strip, List<JenkinsJob> configuredJobs)
-    {   
-        LedStatusIndicatorStrip lsi = knownIndicatorStrips.get(strip);
-        
-        for(JenkinsJob jj : configuredJobs)
-        {
-            String key = jj.getJobName();
-            
-            String consoleMessage = "\t\t\t\t\t" + "Sending data for " + key + 
-                                    " (neopixel " + jj.getNeopixelIndex() + ")";
-            System.out.println(consoleMessage);
-
-            sendArduinoMessage(strip, jj);
-
-            // Give the Arduino time to receive the data before sending the next one.
-            int delayInSeconds = 2;  // used to be 4
-            long iterationDelay = Duration.ofSeconds(delayInSeconds).toMillis();
-            Sleeper.sleepo(iterationDelay);
-        }
-    }
-    
     private class ConfigHttpHandler extends TextHttpHandler
     {
         @Override
@@ -458,87 +341,5 @@ public class JenkinsRssPoller
             
             return message;
         }
-    }
-    
-    /**
-     *  The task class is to 
-     *  poll the RSS feed for all jobs status entries.
-     */
-    private class PollerTask extends TimerTask
-    {   
-        private List<JenkinsJob> filter(int indicatorIndex, List<JenkinsJob> allRssJobs)
-        {
-            List<String> unknownKeys = new ArrayList();
-            
-            List<JenkinsJob> configuredJobs = new ArrayList();
-            
-            LedStatusIndicatorStrip configuredStrip = knownIndicatorStrips.get(indicatorIndex);
-            
-            allRssJobs.forEach(rssJob -> 
-            {
-                String targetName = rssJob.getJobName();
-                
-                boolean found = false;
-                for(JenkinsJob configuredJob : configuredStrip.jobs)
-                {
-                    if( targetName.equals(configuredJob.getJobName() ) )
-                    {
-                        rssJob.setNeopixelIndex( configuredJob.getNeopixelIndex() );
-                        configuredJobs.add(rssJob);
-                        
-                        found = true;
-
-                        break;
-                    }
-                };
-
-                if(!found)
-                {
-                    unknownKeys.add(rssJob.getJobName());
-                }                
-            });
-                    
-            printUnknownRssJobs(unknownKeys);
-        
-            return configuredJobs;
-        }
-        
-        private void printUnknownRssJobs(List<String> unknownRssJobs)
-        {
-            System.out.println();
-            System.out.print("There is no pixel id for: ");
-            unknownRssJobs.forEach( (s) ->
-            {
-                System.out.print(s);
-                System.out.print(", ");        
-            });
-            System.out.println();
-        }
-        
-        @Override
-        public void run() 
-        {
-            System.out.println();
-            System.out.println("The Jenkins RSS Poller goes off every " + POLL_DELAY + " millieseconds.");
-
-            List<JenkinsJob> allJobs;
-            try 
-            {
-                allJobs = obtainAllRssJobs();
-                
-                // TODO: remove the hard-coded nature of assuming there will always be 3 strips
-                IntStream.rangeClosed(0, 2).forEach( i ->
-                {
-                    List<JenkinsJob> configuredJobs = filter(i, allJobs);
-
-                    updateNeopixelStrip(i, configuredJobs);
-                });
-            } 
-            catch (FeedException | IOException ex) 
-            {
-                String message = "An error occured while obtaining the Jenkins jobs.";
-                logger.log(Level.SEVERE, message, ex);
-            }
-        }        
     }
 }
