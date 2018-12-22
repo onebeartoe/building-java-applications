@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * 
  * @author Roberto Marquez
  */
-public class RssFeedTest
+public class RssFeedSpecification
 {
     @Test
     public void builds() throws MalformedURLException, IOException, DocumentException

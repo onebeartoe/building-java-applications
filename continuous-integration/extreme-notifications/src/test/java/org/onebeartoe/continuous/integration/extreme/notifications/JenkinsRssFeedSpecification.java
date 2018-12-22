@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * 
  * @author Roberto Marquez
  */
-public class JenkinsRssFeedTest
+public class JenkinsRssFeedSpecification
 {
 //TODO: Convert this from a unit test to an integration test.    
     @Test

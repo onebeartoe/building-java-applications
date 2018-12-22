@@ -17,8 +17,31 @@ public class JenkinsJobSpecification
     {
         implementation = new JenkinsJob();
     }
+
+    @Test
+    public void fromRssTitle()
+    {
+        String rssTitle = "none#after(some stuff)other";
+        String uri = "some.host.tld/path/rss";
+        
+        JenkinsJob jj = JenkinsJob.fromRssTitle(rssTitle, uri);
+    }
     
-    @Test(groups = {"unit"}, expectedExceptions = StringIndexOutOfBoundsException.class)
+    @Test
+    public void setJobStatus()
+    {
+        implementation.setJobStatus("none");
+    }
+
+    @Test
+    public void getJobStatus()
+    {
+        JenkinsJobStatus jobStatus = implementation.getJobStatus();
+        
+        assert(jobStatus != JenkinsJobStatus.UNKOWN);
+    }
+    
+    @Test(expectedExceptions = StringIndexOutOfBoundsException.class)
     public void fromRssTitle_fail_badTitle()
     {
         String rssTitle = "bad-title";
@@ -27,7 +50,7 @@ public class JenkinsJobSpecification
         JenkinsJob jenkinsJob = JenkinsJob.fromRssTitle(rssTitle, uri);
     }
     
-    @Test(groups = {"unit"})
+    @Test
     public void toString_pass()
     {
         String s = implementation.toString();
