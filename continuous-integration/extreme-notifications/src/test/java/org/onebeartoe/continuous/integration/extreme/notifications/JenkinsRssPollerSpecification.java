@@ -18,17 +18,16 @@ public class JenkinsRssPollerSpecification
         String port = "/some/fake/port";
         
         String url = "https://jenkins.mono-project.com/rssLatest";
-        
-        JenkinsRssRunProfile rp = new JenkinsRssRunProfile();
-        rp.setPort(port);
-        rp.setRssUrl(url);
-        
-        implementation = new JenkinsRssPoller(rp);
-        
-//        implementation.setRssUrl(url);
-        
+
         String path = "src/main/resources/strip-job.mapping";
-        rp.setJobMappingPath(path);
+        
+        String [] args = {
+                            "--port", port,
+                            "--rssUrl", url,
+                            "--jobMappingPath", path
+                         };
+                
+        implementation = new JenkinsRssPoller(args);
     }
 
     @Test

@@ -80,9 +80,11 @@ public class JenkinsRssPoller
 
     private JenkinsRssRunProfile runProfile;
     
-    public JenkinsRssPoller(JenkinsRssRunProfile runProfile) throws Exception
+    public JenkinsRssPoller(String [] args) throws Exception
     {
-        this.runProfile = runProfile;
+        Options options = buildOptions();
+
+        runProfile = parseRunProfile(args, options);
 
         String className = getClass().getName();
         logger = Logger.getLogger(className);
@@ -124,7 +126,7 @@ public class JenkinsRssPoller
      * @return
      * @throws Exception 
      */
-    private static JenkinsRssRunProfile parseRunProfile(String [] args, Options options) throws Exception
+    private JenkinsRssRunProfile parseRunProfile(String [] args, Options options) throws Exception
     {
         // The app uses the following as the defalut port descriptor on a MS 
         // Windows environment.  On Linux environments, use a path to the serial 
@@ -212,13 +214,9 @@ public class JenkinsRssPoller
         {
            System.out.println(a + " ") ;
         }
-        
-        Options options = buildOptions();
 
-        JenkinsRssRunProfile runProfile = parseRunProfile(args, options);
+        JenkinsRssPoller poller = new JenkinsRssPoller(args);
 
-        JenkinsRssPoller poller = new JenkinsRssPoller(runProfile);
-        
         poller.initialize();
         
         poller.start();
