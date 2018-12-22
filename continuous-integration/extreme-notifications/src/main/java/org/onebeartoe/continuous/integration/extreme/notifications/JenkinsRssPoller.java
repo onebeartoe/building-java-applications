@@ -5,7 +5,6 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-import java.awt.Color;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,7 +34,6 @@ import org.onebeartoe.io.buffered.BufferedTextFileReader;
 import org.onebeartoe.network.ClasspathResourceHttpHandler;
 import org.onebeartoe.network.EndOfRunHttpHandler;
 import org.onebeartoe.network.TextHttpHandler;
-import org.onebeartoe.system.Sleeper;
 
 /**
  * I found a 64bit version of rxtx for Windows here:

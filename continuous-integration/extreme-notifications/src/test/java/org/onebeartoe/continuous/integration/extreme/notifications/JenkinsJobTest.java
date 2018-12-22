@@ -9,25 +9,26 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.testng.annotations.Test;
+//import org.junit.Test;
+//import org.junit.runner.RunWith;
+//import org.junit.runners.Parameterized;
 
-//todo: Correct the spelling
+
 /**
  * @author Roberto Marquez <https://www.youtube.com/user/onebeartoe>
  */
-@RunWith(Parameterized.class)
-public class JenkisJobTest 
+//@RunWith(Parameterized.class)
+public class JenkinsJobTest 
 {
-    private JenkinsJob jj;
+    private JenkinsJob implementation;
     
-    public JenkisJobTest(JenkinsJob jj)
+    public JenkinsJobTest()
     {
-        this.jj = jj;
+        this.implementation = new JenkinsJob();
     }
     
-    @Parameterized.Parameters(name="{index} - {0}")
+//    @Parameterized.Parameters(name="{index} - {0}")
     public static Collection<Object[]> dataSet() throws MalformedURLException, FeedException, IOException
     {                
         String u = "https://onebeartoe.ci.cloudbees.com/rssLatest";
@@ -46,11 +47,17 @@ public class JenkisJobTest
         
         return dataSet;
     }
-
+    
     @Test
     public void setJobStatus()
     {
-        JenkinsJobStatus jobStatus = jj.getJobStatus();
+        implementation.setJobStatus("none");
+    }
+
+    @Test
+    public void getJobStatus()
+    {
+        JenkinsJobStatus jobStatus = implementation.getJobStatus();
         
         assert(jobStatus != JenkinsJobStatus.UNKOWN);
     }
