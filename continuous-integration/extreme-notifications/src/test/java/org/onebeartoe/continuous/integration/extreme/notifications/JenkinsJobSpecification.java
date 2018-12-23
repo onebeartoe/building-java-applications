@@ -37,11 +37,22 @@ public class JenkinsJobSpecification
         assert(jj.getJobStatus() == JenkinsJobStatus.UNSTABLE);
     }
     
+    @Test(expectedExceptions = StringIndexOutOfBoundsException.class)
+    public void fromRssTitle_fail_badTitle()
+    {
+        String rssTitle = "bad-title";
+        String uri = "http://some.url/";
+        
+        JenkinsJob jenkinsJob = JenkinsJob.fromRssTitle(rssTitle, uri);
+    }
+    
     @Test
     public void setJobStatus()
     {
         implementation.setJobStatus("none");
     }
+
+    
 
     @Test
     public void getJobStatus()
@@ -49,6 +60,14 @@ public class JenkinsJobSpecification
         JenkinsJobStatus jobStatus = implementation.getJobStatus();
         
         assert(jobStatus != JenkinsJobStatus.UNKOWN);
+    }
+    
+    @Test
+    public void getNeopixelIndex()
+    {
+        int i = implementation.getNeopixelIndex();
+        
+        assert(i >= 0);
     }
     
     @Test
@@ -60,16 +79,7 @@ public class JenkinsJobSpecification
         
         assert(description != null);
     }
-    
-    @Test(expectedExceptions = StringIndexOutOfBoundsException.class)
-    public void fromRssTitle_fail_badTitle()
-    {
-        String rssTitle = "bad-title";
-        String uri = "http://some.url/";
-        
-        JenkinsJob jenkinsJob = JenkinsJob.fromRssTitle(rssTitle, uri);
-    }
-    
+
     @Test
     public void toString_pass()
     {
