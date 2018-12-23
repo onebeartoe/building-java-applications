@@ -1,6 +1,7 @@
 
 package org.onebeartoe.continuous.integration.extreme.notifications;
 
+import java.util.Date;
 import org.testng.annotations.Test;
 
 /**
@@ -44,6 +45,28 @@ public class JenkinsJobSpecification
         String uri = "http://some.url/";
         
         JenkinsJob jenkinsJob = JenkinsJob.fromRssTitle(rssTitle, uri);
+    }
+    
+    @Test
+    public void getJobNumber()
+    {
+        int expected = 33;
+        
+        implementation.setJobNumber(expected);
+        
+        int actual = implementation.getJobNumber();
+        
+        assert(expected == actual);
+    }
+    
+    @Test
+    public void getJobRunDate()
+    {
+        implementation.setJobRunDate( new Date() );
+        
+        Date date = implementation.getJobRunDate();
+        
+        assert(date != null);       
     }
     
     @Test
