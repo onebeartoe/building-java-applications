@@ -16,7 +16,7 @@ public class JenkinsRssFeed
         return jobs;
     }
 
-    public void setJobs(List<JenkinsJob> jobs) 
+    public void setJobs(List<JenkinsJob> jobs)
     {
         this.jobs = jobs;
     }

@@ -18,6 +18,7 @@ import org.dom4j.DocumentException;
 import static org.testng.AssertJUnit.assertFalse;
 import static org.testng.AssertJUnit.assertNotNull;
 import static org.testng.AssertJUnit.assertNotSame;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 /**
@@ -27,6 +28,24 @@ import org.testng.annotations.Test;
  */
 public class JenkinsRssFeedSpecification
 {
+    private JenkinsRssFeed implemtation;
+    
+    @BeforeTest
+    public void setup()
+    {
+        implemtation = new JenkinsRssFeed();
+    }
+    
+    @Test
+    public void getJobs()
+    {
+        List<JenkinsJob> jobs = new ArrayList();
+        
+        implemtation.setJobs(jobs);
+        
+        assert(implemtation.getJobs() != null);
+    }
+        
 //TODO: Convert this from a unit test to an integration test.    
     @Test
     public void builds() throws MalformedURLException, IOException, DocumentException
@@ -87,10 +106,6 @@ rssUrl = "https://jenkins.mono-project.com/rssLatest";
             System.out.println("FeedReader reads and prints any RSS/Atom feed type.");
             System.out.println("The first parameter must be the URL of the feed to read.");
             System.out.println();
-        }
-        else
-        {
-            
         }
     }
 }

@@ -75,8 +75,6 @@ public class JenkinsJobSpecification
         implementation.setJobStatus("none");
     }
 
-    
-
     @Test
     public void getJobStatus()
     {
