@@ -100,16 +100,9 @@ public class JenkinsJob
     public static JenkinsJob fromRssTitle(String rssTitle, String uri)
     {
         JenkinsJob job = new JenkinsJob();
+
+        String name = jobNameFromUri(uri);
         
-        // the title is giving inconsistant reslts...
-        int hashIndex = rssTitle.indexOf('#');        
-        String name = null;//rssTitle.substring(0, hashIndex).trim();
-        
-        // so we are going to always get it from the URI
-//        if(name.trim().equals(""))
-        {
-            name = jobNameFromUri(uri);
-        }
         job.setJobName(name);
         
         int openParenIndex = rssTitle.indexOf('(');

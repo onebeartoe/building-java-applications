@@ -27,7 +27,7 @@ public class JenkinsJobSpecification
     }
     
     @Test
-    public void fromRssTitle()
+    public void fromRssTitle_unstable()
     {
         String rssTitle = "none#after(4 test failures)other";
         String uri = "some.host.tld/path/rss";
