@@ -16,12 +16,25 @@ public class JenkinsJobSpecification
     }
 
     @Test
-    public void fromRssTitle()
+    public void fromRssTitle_unknown()
     {
         String rssTitle = "none#after(some stuff)other";
         String uri = "some.host.tld/path/rss";
         
         JenkinsJob jj = JenkinsJob.fromRssTitle(rssTitle, uri);
+        
+        assert(jj.getJobStatus() == JenkinsJobStatus.UNKOWN);
+    }
+    
+    @Test
+    public void fromRssTitle()
+    {
+        String rssTitle = "none#after(4 test failures)other";
+        String uri = "some.host.tld/path/rss";
+        
+        JenkinsJob jj = JenkinsJob.fromRssTitle(rssTitle, uri);
+        
+        assert(jj.getJobStatus() == JenkinsJobStatus.UNSTABLE);
     }
     
     @Test
