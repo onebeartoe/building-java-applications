@@ -51,6 +51,16 @@ public class JenkinsJobSpecification
         assert(jobStatus != JenkinsJobStatus.UNKOWN);
     }
     
+    @Test
+    public void jobStatusDescription()
+    {
+        implementation.setJobStatusDescription("some description");
+
+        String description = implementation.getJobStatusDescription();
+        
+        assert(description != null);
+    }
+    
     @Test(expectedExceptions = StringIndexOutOfBoundsException.class)
     public void fromRssTitle_fail_badTitle()
     {
