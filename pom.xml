@@ -22,7 +22,6 @@
         <module>continuous-integration</module>
         <module>drinking-bird</module>
         <module>log-diver</module>
-        <module>parent-child</module>
         <module>web</module>
     </modules>
 
