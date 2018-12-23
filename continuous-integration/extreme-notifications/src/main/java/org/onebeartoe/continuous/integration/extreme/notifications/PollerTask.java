@@ -229,7 +229,7 @@ public class PollerTask extends TimerTask
      */
     private void updateNeopixelStrip(int strip, List<JenkinsJob> configuredJobs)
     {   
-        LedStatusIndicatorStrip lsi = knownIndicatorStrips.get(strip);
+//        LedStatusIndicatorStrip lsi = knownIndicatorStrips.get(strip);
         
         for(JenkinsJob jj : configuredJobs)
         {
