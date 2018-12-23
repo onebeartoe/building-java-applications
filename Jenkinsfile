@@ -28,6 +28,8 @@ pipeline
 
                 sh '''
                     mvn -P chrome,headless,production verify
+
+                    ls -la web/automation/target/screenshots/
                 '''
             }
         }
