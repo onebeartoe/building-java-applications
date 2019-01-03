@@ -26,12 +26,25 @@ Tools used in this project include:
 User Story Review
 https://github.com/onebeartoe/building-java-applications/blob/master/web/automation/stories/web-automation.epic
 
-Demonstrate acceptance criteria
+Demonstrate Acceptance Criteria
 
-Demonstrate the different flows
+    using this flow
 
-    content veriffication - Salaray to Rate defaults
+        content veriffication - Salaray to Rate defaults
+
+Demonstrate the other two flows
 
     navigation - salary to rate navigation
 
     form submision and verifiation - long to date
+
+Show the tests running headless on Jenkins
+http://betoland-continuous/
+
+Outro
+    
+    I hope you enjoyed the demonstration of this user story and I encourage you 
+    to try the ideas presented in this Web automation framework.
+
+    Thanks for watching; like and subscribe for more Selenium Web Driver 
+    automation content.
