@@ -30,13 +30,13 @@ Demonstrate Acceptance Criteria
 
     using this flow
 
-        content veriffication - Salaray to Rate defaults
+        content verification - Salary to Rate defaults
 
 Demonstrate the other two flows
 
-    navigation - salary to rate navigation
+    Page object navigation - salary to rate Web pages
 
-    form submision and verifiation - long to date
+    form submission and verification - long to date
 
 Show the tests running headless on Jenkins
 http://betoland-continuous/
