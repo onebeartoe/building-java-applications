@@ -5,11 +5,12 @@ so that components are reused as much as possible to test applications.
 
 Acceptance Criteria
 
-The test software has run-time configuration and,
-the Web automation tests use the Page object design pattern to move between pages and
+The test software has run-time configuration for the following
+    URL under test and
+    browser type and 
+Maven profiles exist for specifying the browser and URL under testing and,
 the default run-time configuration is to run in a desktop environment with the Firefox browser and,
 run-time configuration exists to execute tests in a desktop  environment with the Chrome browser and,
 run-time configuration exists to execute tests in a headless environment with Chrome and,
-the URL under test is specified by run-time configuration and,
-Maven profiles exist for specifying the browser and URL used for testing and,
+the Web automation tests use the Page object design pattern to move between pages and
 the continuous integration server runs the test software in a headless environment.

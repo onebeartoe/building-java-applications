@@ -1,0 +1,37 @@
+
+Greeting
+
+	Hi, I am Roberto Marquez.   In this video I demonstrate a user story 
+        for an automated Web-based testing framework.
+
+Tools used in this project include:
+
+    Source control - git
+    https://github.com/onebeartoe/building-java-applications/tree/master/web/automation
+
+    Java Standard Edition 8 or better
+
+    Selenium Web Driver for Java
+
+    Chromedriver 2.37
+
+    geckodriver-v0.23.0 - for Firefox
+    
+    the Netbeans IDE
+    https://netbeans.apache.org/
+    
+    application under test
+    http://www.onebeartoe.com/
+
+User Story Review
+https://github.com/onebeartoe/building-java-applications/blob/master/web/automation/stories/web-automation.epic
+
+Demonstrate acceptance criteria
+
+Demonstrate the different flows
+
+    content veriffication - Salaray to Rate defaults
+
+    navigation - salary to rate navigation
+
+    form submision and verifiation - long to date
