@@ -19,7 +19,7 @@ import org.testng.annotations.BeforeMethod;
 
 /**
  * A UnitOfWorkSpecification is the Web automation test that invokes operations 
- * on a UnitsOfWork instnace.
+ * on a UnitsOfWork instance.
  * 
  * @author Roberto Marquez
  */
