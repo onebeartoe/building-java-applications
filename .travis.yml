@@ -9,6 +9,8 @@ addons:
 script:
   - mvn clean
   - mvn -P chrome,headless,production org.jacoco:jacoco-maven-plugin:prepare-agent verify sonar:sonar
+  - ll -la /home/travis/build/onebeartoe/building-java-applications/web/automation/target/failsafe-reports/
+  - cat /home/travis/build/onebeartoe/building-java-applications/web/automation/target/failsafe-reports/*.dump
   - ll -la web/automation/target/screenshots/
   
 cache:
