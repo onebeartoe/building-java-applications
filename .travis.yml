@@ -8,6 +8,7 @@ addons:
 
 script:
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+  - ls -la web/automation/target/screenshots/
   
 cache:
   directories:
