@@ -7,5 +7,4 @@ Acceptance Criteria
 
 The screenshot method is called at the test class level and
 the screenshot is saved to the filesystem and
-a post process hook exists to automatically screenshot at the end of each test and
-.
+a post process hook exists to automatically screenshot at the end of each test.
