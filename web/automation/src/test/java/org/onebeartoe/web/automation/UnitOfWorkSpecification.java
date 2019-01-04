@@ -37,7 +37,7 @@ public class UnitOfWorkSpecification
     
     private String currentTest = "test-name-not-set";
 
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void testName(Method method)
     {
         currentTest = method.getName();
