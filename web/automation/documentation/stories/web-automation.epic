@@ -7,7 +7,8 @@ Acceptance Criteria
 
 The test software has run-time configuration for the following
     URL under test and
-    browser type and 
+    browser type and
+    running in headless mode and 
 Maven profiles exist for specifying the browser and URL under testing and,
 the default run-time configuration is to run in a desktop environment with the Firefox browser and,
 run-time configuration exists to execute tests in a desktop  environment with the Chrome browser and,
