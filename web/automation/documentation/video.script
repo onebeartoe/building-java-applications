@@ -25,7 +25,11 @@
 
 
 02 - User Story Review
-https://github.com/onebeartoe/building-java-applications/blob/master/web/automation/documentation/video.script
+	framework epic
+	https://github.com/onebeartoe/building-java-applications/blob/master/web/automation/documentation/video.script
+
+	screenshot story
+	https://github.com/onebeartoe/building-java-applications/blob/master/web/automation/documentation/stories/screenshots.story
 
 03 - Demonstrate Acceptance Criteria
 
