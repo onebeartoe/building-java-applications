@@ -8,10 +8,11 @@ Without this configuration present, some functionality in the IDE may be limited
 -->
     <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
         <configurations>
-            <configuration id="desktop-chrome" profiles="chrome"/>
-            <configuration id="desktop-chrome-production" profiles="chrome production"/>
-            <configuration id="desktop-firefox" profiles="firefox"/>
-            <configuration id="headless-chrom" profiles="chrome headless"/>
+            <configuration id="localhost-chorme-headless" profiles="chrome headless"/>
+            <configuration id="localhost-firefox" profiles="firefox"/>
+            <configuration id="production-chrome" profiles="chrome production"/>
+            <configuration id="production-chrome-headless" profiles="production chrome headless"/>
+            <configuration id="production-firefox" profiles="production firefox"/>
         </configurations>
     </config-data>
 </project-shared-configuration>

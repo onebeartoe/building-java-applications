@@ -20,8 +20,6 @@ public class SalaryToRateUowSpecification extends UnitOfWorkSpecification
    public void defaults()
    {
         logger.info(" testing the printing remove");
-       
-//        driver.get(testUrl);
 
         WebElement bodyElement = driver.findElementByTagName("body");
 
