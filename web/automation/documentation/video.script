@@ -31,13 +31,11 @@
 	screenshot story
 	https://github.com/onebeartoe/building-java-applications/blob/master/web/automation/documentation/stories/screenshots.story
 
-03 - Demonstrate Acceptance Criteria
+03 - Demonstrate Acceptance Criteria - Phase I
 
-    using this flow
+        Content Verification - Salary to Rate defaults
 
-        content verification - Salary to Rate defaults
-
-04 - Demonstrate the other two flows
+04 - Demonstrate Acceptance Criteria  - Phase II
 
     Page object navigation - salary to rate Web pages
 
