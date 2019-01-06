@@ -158,7 +158,5 @@ public class UnitOfWorkSpecification
     protected void tearDown()
     {
         driver.close();
-                
-//        driver.quit();        
     }
 }
