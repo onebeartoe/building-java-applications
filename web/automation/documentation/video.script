@@ -1,50 +1,51 @@
 
-Greeting
+00- Greeting
 
 	Hi, I am Roberto Marquez.   In this video I demonstrate a user story 
         for an automated Web-based testing framework.
 
-Tools used in this project include:
+
+01 - Tools used in this project include:
 
     Source control - git
     https://github.com/onebeartoe/building-java-applications/tree/master/web/automation
 
     Java Standard Edition 8 or better
 
-    Selenium Web Driver for Java
+    Selenium Web Driver for Java (verson 3.11.0)
 
     Chromedriver 2.37
 
     geckodriver-v0.23.0 - for Firefox
     
     the Netbeans IDE
-    https://netbeans.apache.org/
     
     application under test
     http://www.onebeartoe.com/
 
-User Story Review
-https://github.com/onebeartoe/building-java-applications/blob/master/web/automation/stories/web-automation.epic
 
-Demonstrate Acceptance Criteria
+02 - User Story Review
+https://github.com/onebeartoe/building-java-applications/blob/master/web/automation/documentation/video.script
+
+03 - Demonstrate Acceptance Criteria
 
     using this flow
 
         content verification - Salary to Rate defaults
 
-Demonstrate the other two flows
+04 - Demonstrate the other two flows
 
     Page object navigation - salary to rate Web pages
 
     form submission and verification - long to date
 
-Show the tests running headless on Jenkins
+05 - Show the tests running headless on Jenkins
 http://betoland-continuous/
 
-Outro
+06 - Outro
     
     I hope you enjoyed the demonstration of this user story and I encourage you 
-    to try the ideas presented in this Web automation framework.
+    to explore the ideas presented in this Web automation framework.
 
     Thanks for watching; like and subscribe for more Selenium Web Driver 
     automation content.
