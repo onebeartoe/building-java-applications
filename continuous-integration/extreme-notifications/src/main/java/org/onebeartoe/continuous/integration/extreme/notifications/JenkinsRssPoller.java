@@ -37,7 +37,11 @@ import org.onebeartoe.network.EndOfRunHttpHandler;
  *
  * On Linux this command works with the RXTX provided by apt-get:
  *
- *       java -Djava.library.path=/usr/lib/jni/ -jar extreme-notifications-1.0-SNAPSHOT-jar-with-dependencies.jar /dev/ttyACM0 strip-job.mapping
+ *      sudo apt-get install librxtx-java
+ * 
+ *      sudo ln -s librxtxSerial-2.2pre1.so rxtxSerial.so
+ * 
+ *      java -Djava.library.path=/usr/lib/jni/ -jar extreme-notifications-1.0-SNAPSHOT-jar-with-dependencies.jar /dev/ttyACM0 strip-job.mapping
  *
  * To run/debug from Netbeans, add the -Djava.library.path="C:\home\......" path above to the VM arguments via 'Right Click Project' -> Properties -> Run.
  * 
