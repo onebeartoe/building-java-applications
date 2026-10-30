@@ -295,9 +295,4 @@ public class FXMLController implements Initializable
             }
         }
     }
-    
-//    private class DurationOption
-//    {
-//        Duration duration;       
-//    }
 }
